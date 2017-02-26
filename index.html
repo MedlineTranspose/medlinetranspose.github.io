@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-<body>
 
 <link rel="stylesheet" href="w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 .w3-navbar,h1,button {font-family: sans-serif}
@@ -44,8 +45,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	<!-- Search Input -->
     <div class="w3-container">
     	<b><p class="w3-xlarge">Enter your search strategy</p></b>
-		
-		<!-- accordion --> 
+
+		<!-- accordion -->
 		<div class="w3-accordion">
 			<button onClick="myAccordion('Ovid-Acc')" class="w3-btn w3-round-large w3-theme">
 			Ovid Examples
@@ -54,7 +55,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 				<p>(losartan intervention for endpoint reduction.ti,ab.) or (exp *Losartan/ and (exp Echocardiography/ or exp Electrocardiography/)) or (exp Losartan/ and (exp Atrial Function/ or exp Heart Atria/ or exp Atrial Remodeling/))</p>
 				<p>(exp Foster Home Care/ or exp Adoption/) and (exp American Native Continental Ancestry Group/ or exp Health Services, Indigenous/ or (aboriginal$ or "first nations" or "first nation" or indigenous or native$ or (indian$ not India) or inuit$ or metis or autochthon$).ti,ab,kw.)</p>
 			</div>
-			
+
 						  <div class="w3-padding-4">
 				</div>
 			<button onClick="myAccordion('PubMed-Acc')" class="w3-btn w3-round-large w3-theme">
@@ -68,7 +69,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 				</div>
     	<textarea class="w3-input w3-large w3-border w3-round-large" id="userEntry" value="Exercise Therapy/" required name="userInput" rows="7"></textarea>
 	</div>
-	
+
 	<div class="w3-layout-cell w3-layout-middle">
     	<input id="ovid" class="w3-radio" type="radio" name="database" value="OTP">
     	<label class="w3-validate">Ovid to PubMed</label>
@@ -81,20 +82,20 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	<div class="w3-container w3-layout-cell w3-layout-middle">
 		<button class="w3-btn w3-padding-large w3-round-large w3-theme" onClick="myFunction()">Submit</button></p>
 	</div>
-	
+
 	  <div class="w3-padding-8">
   	</div>
 
   </div>
-</div> 
+</div>
 </div>
 
 
 <!-- Search results -->
 <div class="w3-container w3-theme-l2 w3-padding-8">
 	<div class="w3-content">
-			<!-- <p>Your entry was:<br></p> 
-				<p id="output0"></p> 
+			<!-- <p>Your entry was:<br></p>
+				<p id="output0"></p>
 				<p id="output1"></p>
 				<p id="output2"></p> -->
 				<!-- Search Results -->
@@ -104,15 +105,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 				<p id="output3"></p>
 				<!-- warnings -->
 				<p id="output4"></p>
-				<!-- testing --> 
-				<p id="output5"></p> 
+				<!-- testing -->
+				<p id="output5"></p>
 				<br><br>
 			</div>
 	</div>
 </div>
 
 <!-- Footer -->
-<footer class="w3-row-padding w3-container w3-padding-32 w3-center">  
+<footer class="w3-row-padding w3-container w3-padding-32 w3-center">
 	<div class="w3-xlarge w3-padding-32">
 		<h1 class="w3-margin w3-xlarge w3-opacity">This project was made possible by</h1>
 		<div class="w3-layout-container">
@@ -136,7 +137,7 @@ function mySmallNav() {
     var x = document.getElementById("small-nav");
     if (x.className.indexOf("w3-show") == -1) {
         x.className += " w3-show";
-    } else { 
+    } else {
         x.className = x.className.replace(" w3-show", "");
     }
 }
@@ -145,7 +146,7 @@ function myAccordion(id) {
     var x = document.getElementById(id);
     if (x.className.indexOf("w3-show") == -1) {
         x.className += " w3-show";
-    } else { 
+    } else {
         x.className = x.className.replace(" w3-show", "");
     }
 }
@@ -166,7 +167,7 @@ function myFunction() {
 	else{
 	    document.getElementById("output3").innerHTML = "error";
 	}
- 
+
 }
 
 function transposeOTP(inputline){
@@ -181,79 +182,79 @@ function transposeOTP(inputline){
     var warningIndex = 0;
 	var wi = 0;
     var wiPlus = 1;
-	
-	var numCloseParens = 0; 
+
+	var numCloseParens = 0;
 	var totalCloseParens = 0;
-	var numOpenParens = 0; 
-	var totalOpenParens = 0; 
-	
+	var numOpenParens = 0;
+	var totalOpenParens = 0;
+
 	// testing array
 	// var testingArray = [null, null];
-	// var testingIndex = 0; 
-    
+	// var testingIndex = 0;
+
     //make an array to receive the output of other functions and split it into output and warnings
     var outputReceiver = [null, null];
-	
+
 	// convert adj to AND
 	if (inputline.search(/adj\d?/i) >= 0 ) {
-		inputline = inputline.replace(/adj\d?/ig,"AND"); 
+		inputline = inputline.replace(/adj\d?/ig,"AND");
 		warningArray.push("<br />PubMed does not support the use of adjacency. Converted ADJ to AND."); // warning message
 		warningIndex++;
 	}
 	else {
 		// do nothing
 	}
-	
+
     //split user input by any OR operators and put the pieces into an array
     var orArray = inputline.split(/ OR /i);
-	var orLengthCounter = orArray.length - 1; // for nested parenthasis 
+	var orLengthCounter = orArray.length - 1; // for nested parenthasis
     var orLength = orArray.length;
-	var mostRecentTag = ""; 
-	
-		// nested parenthasis 
+	var mostRecentTag = "";
+
+		// nested parenthasis
 		for (i = orLengthCounter; i >= 0; i--){
-  
+
             //split the string by any AND operators and put the pieces into an array
             var andArray = orArray[i].split(/ AND /i);
-			var andLengthCounter = andArray.length - 1; // for nested parenthasis 
+			var andLengthCounter = andArray.length - 1; // for nested parenthasis
             var andLength = andArray.length;
-			
-				// nested parenthasis 
+
+				// nested parenthasis
 				for (j = andLengthCounter; j >= 0; j--){
 
                 	//split the string by any NOT operators and put the pieces into an array
                     var notArray = andArray[j].split(/ NOT /i);
-					var notLengthCounter = notArray.length - 1; // for nested parenthasis 
+					var notLengthCounter = notArray.length - 1; // for nested parenthasis
                     var notLength = notArray.length;
-					
-					// nested parenthasis 
+
+					// nested parenthasis
 					for (k = notLengthCounter; k >= 0; k--){
-					
+
                     // is it a MeSH term?
-                    if (notArray[k].search(/\//) >= 0|notArray[k].search(".fs") >= 0|notArray[k].search(".xs") >= 0|notArray[k].search(".sh") >= 0){            
+                    if (notArray[k].search(/\//) >= 0|notArray[k].search(".fs") >= 0|notArray[k].search(".xs") >= 0|notArray[k].search(".sh") >= 0){
 						outputReceiver = formatMesh(notArray[k]);
 						notArray[k] = outputReceiver[0];
 						warningArray[warningIndex] = outputReceiver[1];
                     }
 
                     // is the term a keyword?
-                    else {	
+                    else {
 						// if a regular keyword
-						if (notArray[k].search(/\./) >= 0) { // 
-							var mostRecentTagArray = notArray[k].match(/\.[a-zA-Z,/-]+/); 
-							mostRecentTag = mostRecentTagArray[0]; // mostRecentTag = keyword field code 
+						if (notArray[k].search(/\./) >= 0) { //
+							var mostRecentTagArray = notArray[k].match(/\.[a-zA-Z,/-]+/);
+							mostRecentTag = mostRecentTagArray[0]; // mostRecentTag = keyword field code
 						}
 						// if no field codes --> .af
-						if (mostRecentTag == "") { 
-							warningArray.push("<br />The term <b>" + notArray[k].replace(/[()*$"]/g,"") + "</b> does not have a field code. The <b>[All Fields]</b> code has been applied."); 
+						if (mostRecentTag == "") {
+							warningArray.push("<br />The term <b>" + notArray[k].replace(/[()*$"]/g,"") + "</b> does not have a field code. The <b>[All Fields]</b> code has been applied.");
 							warningIndex++;
-							notArray[k] = notArray[k] + ".af"; 
-						}	
-						
+							notArray[k] = notArray[k] + ".af";
+						}
+
 						if (notArray[k].search(/[)]/) > 0) {
 							numCloseParens = notArray[k].match(/[)]/g).length;
 						}
-						
+
 						if (numCloseParens != null){
 							totalCloseParens = totalCloseParens + numCloseParens;
 						}
@@ -261,7 +262,7 @@ function transposeOTP(inputline){
 						if (notArray[k].search(/[(]/) > 0) {
 							numOpenParens = notArray[k].match(/[(]/g).length;
 						}
-						
+
 						if (numOpenParens != null){
 							totalOpenParens = totalOpenParens + numOpenParens;
 						}
@@ -280,27 +281,27 @@ function transposeOTP(inputline){
 								notArray[k] = notArray[k] + mostRecentTag;
 							}
 						}
-						
-						// all keyword processing 
+
+						// all keyword processing
 						outputReceiver = formatKeyword(notArray[k]);
 						notArray[k] = outputReceiver[0];
 						warningArray[warningIndex] = outputReceiver[1];
                     }
                     warningIndex++;
-					// testingIndex++; 
+					// testingIndex++;
 
 				} // notLengthCounter
                 andArray[j] = notArray.join(" NOT ");
 			} // andLengthCounter
             orArray[i] = andArray.join(" AND ");
 		} // orLengthCounter
-        outputline = orArray.join(" OR ");	
-	
-	// filter underdefined, null from warning array 
-	warningArray = warningArray.filter(String);  
-	
+        outputline = orArray.join(" OR ");
+
+	// filter underdefined, null from warning array
+	warningArray = warningArray.filter(String);
+
 	var warningString = warningArray.join(""); // warning array into one string
-	
+
 	document.getElementById("output3").innerHTML = outputline;
     document.getElementById("output4").innerHTML = warningString;
 	//document.getElementById("output5").innerHTML = testingArray;
@@ -311,39 +312,39 @@ function transposeOTP(inputline){
 function formatMesh (fmString) {
 
     // make a variable to hold any warnings
-    var fmWarningArray = [null, null];  
+    var fmWarningArray = [null, null];
 
     // make an array to hold the outputs (string and warnings)
     var fmOutputArray = [null, null];
-    
-    var tempArray = []; 
-    var subHeadingArray2 = []; 
-    
-    var c; 
-	var i; 
-    var j; 
-	var k; 
-	var l; 
-	var z; 
-    
-    // subheadings 
+
+    var tempArray = [];
+    var subHeadingArray2 = [];
+
+    var c;
+	var i;
+    var j;
+	var k;
+	var l;
+	var z;
+
+    // subheadings
     var subHeadingList = ["Abnormalities", "Administration and Dosage", "Adverse Effects", "Agonists", "Analogs and Derivatives", "Analysis", "Anatomy and Histology", "Antagonists and Inhibitors", "Biosynthesis", "Blood Supply", "Blood", "Cerebrospinal Fluid", "Chemical Synthesis", "Chemically Induced", "Chemistry", "Classification", "Complications", "Congenital", "Contraindications", "Cytology", "Deficiency", "Diagnosis", "Diagnostic Use", "Diet Therapy", "Diagnostic Imaging", "Drug Effects", "Drug Therapy", "Economics", "Education", "Embryology", "Enzymology", "Epidemiology", "Ethics", "Ethnology", "Etiology", "Genetics", "Growth and Development", "History", "Immunology", "Injuries", "Innervation", "Instrumentation", "Isolation and Purification", "Legislation and Jurisprudence", "Manpower", "Metabolism", "Methods", "Microbiology", "Mortality", "Nursing", "Organization and Administration", "Parasitology", "Pathogenicity", "Pathology", "Pharmacokinetics", "Pharmacology", "Physiology", "Physiopathology", "Poisoning", "Prevention and Control", "Psychology", "Radiation Effects", "Radiotherapy", "Rehabilitation", "Secondary", "Secretion", "Standards", "Statistics and Numerical Data", "Supply and Distribution", "Surgery", "Therapeutic Use", "Therapy", "Toxicity", "Transmission", "Transplantation", "Trends", "Ultrastructure", "Urine", "Utilization", "Veterinary", "Virology"];
-	var subHeadingCode = ["AB", "AD", "AE", "AG", "AA", "AN", "AH", "AI", "BI", "BS", "BL", "CF", "CS", "CI", "CH", "CL", "CO", "CN", "CT", "CY", "DF", "DI","DU", "DH", "DG", "DE", "DT", "EC", "ED", "EM", "EN", "EP", "ES", "EH", "ET", "GE", "GD", "HI", "IM", "IN", "IR", "IS", "IP", "LJ", "MA", "ME", "MT", "MI", "MO", "NU", "OG", "PS", "PY", "PA", "PK", "PD", "PH", "PP", "PO", "PC", "PX", "RE", "RT", "RH", "SC", "SE", "ST", "SN", "SD", "SU", "TU", "TH", "TO", "TM", "TR", "TD", "UL", "UR", "UT", "VE", "VI"];  
-	var subHeadingExplode = ["AN", "AH", "CY", "EM", "CH", "DI", "ET", "CO", "MI", "OG", "PD", "AE", "PH", "ME", "SN", "EP", "TU", "TH", "SU"]; 		
-			
+	var subHeadingCode = ["AB", "AD", "AE", "AG", "AA", "AN", "AH", "AI", "BI", "BS", "BL", "CF", "CS", "CI", "CH", "CL", "CO", "CN", "CT", "CY", "DF", "DI","DU", "DH", "DG", "DE", "DT", "EC", "ED", "EM", "EN", "EP", "ES", "EH", "ET", "GE", "GD", "HI", "IM", "IN", "IR", "IS", "IP", "LJ", "MA", "ME", "MT", "MI", "MO", "NU", "OG", "PS", "PY", "PA", "PK", "PD", "PH", "PP", "PO", "PC", "PX", "RE", "RT", "RH", "SC", "SE", "ST", "SN", "SD", "SU", "TU", "TH", "TO", "TM", "TR", "TD", "UL", "UR", "UT", "VE", "VI"];
+	var subHeadingExplode = ["AN", "AH", "CY", "EM", "CH", "DI", "ET", "CO", "MI", "OG", "PD", "AE", "PH", "ME", "SN", "EP", "TU", "TH", "SU"];
+
 	// publication types
 	var pubType = ["addresses", "autobiography", "bibliography", "biography", "case reports", "classical article", "clinical conference", "clinical study", "clinical trial", "clinical trial, phase i", "clinical trial, phase ii", "clinical trial, phase iii", "clinical trial, phase iv", "collected works", "comparative study", "congresses", "consensus development conference", "consensus development conference, nih", "controlled clinical trial", "dataset", "dictionary", "directory", "duplicate publication", "editorial", "english abstract", "evaluation studies", "festschrift", "government publications", "guideline", "historical article", "interactive tutorial", "interview", "introductory journal article", "journal article", "lectures", "legal cases", "legislation", "letter", "meta-analysis", "meta analysis", "multicenter study", "news", "newspaper article", "observational study", "overall", "patient education handout", "periodical index", "personal narratives", "portraits", "practice guideline", "pragmatic clinical trial", "publication components", "publication formats", "publication type category", "randomized controlled trial", "research support, american recovery and reinvestment act", "research support, n.i.h., extramural", "research support, n.i.h., intramural", "research support, non-u.s. gov't research support, u.s. gov't, non-p.h.s.", "research support, u.s. gov't, p.h.s.", "review", "scientific integrity review", "study characteristics", "support of research", "technical report", "twin study", "validation studies", "video-audio media", "webcasts"];
 
-    // .sh syntax 
+    // .sh syntax
     if (fmString.search(".sh") >= 0) {
     	fmString = fmString.replace(".sh","/");
     }
 
-	// floating or exploded subheadings	
-    if (fmString.search(/\.fs/i) >= 0|fmString.search(/\.xs/i) >= 0) { 
-    	fmString = fmString.toUpperCase(); 
-    	fmSubheadingArray = fmString.split("."); 
-    	
+	// floating or exploded subheadings
+    if (fmString.search(/\.fs/i) >= 0|fmString.search(/\.xs/i) >= 0) {
+    	fmString = fmString.toUpperCase();
+    	fmSubheadingArray = fmString.split(".");
+
     	for (c=0; c < subHeadingCode.length; c++) {
     		if (fmSubheadingArray[0] == subHeadingCode[c]) {
     			fmSubheadingArray[0] = fmSubheadingArray[0].replace(fmSubheadingArray[0],subHeadingList[c]);
@@ -358,87 +359,87 @@ function formatMesh (fmString) {
 		fmSubheadingArray[0] = addQuotes(fmSubheadingArray[0]);
 		fmString = fmSubheadingArray[0] + fmSubheadingArray[1];
     } // end .fs and .xs processing
-    
-	
+
+
 	// regular Mesh processing
 	else {
 		// containers to hold parts of the input string
  		var fmBeg = new RegExp(/^[\n\r (]*/); // matches anything before mesh
- 		fmBeg = fmBeg.exec(fmString); 
- 			
+ 		fmBeg = fmBeg.exec(fmString);
+
  		var fmMesh = new RegExp(/[a-zA-Z, "*]+[a-zA-Z, "()-]*(?="?\/)/); // match the mesh term, incl ""
- 		fmMesh = fmMesh.exec(fmString); 
- 		
+ 		fmMesh = fmMesh.exec(fmString);
+
  		var fmSubHead = new RegExp(/[\/][.,a-zA-Z ]*/); // matches subheadings and slash
- 		fmSubHead = fmSubHead.exec(fmString); 
- 		
+ 		fmSubHead = fmSubHead.exec(fmString);
+
  		var fmEnd = new RegExp(/[ )\r\n]*$/); // matches end parenthesis
- 		fmEnd = fmEnd.exec(fmString); 
- 		
- 		var fmMeshType = ""; // to hold type of mesh 
-		
+ 		fmEnd = fmEnd.exec(fmString);
+
+ 		var fmMeshType = ""; // to hold type of mesh
+
 		// publication type processing
 		for (i = 0; i < pubType.length; i++) {
 			if (fmMesh[0].toLowerCase() == pubType[i]) {
-				fmMeshType = "[ptyp]"; 
+				fmMeshType = "[ptyp]";
 			}
 		}
-		
+
 		// mesh type processing
 		if (fmMeshType == "[ptyp]"){
 			// do nothing
 		}
-		else if (fmString.search(/\*/) >= 0 && fmString.search(/exp /i) >= 0){ 		
-			fmMeshType = "[majr]"; 
+		else if (fmString.search(/\*/) >= 0 && fmString.search(/exp /i) >= 0){
+			fmMeshType = "[majr]";
 		}
-		else if (fmString.search(/\*/) >= 0){ 	
-			fmMeshType = "[majr:noexp]"; 	
-		} 
-		else if (fmString.search(/exp /i) >= 0){	
-			fmMeshType = "[mesh]";	
+		else if (fmString.search(/\*/) >= 0){
+			fmMeshType = "[majr:noexp]";
 		}
-		else {  
-			fmMeshType = "[mesh:noexp]";	
+		else if (fmString.search(/exp /i) >= 0){
+			fmMeshType = "[mesh]";
 		}
-			
+		else {
+			fmMeshType = "[mesh:noexp]";
+		}
+
  		// format subheadings
-  		if (fmSubHead[0].search(/[a-zA-Z ,.\r\n]$/) >= 0) { // if contains subheadings 
-  			// split into array 
+  		if (fmSubHead[0].search(/[a-zA-Z ,.\r\n]$/) >= 0) { // if contains subheadings
+  			// split into array
   			fmSubHead[0] = fmSubHead[0].toUpperCase(); // uppercase to match subheading code array above
 			fmSubHead[0] = fmSubHead[0].replace(/[\/]/,""); // remove slash
   			var subHeadingArray = fmSubHead[0].split(","); // array of subheading codes from user input
-  			 
+
   			// go through each subheading in array
-			for (k=0; k < subHeadingArray.length; k++) {	
-			
-				subHeadingArray[k] = subHeadingArray[k].replace(/\s/g,''); // remove any spaces 
-				
-				// search for diagnostic use -- no longer used 
+			for (k=0; k < subHeadingArray.length; k++) {
+
+				subHeadingArray[k] = subHeadingArray[k].replace(/\s/g,''); // remove any spaces
+
+				// search for diagnostic use -- no longer used
 				if (subHeadingArray[k].search("DU") >= 0) { // mesh contains subheading Diagnostic Use
 					fmWarningArray.push("<br />The subheading <b>Diagnostic Use</b> is no longer used. Remove it from your search or replace it with another subheading.");
 				}
-				
+
 				// radiography subheading
 				if (subHeadingArray[k].search("RA") >= 0) {
-					subHeadingArray[k] = "DG"; 
+					subHeadingArray[k] = "DG";
 					fmWarningArray.push("<br />The subheading <b>Radiography</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
-				}	
-				
+				}
+
 				// radionuclide subheading
 				if (subHeadingArray[k].search("RI") >= 0) {
-					subHeadingArray[k] = "DG"; 
+					subHeadingArray[k] = "DG";
 					fmWarningArray.push("<br />The subheading <b>radionuclide</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
-				}	
-				
+				}
+
 				// ultrasonography subheading
 				if (subHeadingArray[k].search("US") >= 0) {
-					subHeadingArray[k] = "DG"; 
+					subHeadingArray[k] = "DG";
 					fmWarningArray.push("<br />The subheading <b>ultrasonographye</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
-				}	
-			
-				// if a match with exploded subheadings list 
+				}
+
+				// if a match with exploded subheadings list
 				for (l = 0; l < subHeadingExplode.length; l++) {
-			
+
 					if (subHeadingArray[k] == subHeadingExplode[l]) {
 						if (fmMeshType.search("noexp") >= 0) { // mesh contains noexp
 							// do nothing
@@ -447,70 +448,70 @@ function formatMesh (fmString) {
 							fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. The exploded subheadings have been added to the search. For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 							switch (subHeadingArray[k]) {
 								case "AN":
-									tempArray.push("BL","CF","IP","UR"); 
-									break; 
+									tempArray.push("BL","CF","IP","UR");
+									break;
 								case "CY":
-									tempArray.push("UL"); 
-									break; 
+									tempArray.push("UL");
+									break;
 								case "EM":
-									tempArray.push("AB"); 
-									break; 
+									tempArray.push("AB");
+									break;
 								case "AH":
-									tempArray.push("AG","AA","AI","CS"); 
-									break; 
+									tempArray.push("AG","AA","AI","CS");
+									break;
 								case "DI":
-									tempArray.push("DG"); 
-									break; 
+									tempArray.push("DG");
+									break;
 								case "CO":
-									tempArray.push("SC"); 
-									break; 
+									tempArray.push("SC");
+									break;
 								case "MI":
-									tempArray.push("VI"); 
-									break; 
+									tempArray.push("VI");
+									break;
 								case "ET":
-									tempArray.push("CI","CO","SC","CN","EM","GE","IM","MI","VI","PS","TM"); 
-									break; 
+									tempArray.push("CI","CO","SC","CN","EM","GE","IM","MI","VI","PS","TM");
+									break;
 								case "OG":
-									tempArray.push("EC","LJ","MA","ST","SD","TD","UT"); 
-									break; 
+									tempArray.push("EC","LJ","MA","ST","SD","TD","UT");
+									break;
 								case "AE":
-									tempArray.push("PO","TO"); 
-									break; 
+									tempArray.push("PO","TO");
+									break;
 								case "PD":
-									tempArray.push("AD","AE","PO","TO","AG","AI","CT","PK"); 
-									break; 
+									tempArray.push("AD","AE","PO","TO","AG","AI","CT","PK");
+									break;
 								case "ME":
-									tempArray.push("BI","BL","CF","DF","EN","PK","UR"); 
-									break; 				
+									tempArray.push("BI","BL","CF","DF","EN","PK","UR");
+									break;
 								case "PH":
-									tempArray.push("GE","GD","IM","ME","BI","BL","CF","DF","EN","PK","UR","PP","SE"); 
-									break; 
+									tempArray.push("GE","GD","IM","ME","BI","BL","CF","DF","EN","PK","UR","PP","SE");
+									break;
 								case "EP":
-									tempArray.push("EH","MO"); 
-									break; 
+									tempArray.push("EH","MO");
+									break;
 								case "SN":
-									tempArray.push("EP","EH","MO","SD","UT"); 
-									break; 
+									tempArray.push("EP","EH","MO","SD","UT");
+									break;
 								case "TU":
-									tempArray.push("AD","AE","CT","PO"); 
+									tempArray.push("AD","AE","CT","PO");
 									break;
 								case "SU":
-									tempArray.push("TR"); 
+									tempArray.push("TR");
 									break;
 								case "TH":
-									tempArray.push("DH","DT","NU","PC","RT","RH","SU","TR"); 
+									tempArray.push("DH","DT","NU","PC","RT","RH","SU","TR");
 									break;
 							}
 						}
-					} 
+					}
 				} // end subHeadingExplode for loop
-				
-				subHeadingArray2 = subHeadingArray.concat(tempArray);  
+
+				subHeadingArray2 = subHeadingArray.concat(tempArray);
 			} // end subHeadingList for loop
-			
+
 		// go through each subheading in array (second time)
 		for (k=0; k < subHeadingArray2.length; k++) {
-			
+
 			// convert user input subheading abbreviations into full phrases
 				for (j = 0; j < subHeadingList.length; j++) {
 					if (subHeadingArray2[k] == subHeadingCode[j]) {
@@ -519,93 +520,93 @@ function formatMesh (fmString) {
 					else {
 						// do nothing
 					}
-				} // end subHeadingList for loop 
-			
-			// format each subheading back into full mesh string 
+				} // end subHeadingList for loop
+
+			// format each subheading back into full mesh string
 			subHeadingArray2[k] = fmMesh[0] + "/" + subHeadingArray2[k] + fmMeshType;
-			subHeadingArray2[k] = addQuotes(subHeadingArray2[k]); // add quotes 
-		
+			subHeadingArray2[k] = addQuotes(subHeadingArray2[k]); // add quotes
+
 		} // end subHeadingArray for loop
-				
+
 			// separate each string by OR
-			fmString = subHeadingArray2.join(" OR ");	
-			
+			fmString = subHeadingArray2.join(" OR ");
+
 			fmString = fmBeg[0] + fmString + fmEnd[0]; // add any beginning parenthasis to string
-			
+
 			if (fmString.search("OR") > 0) {
-				fmString = "(" + fmString + ")"; 
+				fmString = "(" + fmString + ")";
 			}
-			
+
 		} // end subheading processing
-		
-		else { // if no subheading 
+
+		else { // if no subheading
 			fmString = fmBeg[0] + fmMesh[0] + fmMeshType + fmEnd[0]; // put all components back together
-			fmString = addQuotes(fmString); // add quotes			 
-		} // end no subheading processing	
-		
+			fmString = addQuotes(fmString); // add quotes
+		} // end no subheading processing
+
 	} // end regular mesh processing
-	
+
 	fmString = fmString.replace(/\*/g,"");  // remove focus
 	fmString = fmString.replace(/exp /ig,""); // remove explode
-	
+
  	// warning array into single string
- 	var fmWarning = fmWarningArray.join("");	
+ 	var fmWarning = fmWarningArray.join("");
 
 	fmOutputArray[0] = fmString;
     fmOutputArray[1] = fmWarning;
     return fmOutputArray;
-    
-} // function end 
+
+} // function end
 
 // ****************************************** KEYWORDS ******************************************
-function formatKeyword(kwString) {	
+function formatKeyword(kwString) {
 
-	kwTemp = kwString; 
-    
+	kwTemp = kwString;
+
     //make an array to hold any warnings
-    var kwWarningArray = []; 
+    var kwWarningArray = [];
 
     //make an array to hold the outputs (string and warnings)
     var kwOutputArray = [];
-	
+
 	// to hold array of field codes
 	var kwFieldArray = [];
-	
-	// variable to hold any beginning parenthesis 
+
+	// variable to hold any beginning parenthesis
 	var kwBeg = new RegExp(/^[\n\r (]*/);
-		kwBeg = kwBeg.exec(kwString); 
-	
-	// variable to hold any end parenthesis 
-	var kwEnd = new RegExp(/[ )\r\n]*$/); 
-		kwEnd = kwEnd.exec(kwString); 
-		
-	// variable to hold any nested parenthesis 
-		var kwNestedEnd = new RegExp(/[) ]*(?=\.)/); 
+		kwBeg = kwBeg.exec(kwString);
+
+	// variable to hold any end parenthesis
+	var kwEnd = new RegExp(/[ )\r\n]*$/);
+		kwEnd = kwEnd.exec(kwString);
+
+	// variable to hold any nested parenthesis
+		var kwNestedEnd = new RegExp(/[) ]*(?=\.)/);
 		kwNestedEnd = kwNestedEnd.exec(kwString);
- 	
- 	var kwNested = false; 
- 		
- 	if (kwString.search(/\)\./) >= 0) { // if nested parenthesis 
-	 	kwNested = true; 
-	}	
-	else { 
-		kwNested = false; 
-	}	
+
+ 	var kwNested = false;
+
+ 	if (kwString.search(/\)\./) >= 0) { // if nested parenthesis
+	 	kwNested = true;
+	}
+	else {
+		kwNested = false;
+	}
 
     kwString = kwString.replace(/[()]*/g,""); // remove any parenthesis (stored in kwEnd,kwBeg)
     var kwArray = kwString.split("."); // split into kw and field codes
     kwArray[1] = kwArray[1].replace(/\s/g,""); // remove any spaces from field codes
-	
+
 	if (kwArray[1].search(/ti,ab/i) >= 0) { // ti,ab --> tiab
-		kwArray[1] = kwArray[1].replace(/ti,ab/,"tiab");  
+		kwArray[1] = kwArray[1].replace(/ti,ab/,"tiab");
 	}
-	
-	if (kwArray[1].search(/[a-zA-Z]/) >= 0) { // if there are any field codes 
+
+	if (kwArray[1].search(/[a-zA-Z]/) >= 0) { // if there are any field codes
 		kwFieldArray = kwArray[1].split(","); // field codes into array
 	}
-	
-    var b; 
-    
+
+    var b;
+
     // loop through field codes applied to kw
     for (b = 0; b < kwFieldArray.length; b++) {
     	// convert field codes
@@ -618,7 +619,7 @@ function formatKeyword(kwString) {
 		else if (kwFieldArray[b].search(/mp/i) >= 0){ // multipurpose
 			kwFieldArray[b] = kwFieldArray[b].replace(/mp/i,"[tiab]");
 			kwWarningArray.push("<br />The multipurpose (mp) field tag searches the following fields in ovid: title, original title, abstract, name of substance word, and subject heading word. However, heading word is not a field code in PubMed. Translated as mesh heading (mh).");
-			kwFieldArray.push("ot","nm","hw"); 
+			kwFieldArray.push("ot","nm","hw");
 		}
 		else if (kwFieldArray[b].search(/ti/i) >= 0){ // title
 			kwFieldArray[b] = kwFieldArray[b].replace(/ti/i,"[ti]");
@@ -654,73 +655,73 @@ function formatKeyword(kwString) {
 		else if (kwFieldArray[b].search(/hw/i) >= 0){ // heading word (no translation)
 			kwFieldArray[b] = kwFieldArray[b].replace(/hw/i,"[mh]");
 		}
-		else if (kwFieldArray[b].search(/sb/i) >= 0){ // journal subset 
+		else if (kwFieldArray[b].search(/sb/i) >= 0){ // journal subset
 			kwFieldArray[b] = kwFieldArray[b].replace(/sb/i,"[sb]");
 		}
 		else {
 		}
-		
+
 		// add quotes
 		if (kwArray[0].search(/\*/g) >= 0) { // truncation * is used (end of kw)
 			// don't add quotes
 			// remove any existing quotes
-			kwArray[0] = kwArray[0].replace(/\"/g,""); 
+			kwArray[0] = kwArray[0].replace(/\"/g,"");
 		}
 		else if (kwArray[0].search(/\$/g) >= 0) { // truncation $ is used (end of kw)
 			kwArray[0] = kwArray[0].replace(/\$/,"*"); // convert $ --> *
 			// don't add quotes
 			// remove any existing quotes
-			kwArray[0] = kwArray[0].replace(/\"/g,""); 
+			kwArray[0] = kwArray[0].replace(/\"/g,"");
 		}
-		else if (kwArray[0].search(/[A-Za-z][\?\#][A-Za-z]/) >= 0) { // wildcard ? or # is used 
-			kwWarningArray.push("<br />PubMed does not support wildcards. For the most accurate translation, write out all possible word combinations."); 
+		else if (kwArray[0].search(/[A-Za-z][\?\#][A-Za-z]/) >= 0) { // wildcard ? or # is used
+			kwWarningArray.push("<br />PubMed does not support wildcards. For the most accurate translation, write out all possible word combinations.");
 		}
-		else { 
+		else {
 			kwArray[0] = addQuotes(kwArray[0]); // normal keyword; add quotations
 		}
-		
-		// format back into full keyword strings		
+
+		// format back into full keyword strings
 		kwFieldArray[b] = kwArray[0] + kwFieldArray[b];
-		
+
 		// keyword strings into one string
 		kwString = kwFieldArray.join(" OR ");
-		
+
 		if (kwString.search("OR") > 0) { // add parenthesis around kw with multiple field codes separated by OR
 			kwString = "(" + kwString + ")";
 		}
-	} // end for loop 
-	
-	if (kwNested == true) { // if nested parenthesis 
+	} // end for loop
+
+	if (kwNested == true) { // if nested parenthesis
 		kwString = kwBeg + kwString + kwNestedEnd + kwEnd;
 	}
 	else { // if non-nested parenthesis
-		kwString = kwBeg + kwString + kwEnd; 
+		kwString = kwBeg + kwString + kwEnd;
 	}
-	
-	// kwString = kwTemp; 
-	
-	// warnings into single string 
+
+	// kwString = kwTemp;
+
+	// warnings into single string
 	var kwWarningString = kwWarningArray.join("");
-	
+
 	kwOutputArray[0] = kwString;
     kwOutputArray[1] = kwWarningString;
     return kwOutputArray;
-    
-} // function end 
+
+} // function end
 
 // ****************************************** ADD QUOTES ******************************************
 function addQuotes(aqString) {
 
-	if (aqString.search(/\"/) >= 0) { // if string already has quotes 
-		// do nothing 
+	if (aqString.search(/\"/) >= 0) { // if string already has quotes
+		// do nothing
 	}
-	
+
 	else {
-		aqString = aqString.replace(/[a-zA-Z\d \/,*-]+/,"\"$&\""); // add quotes 
+		aqString = aqString.replace(/[a-zA-Z\d \/,*-]+/,"\"$&\""); // add quotes
 	}
-	return aqString; 
-	
-} // function end 
+	return aqString;
+
+} // function end
 
 //*********************************************PTO functions start***********************************************
 
