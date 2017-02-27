@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<link rel="stylesheet" href="w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+.w3-navbar,h1,button {font-family: sans-serif}
+.fa-anchor,.fa-coffee {font-size:200px}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <ul class="w3-navbar w3-blue-grey w3-card-2 w3-left-align w3-large">
+    <li class="w3-hide-medium w3-hide-large w3-blue-grey w3-opennav w3-right">
+      <a class="w3-padding-large w3-hover-white w3-large w3-blue-grey" href="javascript:void(0);" onClick="mySmallNav()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    </li>
+    <li class="w3-hide-small"><a href="index.html" class="w3-padding-large w3-hover-white">Home</a></li>
+    <li class="w3-hide-small"><a href="about.html" class="w3-padding-large w3-hover-white">About</a></li>
+    <li class="w3-hide-small"><a href="documentation.html" class="w3-padding-large w3-white">Documentation</a></li>
+  </ul>
+
+  <!-- Navbar on small screens -->
+  <div id="small-nav" class="w3-hide w3-hide-large w3-hide-medium">
+    <ul class="w3-navbar w3-left-align w3-large w3-blue-grey">
+      <li><a class="w3-padding-large" href="index.html">Home</a></li>
+      <li><a class="w3-padding-large" href="about.html">About</a></li>
+      <li><a class="w3-padding-large" href="documentation.html">Documentation</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="w3-container w3-blue-grey w3-center w3-padding-64">
+	<h1 class="w3-margin w3-jumbo">Medline Transpose</h1>
+	<p class="w3-xlarge">Translate a search query between Ovid Medline and PubMed syntax</p>
+</header>
+
+<!-- How it works -->
+<div class="w3-row-padding w3-theme-l4 w3-container">
+	<div class="w3-content">
+		<div class="w3-container">
+			<b><p class="w3-xlarge">How Medline Transpose works</p></b>
+
+      <p>First, Transpose looks for all of the boolean operators in your strategy. It assumes that all of the text which are not boolean operators are search terms, and makes a list of all of these.</p>
+
+      <p>Transpose then looks at each item in the list in turn. It uses simple pattern matching to identify standard search syntax, and uses these to decide what type of term it is. For instance, if it sees exp something/, it decides that this is a MeSH term.</p>
+
+      <p>Once Transpose has decided what type of term it is looking at, it sends the term to be processed accordingly. If you specified Ovid to PubMed, it will take the term and convert it to PubMed syntax, or vice versa if you specified PubMed to Ovid. The process used is similar to Find and Replace.</p>
+
+      <p>Some terms require additional processing. For instance, if your term is a MeSH term, Transpose will check to see if it has any subheadings and send the subheading for additional processing before it finishes the conversion. Also, Transpose checks for specific situations in which a warning might be needed, for instance if an exact translation is not available.</p>
+
+      <p>We decided to make the conversion as accurate as possible. Thus, if there is not an exact match between the two databases, we have chosen the translation which will provide the search which is as close as possible to the original strategy. In some cases, this may result in a longer strategy than expected.</p>
+
+      <p>After Transpose has translated each item in the list, it puts the boolean operators back in between each of the items, and displays the new strategy on the website. It also displays any warnings or suggestions which were relevant.</p>
+      <div class="w3-padding-8"></div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- What it doesn't do -->
+<div class="w3-row-padding w3-theme-l3 w3-container">
+	<div class="w3-content">
+		<div class="w3-container">
+			<b><p class="w3-xlarge">What Medline Transpose doesn't do</p></b>
+
+      <p>Transpose only looks at the syntax of the search, not the MeSH terms and keywords which you used. If you enter something which is not a MeSH term using MeSH syntax, the programme will translate it as if it were a real MeSH term. That is, if you enter exp Deliberately Silly Example/, Transpose will return "Deliberately Silly Example"[Mesh]. This includes former MeSH terms which have been changed or deleted - Transpose will translate them just as if they were still valid. Likewise, Transpose will not evaluate the quality of your search strategy.</p>
+
+      <p>Transpose is only intended for translating between these two versions of Medline. It is not intended for translating to any other Ovid databases, e.g. EMBASE. That being said, if you enter a keyword-only search, and the PubMed tags which you use happen to correspond to search fields in the other Ovid database, it is possible that you could get a usable search strategy. However, if you attempt this, please check over the search strategy carefully, and be aware that it is quite likely that there will be incorrect translations, since you are using Transpose in a way that it was not intended to be used.</p>
+
+      <p>The PubMed interface will accept a keyword or phrase without any syntax or tags, and usually will make an attempt to map it to MeSH headings, and otherwise process the request. Transpose does not have the capability to replicate what PubMed does, and simply translates this as an "all fields" search in Ovid Medline, which is PubMed's default output if it can't map the keyword/phrase. If you wish to replicate PubMed's exact translation of a term without syntax, enter your term into PubMed. Look on the right-hand side of your search results for the Search Details box. Then, copy and paste the contents of the Search Details box into Transpose.</p>
+
+      <p>Currently Transpose doesn't translate any strategies which involve dates. That is next on our to-do list (as soon as we fix all of the bugs…)</p>
+
+      <p>Currently Transpose doesn't translate PubMed Filters nor Ovid limits. So, you can enter something like english[lang] OR english.lg., but not Filters: english or "limit search x to english language". We plan to make those available in future (just as soon as we figure out how!)</p>
+      <div class="w3-padding-8"></div>
+
+    </div>
+  </div>
+</div>
+
+
+      <!-- Disclaimer-->
+<div class="w3-row-padding w3-theme-l4 w3-container">
+  <div class="w3-content">
+  	<div class="w3-container">
+  		<b><p class="w3-xlarge">Disclaimer</p></b>
+      <p>Transpose is a simple javascript application with no artificial intelligence system. It is intended to provide a basic conversion between the syntax of two medline interfaces for the sake of convenience only. It is possible that a mistake or inaccuracy may occur. We make no guarantees, and are not liable if any translations are inaccurate (but if you find a bug, please let us know!). Please check over the translations carefully before using them. Transpose is not a substitute for the judgement of someone trained in the use of Ovid Medline or PubMed.</p>
+
+      <p>An understanding of how Transpose works and its limitations - as well as an understanding of the medline database - will help you in obtaining an accurate and usable translation.</p>
+
+			<h4>Found a bug or have a suggestion? Contact the creators at medlinetranspose AT gmail DOT com.</h4>
+      <div class="w3-padding-8"></div>
+
+		</div>
+	</div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-row-padding w3-container w3-padding-32 w3-center">
+	<div class="w3-xlarge w3-padding-32">
+		<h1 class="w3-margin w3-xlarge w3-opacity">This project was made possible by</h1>
+		<div class="w3-layout-container">
+		<div class="w3-container w3-layout-cell">
+		<img src="CLAHRC-logo-1.jpg" alt="Plymouth University Peninsula Schools of Medicine & Dentistry" class="w3-image">
+		</div>
+		<div class="w3-container w3-layout-cell">
+		<img src="CLAHRC-logo-2.jpg" alt="NIHR CLAHRC South West Peninsula" class="w3-image">
+		</div>
+		<div class="w3-container w3-layout-cell">
+		<img src="CPSBC-logo.jpg" alt="College of Physicians and Surgeons of British Columbia" class="w3-image">
+		</div>
+		</div>
+ 	</div>
+		<p>Powered by <a href="http://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+<script>
+
+function mySmallNav() {
+    var x = document.getElementById("small-nav");
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else {
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+
+</script>
+</body>
