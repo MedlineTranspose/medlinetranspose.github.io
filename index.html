@@ -1309,20 +1309,15 @@ function formatKeywordPTO(kwString) {
     var fkwOutputArray = [null, null];
 
     //reformat keywords being searched in the title and abstract
-    if (kwString.search(/\[tiab/i) >= 0){
+    if (kwString.search(/\[ti/i) >= 0){
         kwString = kwString.replace(/\[tiab\]/i,".ti,ab.");
+	kwString = kwString.replace(/\[title\]/i,".ti.");
+	kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab.");
+	kwString = kwString.replace(/\[ti\]/i,".ti.");
     }
     //reformat keywords being searched in all fields
     else if (kwString.search(/\[All fields/i) >= 0){
         kwString = kwString.replace(/\[All fields\]/i,".af.");
-    }
-
-    //reformat keywords being searched in the title field.
-    else if (kwString.search(/\[title/i) >= 0){
-        kwString = kwString.replace(/\[title\]/i,".ti.");
-    }
-    else if (kwString.search(/\[ti/i) >= 0){
-        kwString = kwString.replace(/\[ti\]/i,".ti.");
     }
 
     //reformat keywords being searched in Text Words (this is precise according to PubMed documentation) Add a suggestion: .mp. as an alternate.
