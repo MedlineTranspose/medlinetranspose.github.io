@@ -350,14 +350,14 @@ function formatMesh (fmString) {
     var subHeadingArray2 = [];
 
     var c;
-	var i;
+	  var i;
     var j;
-	var k;
-	var l;
-	var z;
+	  var k;
+    var l;
+	  var z;
 
     // subheadings
-    var subHeadingList = ["Abnormalities", "Administration and Dosage", "Adverse Effects", "Agonists", "Analogs and Derivatives", "Analysis", "Anatomy and Histology", "Antagonists and Inhibitors", "Biosynthesis", "Blood Supply", "Blood", "Cerebrospinal Fluid", "Chemical Synthesis", "Chemically Induced", "Chemistry", "Classification", "Complications", "Congenital", "Contraindications", "Cytology", "Deficiency", "Diagnosis", "Diagnostic Use", "Diet Therapy", "Diagnostic Imaging", "Drug Effects", "Drug Therapy", "Economics", "Education", "Embryology", "Enzymology", "Epidemiology", "Ethics", "Ethnology", "Etiology", "Genetics", "Growth and Development", "History", "Immunology", "Injuries", "Innervation", "Instrumentation", "Isolation and Purification", "Legislation and Jurisprudence", "Manpower", "Metabolism", "Methods", "Microbiology", "Mortality", "Nursing", "Organization and Administration", "Parasitology", "Pathogenicity", "Pathology", "Pharmacokinetics", "Pharmacology", "Physiology", "Physiopathology", "Poisoning", "Prevention and Control", "Psychology", "Radiation Effects", "Radiotherapy", "Rehabilitation", "Secondary", "Secretion", "Standards", "Statistics and Numerical Data", "Supply and Distribution", "Surgery", "Therapeutic Use", "Therapy", "Toxicity", "Transmission", "Transplantation", "Trends", "Ultrastructure", "Urine", "Utilization", "Veterinary", "Virology"];
+  var subHeadingList = ["Abnormalities", "Administration and Dosage", "Adverse Effects", "Agonists", "Analogs and Derivatives", "Analysis", "Anatomy and Histology", "Antagonists and Inhibitors", "Biosynthesis", "Blood Supply", "Blood", "Cerebrospinal Fluid", "Chemical Synthesis", "Chemically Induced", "Chemistry", "Classification", "Complications", "Congenital", "Contraindications", "Cytology", "Deficiency", "Diagnosis", "Diagnostic Use", "Diet Therapy", "Diagnostic Imaging", "Drug Effects", "Drug Therapy", "Economics", "Education", "Embryology", "Enzymology", "Epidemiology", "Ethics", "Ethnology", "Etiology", "Genetics", "Growth and Development", "History", "Immunology", "Injuries", "Innervation", "Instrumentation", "Isolation and Purification", "Legislation and Jurisprudence", "Manpower", "Metabolism", "Methods", "Microbiology", "Mortality", "Nursing", "Organization and Administration", "Parasitology", "Pathogenicity", "Pathology", "Pharmacokinetics", "Pharmacology", "Physiology", "Physiopathology", "Poisoning", "Prevention and Control", "Psychology", "Radiation Effects", "Radiotherapy", "Rehabilitation", "Secondary", "Secretion", "Standards", "Statistics and Numerical Data", "Supply and Distribution", "Surgery", "Therapeutic Use", "Therapy", "Toxicity", "Transmission", "Transplantation", "Trends", "Ultrastructure", "Urine", "Utilization", "Veterinary", "Virology"];
 	var subHeadingCode = ["AB", "AD", "AE", "AG", "AA", "AN", "AH", "AI", "BI", "BS", "BL", "CF", "CS", "CI", "CH", "CL", "CO", "CN", "CT", "CY", "DF", "DI","DU", "DH", "DG", "DE", "DT", "EC", "ED", "EM", "EN", "EP", "ES", "EH", "ET", "GE", "GD", "HI", "IM", "IN", "IR", "IS", "IP", "LJ", "MA", "ME", "MT", "MI", "MO", "NU", "OG", "PS", "PY", "PA", "PK", "PD", "PH", "PP", "PO", "PC", "PX", "RE", "RT", "RH", "SC", "SE", "ST", "SN", "SD", "SU", "TU", "TH", "TO", "TM", "TR", "TD", "UL", "UR", "UT", "VE", "VI"];
 	var subHeadingExplode = ["AN", "AH", "CY", "EM", "CH", "DI", "ET", "CO", "MI", "OG", "PD", "AE", "PH", "ME", "SN", "EP", "TU", "TH", "SU"];
 
@@ -474,61 +474,60 @@ function formatMesh (fmString) {
 							// do nothing
 						}
 						else {
-							fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. The exploded subheadings have been added to the search. For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 							switch (subHeadingArray[k]) {
 								case "AN":
-									tempArray.push("BL","CF","IP","UR");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>BL, CF, IP, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "CY":
-									tempArray.push("UL");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>UL.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "EM":
-									tempArray.push("AB");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>AB.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "AH":
-									tempArray.push("AG","AA","AI","CS");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AG, AA, AI, and CS.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "DI":
-									tempArray.push("DG");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>DG.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "CO":
-									tempArray.push("SC");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>SC.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "MI":
-									tempArray.push("VI");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>VI.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "ET":
-									tempArray.push("CI","CO","SC","CN","EM","GE","IM","MI","VI","PS","TM");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>CI, CO, SC, CN, EM, GE, IM, MI, VI, PS, and TM.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "OG":
-									tempArray.push("EC","LJ","MA","ST","SD","TD","UT");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EC, LJ, MA, ST, SD, TD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "AE":
-									tempArray.push("PO","TO");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>PO and TO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "PD":
-									tempArray.push("AD","AE","PO","TO","AG","AI","CT","PK");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AD, AE, PO, TO, AG, AI, CT, and PK.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "ME":
-									tempArray.push("BI","BL","CF","DF","EN","PK","UR");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>BI, BL, CF, DF, EN, PK, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "PH":
-									tempArray.push("GE","GD","IM","ME","BI","BL","CF","DF","EN","PK","UR","PP","SE");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>GE GD, IM, ME, BI, BL, CF, DF, EN, PK, UR, PP, and SE.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "EP":
-									tempArray.push("EH","MO");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EH and MO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "SN":
-									tempArray.push("EP","EH","MO","SD","UT");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EP, EH, MO, SD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "TU":
-									tempArray.push("AD","AE","CT","PO");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AD, AE, CT, and PO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "SU":
-									tempArray.push("TR");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "TH":
-									tempArray.push("DH","DT","NU","PC","RT","RH","SU","TR");
+                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>DH, DT, NU, PC, RT, RH, SU, and TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 							}
 						}
