@@ -681,6 +681,9 @@ function formatKeyword(kwString) {
     else if (kwFieldArray[b].search(/ja/i) >= 0){ // journal title abbreviated
       kwFieldArray[b] = kwFieldArray[b].replace(/ja/i,"[ta]");
     }
+    else if (kwFieldArray[b].search(/af/i) >= 0){ // all fields
+      kwFieldArray[b] = kwFieldArray[b].replace(/af/i,"[all]");
+    }
 		else if (kwFieldArray[b].search(/hw/i) >= 0){ // heading word (no translation)
 			kwFieldArray[b] = kwFieldArray[b].replace(/hw/i,"[mh]");
       kwWarningArray.push("<br />PubMed does not support heading word (.hw) searches. The closest equivalent is mesh heading [mh], which may retrieve fewer results.");
