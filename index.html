@@ -412,12 +412,12 @@ function formatMesh (fmString) {
 		// publication type processing
 		for (i = 0; i < pubType.length; i++) {
 			if (fmMesh[0].toLowerCase() == pubType[i]) {
-				fmMeshType = "[pt]";
+				fmMeshType = "[ptyp]";
 			}
 		}
 
 		// mesh type processing
-		if (fmMeshType == "[pt]"){
+		if (fmMeshType == "[ptyp]"){
 			// do nothing
 		}
 		else if (fmString.search(/\*/) >= 0 && fmString.search(/exp /i) >= 0){
