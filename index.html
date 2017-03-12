@@ -262,7 +262,7 @@ function transposeOTP(inputline){
 					for (k = notLengthCounter; k >= 0; k--){
 
                     // is it a MeSH term?
-                    if (notArray[k].search(/\//) >= 0|notArray[k].search(".fs") >= 0|notArray[k].search(".xs") >= 0|notArray[k].search(".sh") >= 0){
+                    if (notArray[k].search(/\//) >= 0|notArray[k].search(/\.fs/) >= 0|notArray[k].search(/\.xs/) >= 0|notArray[k].search(/\.sh/) >= 0){
 						outputReceiver = formatMesh(notArray[k]);
 						notArray[k] = outputReceiver[0];
 						warningArray[warningIndex] = outputReceiver[1];
@@ -412,12 +412,12 @@ function formatMesh (fmString) {
 		// publication type processing
 		for (i = 0; i < pubType.length; i++) {
 			if (fmMesh[0].toLowerCase() == pubType[i]) {
-				fmMeshType = "[ptyp]";
+				fmMeshType = "[pt]";
 			}
 		}
 
 		// mesh type processing
-		if (fmMeshType == "[ptyp]"){
+		if (fmMeshType == "[pt]"){
 			// do nothing
 		}
 		else if (fmString.search(/\*/) >= 0 && fmString.search(/exp /i) >= 0){
