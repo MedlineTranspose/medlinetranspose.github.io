@@ -262,7 +262,7 @@ function transposeOTP(inputline){
 					for (k = notLengthCounter; k >= 0; k--){
 
                     // is it a MeSH term?
-                    if (notArray[k].search(/\//) >= 0|notArray[k].search(".fs") >= 0|notArray[k].search(".xs") >= 0|notArray[k].search(".sh") >= 0){
+                    if (notArray[k].search(/\//) >= 0|notArray[k].search(/\.fs/) >= 0|notArray[k].search(/\.xs/) >= 0|notArray[k].search(/\.sh/) >= 0){
 						outputReceiver = formatMesh(notArray[k]);
 						notArray[k] = outputReceiver[0];
 						warningArray[warningIndex] = outputReceiver[1];
