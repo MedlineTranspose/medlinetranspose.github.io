@@ -36,15 +36,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 
 <!-- Header -->
 <header class="w3-container w3-blue-grey w3-center w3-padding-64">
-	<h1 class="w3-margin w3-jumbo">Medline Transpose</h1>
-	<p class="w3-xlarge">Translate a search query between Ovid Medline and PubMed syntax</p>
+	<h1 class="w3-margin w3-jumbo">MEDLINE Transpose</h1>
+	<p class="w3-xlarge">Translate a search query between Ovid MEDLINE and PubMed syntax</p>
 </header>
 
 <!-- How it works -->
 <div class="w3-row-padding w3-theme-l4 w3-container">
 	<div class="w3-content">
 		<div class="w3-container">
-			<b><p class="w3-xlarge">How Medline Transpose works</p></b>
+			<b><p class="w3-xlarge">How MEDLINE Transpose works</p></b>
 
       <p>First, Transpose looks for all of the boolean operators in your strategy. It assumes that all of the text which are not boolean operators are search terms, and makes a list of all of these.</p>
 
@@ -68,13 +68,13 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 <div class="w3-row-padding w3-theme-l3 w3-container">
 	<div class="w3-content">
 		<div class="w3-container">
-			<b><p class="w3-xlarge">What Medline Transpose doesn't do</p></b>
+			<b><p class="w3-xlarge">What MEDLINE Transpose doesn't do</p></b>
 
       <p>Transpose only looks at the syntax of the search, not the MeSH terms and keywords which you used. If you enter something which is not a MeSH term using MeSH syntax, the programme will translate it as if it were a real MeSH term. That is, if you enter exp Deliberately Silly Example/, Transpose will return "Deliberately Silly Example"[Mesh]. This includes former MeSH terms which have been changed or deleted - Transpose will translate them just as if they were still valid. Likewise, Transpose will not evaluate the quality of your search strategy.</p>
 
-      <p>Transpose is only intended for translating between these two versions of Medline. It is not intended for translating to any other Ovid databases, e.g. EMBASE. That being said, if you enter a keyword-only search, and the PubMed tags which you use happen to correspond to search fields in the other Ovid database, it is possible that you could get a usable search strategy. However, if you attempt this, please check over the search strategy carefully, and be aware that it is quite likely that there will be incorrect translations, since you are using Transpose in a way that it was not intended to be used.</p>
+      <p>Transpose is only intended for translating between these two versions of MEDLINE. It is not intended for translating to any other Ovid databases, e.g. EMBASE. That being said, if you enter a keyword-only search, and the PubMed tags which you use happen to correspond to search fields in the other Ovid database, it is possible that you could get a usable search strategy. However, if you attempt this, please check over the search strategy carefully, and be aware that it is quite likely that there will be incorrect translations, since you are using Transpose in a way that it was not intended to be used.</p>
 
-      <p>The PubMed interface will accept a keyword or phrase without any syntax or tags, and usually will make an attempt to map it to MeSH headings, and otherwise process the request. Transpose does not have the capability to replicate what PubMed does, and simply translates this as an "all fields" search in Ovid Medline, which is PubMed's default output if it can't map the keyword/phrase. If you wish to replicate PubMed's exact translation of a term without syntax, enter your term into PubMed. Look on the right-hand side of your search results for the Search Details box. Then, copy and paste the contents of the Search Details box into Transpose.</p>
+      <p>The PubMed interface will accept a keyword or phrase without any syntax or tags, and usually will make an attempt to map it to MeSH headings, and otherwise process the request. Transpose does not have the capability to replicate what PubMed does, and simply translates this as an "all fields" search in Ovid MEDLINE, which is PubMed's default output if it can't map the keyword/phrase. If you wish to replicate PubMed's exact translation of a term without syntax, enter your term into PubMed. Look on the right-hand side of your search results for the Search Details box. Then, copy and paste the contents of the Search Details box into Transpose.</p>
 
       <p>Currently Transpose doesn't translate any strategies which involve dates. That is next on our to-do list (as soon as we fix all of the bugs…)</p>
 
@@ -91,9 +91,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   <div class="w3-content">
   	<div class="w3-container">
   		<b><p class="w3-xlarge">Disclaimer</p></b>
-      <p>Transpose is a simple javascript application with no artificial intelligence system. It is intended to provide a basic conversion between the syntax of two medline interfaces for the sake of convenience only. It is possible that a mistake or inaccuracy may occur. We make no guarantees, and are not liable if any translations are inaccurate (but if you find a bug, please let us know!). Please check over the translations carefully before using them. Transpose is not a substitute for the judgement of someone trained in the use of Ovid Medline or PubMed.</p>
+      <p>Transpose is a simple javascript application with no artificial intelligence system. It is intended to provide a basic conversion between the syntax of two MEDLINE interfaces for the sake of convenience only. It is possible that a mistake or inaccuracy may occur. We make no guarantees, and are not liable if any translations are inaccurate (but if you find a bug, please let us know!). Please check over the translations carefully before using them. Transpose is not a substitute for the judgement of someone trained in the use of Ovid MEDLINE or PubMed.</p>
 
-      <p>An understanding of how Transpose works and its limitations - as well as an understanding of the medline database - will help you in obtaining an accurate and usable translation.</p>
+      <p>An understanding of how Transpose works and its limitations - as well as an understanding of the MEDLINE database - will help you in obtaining an accurate and usable translation.</p>
 
 			<h4>Found a bug or have a suggestion? Contact the creators at medlinetranspose AT gmail DOT com.</h4>
       <div class="w3-padding-8"></div>

@@ -36,14 +36,14 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 
 <!-- Header -->
 <header class="w3-container w3-blue-grey w3-center w3-padding-64">
-	<h1 class="w3-margin w3-jumbo">Medline Transpose</h1>
-	<p class="w3-xlarge">Translate a search query between Ovid Medline and PubMed syntax</p>
+	<h1 class="w3-margin w3-jumbo">MEDLINE Transpose</h1>
+	<p class="w3-xlarge">Translate a search query between Ovid MEDLINE and PubMed syntax</p>
 </header>
 
 <!-- Beta testing link -->
 <div class="w3-container w3-yellow w3-topbar w3-bottombar w3-border-amber">
   <span onclick="this.parentElement.style.display='none'" class="w3-closebtn">&times;</span>
-  <p><b>Medline Transpose is still being tested, so there may be mistakes or errors. Please help us improve it <a href="https://goo.gl/forms/QmwV2TGarYrocVay2." target="_blank">by taking a short survey.</b></a></p>
+  <p><b>MEDLINE Transpose is still being tested, so there may be mistakes or errors. Please help us improve it <a href="https://goo.gl/forms/QmwV2TGarYrocVay2." target="_blank">by taking a short survey.</b></a></p>
 </div>
 </div>
 
@@ -390,12 +390,12 @@ function formatMesh (fmString) {
 		// publication type processing
 		for (i = 0; i < pubType.length; i++) {
 			if (fmMesh[0].toLowerCase() == pubType[i]) {
-				fmMeshType = "[ptyp]";
+				fmMeshType = "[pt]";
 			}
 		}
 
 		// mesh type processing
-		if (fmMeshType == "[ptyp]"){
+		if (fmMeshType == "[pt]"){
 			// do nothing
 		}
 		else if (fmString.search(/\*/) >= 0 && fmString.search(/exp /i) >= 0){
@@ -620,21 +620,20 @@ function formatKeyword(kwString) {
     	// convert field codes
 		if (kwFieldArray[b].search(/tiab/i) >= 0){ // title and abstract
 			kwFieldArray[b] = kwFieldArray[b].replace(/tiab/i,"[tiab]");
+      kwWarningArray.push("<br /> In Ovid, the .ti,ab command searches both title and abstract. However, in PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, this pubmed search may return more results than the original ovid one.");
 		}
 		else if (kwFieldArray[b].search(/tw/i) >= 0){ // text word
 			kwFieldArray[b] = kwFieldArray[b].replace(/tw/i,"[tiab]");
+      kwWarningArray.push("<br /> In Ovid, the .tw or .ti,ab command searches both title and abstract. However, in PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, this pubmed search may return more results than the original ovid one. Please note also that while both Ovid MEDLINE and PubMed have a textword (tw) search, they search different fields in each database.");
 		}
 		else if (kwFieldArray[b].search(/mp/i) >= 0){ // multipurpose
 			kwFieldArray[b] = kwFieldArray[b].replace(/mp/i,"[tiab]");
-			kwWarningArray.push("<br />The multipurpose (mp) field tag searches the following fields in ovid: title, original title, abstract, name of substance word, and subject heading word. However, heading word is not a field code in PubMed. Translated as mesh heading (mh).");
-			kwFieldArray.push("ot","nm","hw");
-		}
-		else if (kwFieldArray[b].search(/ti/i) >= 0){ // title
-			kwFieldArray[b] = kwFieldArray[b].replace(/ti/i,"[ti]");
+			kwWarningArray.push("<br />The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). Many of these field codes cannot be searched in PubMed. Search has been translated as [tiab] OR [nm] OR [mh] OR [tt] OR [pmid]. For an inexact, but simpler translation, you may wish to search this term as a text word [tw] search instead.");
+			kwFieldArray.push("nm","mh","ot","ui");
 		}
 		else if (kwFieldArray[b].search(/ab/i) >= 0){ // abstract
 			kwFieldArray[b] = kwFieldArray[b].replace(/ab/i,"[tiab]");
-			kwWarningArray.push("<br />PubMed does not support abstract-only searches. <b>.ab</b> replaced with <b>[tiab]</b>");
+			kwWarningArray.push("<br />PubMed does not support abstract-only searches. <b>.ab</b> has been replaced with <b>[tiab]</b>, which may retrieve more results.");
 		}
 		else if (kwFieldArray[b].search(/ot/i) >= 0){ // original title (transliterated title)
 			kwFieldArray[b] = kwFieldArray[b].replace(/ot/i,"[tt]");
@@ -642,31 +641,37 @@ function formatKeyword(kwString) {
 		else if (kwFieldArray[b].search(/kw/i) >= 0){ // keyword (other term)
 			kwFieldArray[b] = kwFieldArray[b].replace(/kw/i,"[ot]");
 		}
-		else if (kwFieldArray[b].search(/nm/i) >= 0){ // name of substance word
-			kwFieldArray[b] = kwFieldArray[b].replace(/nm/i,"[nm]");
-		}
-		else if (kwFieldArray[b].search(/af/i) >= 0){ // all fields
-			kwFieldArray[b] = kwFieldArray[b].replace(/af/i,"[all fields]");
-		}
-		else if (kwFieldArray[b].search(/pt/i) >= 0){ // publication type
-			kwFieldArray[b] = kwFieldArray[b].replace(/pt/i,"[pt]");
-		}
+    else if (kwFieldArray[b].search(/fa/i) >= 0){ // full author name
+      kwFieldArray[b] = kwFieldArray[b].replace(/fa/i,"[fau]");
+    }
+    else if (kwFieldArray[b].search(/pa/i) >= 0){ // first author name
+      kwFieldArray[b] = kwFieldArray[b].replace(/pa/i,"[1au]");
+    }
+    else if (kwFieldArray[b].search(/pn/i) >= 0){ // peronal name as subject
+      kwFieldArray[b] = kwFieldArray[b].replace(/pn/i,"[ps]");
+    }
 		else if (kwFieldArray[b].search(/lg/i) >= 0){ // language
 			kwFieldArray[b] = kwFieldArray[b].replace(/lg/i,"[la]");
 		}
 		else if (kwFieldArray[b].search(/jn/i) >= 0){ // journal title
 			kwFieldArray[b] = kwFieldArray[b].replace(/jn/i,"[jt]");
 		}
-		else if (kwFieldArray[b].search(/au/i) >= 0){ // author
-			kwFieldArray[b] = kwFieldArray[b].replace(/au/i,"[au]");
-		}
+    else if (kwFieldArray[b].search(/ja/i) >= 0){ // journal title abbreviated
+      kwFieldArray[b] = kwFieldArray[b].replace(/ja/i,"[ta]");
+    }
 		else if (kwFieldArray[b].search(/hw/i) >= 0){ // heading word (no translation)
 			kwFieldArray[b] = kwFieldArray[b].replace(/hw/i,"[mh]");
+      kwWarningArray.push("<br />PubMed does not support heading word (.hw) searches. The closest equivalent is mesh heading [mh], which may retrieve fewer results.");
 		}
-		else if (kwFieldArray[b].search(/sb/i) >= 0){ // journal subset
-			kwFieldArray[b] = kwFieldArray[b].replace(/sb/i,"[sb]");
-		}
+    else if (kwFieldArray[b].search(/kf/i) >= 0){ // keyword heading word (no translation)
+      kwFieldArray[b] = kwFieldArray[b].replace(/kf/i,"[ot]");
+      kwWarningArray.push("<br />PubMed does not support keyword heading word (.hw) searches. The closest equivalent is other term [ot], which may retrieve fewer results.");
+    }
+    else if (kwFieldArray[b].search(/ui/i) >= 0){ // unique identifier
+      kwFieldArray[b] = kwFieldArray[b].replace(/ui/i,"[pmid]");
+    }
 		else {
+      kwFieldArray[b] = "[" + kwFieldArray[b] + "]";
 		}
 
 		// add quotes
@@ -681,6 +686,12 @@ function formatKeyword(kwString) {
 			// remove any existing quotes
 			kwArray[0] = kwArray[0].replace(/\"/g,"");
 		}
+    else if (kwArray[0].search(/\:/g) >= 0) { // truncation $ is used (end of kw)
+      kwArray[0] = kwArray[0].replace(/\:/,"*"); // convert $ --> *
+      // don't add quotes
+      // remove any existing quotes
+      kwArray[0] = kwArray[0].replace(/\"/g,"");
+    }
 		else if (kwArray[0].search(/[A-Za-z][\?\#][A-Za-z]/) >= 0) { // wildcard ? or # is used
 			kwWarningArray.push("<br />PubMed does not support wildcards. For the most accurate translation, write out all possible word combinations.");
 		}
@@ -1208,7 +1219,7 @@ function formatControlledPTO(cvString) {
 			tempCV = tempCV.replace(/ /," and ");
 			tempCV = tempCV + ".nm,rn,rx,px."
 			cvString = "(" + cvString + " or " + tempCV + ")";
-			cvWarning = "This is an approximate translation of the supplementary concept tag in PubMed. Ovid Medline fields which accept a phrase have been converted exactly. Ovid Medline fields which accept only individual words have been split up with a boolean AND, but you may wish to adjust the individual words used.";
+			cvWarning = "This is an approximate translation of the supplementary concept tag in PubMed. Ovid MEDLINE fields which accept a phrase have been converted exactly. Ovid MEDLINE fields which accept only individual words have been split up with a boolean AND, but you may wish to adjust the individual words used.";
 			cvWarning = cvWarning.fontcolor("red");
 		}
 		else{
