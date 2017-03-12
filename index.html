@@ -160,21 +160,43 @@ function myAccordion(id) {
     }
 }
 
+//**************************************************************Functions start***********************************
 function myFunction() {
 
 	var rb1 = document.getElementById("ovid");
 	var rb2 = document.getElementById("pubmed");
 	var mfInputline = document.getElementById("userEntry").value;
+	var warnOTP = "Are you sure that you meant Ovid to PubMed? I see PubMed syntax in your entry.";
+  	var warnPTO = "Are you sure that you meant PubMed to Ovid? I see Ovid syntax in your entry";
+	var warnNoChoice = "Please make a selection: Ovid to PubMed or PubMed to Ovid";
+  	warnOTP = warnOTP.fontcolor("red");
+  	warnPTO = warnPTO.fontcolor("red");
+	warnNoChoice = warnNoChoice.fontcolor("red");
 
 
     if (rb1.checked && rb2.checked == false){
+	if (mfInputline.search(/\[/i) >= 0 && mfInputline.search(/\]/i) >= 0){
+          document.getElementById("output5").innerHTML = warnOTP;
+        }
+        else{
+          document.getElementById("output5").innerHTML = "";
+        }
     	transposeOTP(mfInputline);
     }
     else if (rb1.checked == false && rb2.checked){
+	if (mfInputline.search(/exp/i) >= 0 && mfInputline.search(/\//i) >= 0){
+          document.getElementById("output5").innerHTML = warnPTO;
+        }
+        else if (mfInputline.search(/[.]\w\w[.]/) >= 0){
+          document.getElementById("output5").innerHTML = warnPTO;
+        }
+        else{
+          document.getElementById("output5").innerHTML = "";
+        }
       	transposePTO(mfInputline);
     }
-	else{
-	    document.getElementById("output3").innerHTML = "error";
+	else if (rb1.checked == false && rb2.checked == false){
+	    document.getElementById("output5").innerHTML = warnNoChoice;
 	}
 
 }
