@@ -1345,10 +1345,10 @@ function formatKeywordPTO(kwString) {
 
     //reformat keywords being searched in the title and abstract
     if (kwString.search(/\[ti/i) >= 0){
-        kwString = kwString.replace(/\[tiab\]/i,".ti,ab.");
-	kwString = kwString.replace(/\[title\]/i,".ti.");
-	kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab.");
-	kwString = kwString.replace(/\[ti\]/i,".ti.");
+        kwString = kwString.replace(/\[tiab\]/i,".ti,ab,cl,oa,kw,kf.");
+	kwString = kwString.replace(/\[title\]/i,".ti,bt.");
+	kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,cl,oa,kw,kf.");
+	kwString = kwString.replace(/\[ti\]/i,".ti,bt.");
     }
     //reformat keywords being searched in all fields
     else if (kwString.search(/\[All fields/i) >= 0){
