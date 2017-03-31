@@ -91,13 +91,13 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		<div class="w3-container">
 			<b><p class="w3-xlarge">Table of Ovid Field Codes and PubMed Tags</p></b>
 
-      <table>
+      <table border="1">
 	      <tr>
-		      <td>Name</td>
-		      <td>Ovid Field Code</td>
-		      <td>PubMed Tag</td>
-		      <td>Notes and explanations</td>
-		      <td>Implemented?</td>
+		      <td><strong>Name</strong></td>
+		      <td><strong>Ovid Field Code</strong></td>
+		      <td><strong>PubMed Tag</strong></td>
+		      <td><strong>Notes and explanations</strong></td>
+		      <td><strong>Implemented?</strong></td>
 	      </tr>
 	      <tr>
 		      <td>Mesh Term</td>
@@ -105,6 +105,48 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>"Mesh Term"[Mesh]</td>
 		      <td>PubMed autoexplodes</td>
 		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Unexploded Mesh Term</td>
+		      <td>Mesh Term/</td>
+		      <td>"Mesh Term"[Mesh:NoExp]</td>
+		      <td>nbsp;</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Focussed Mesh Term</td>
+		      <td>exp *Mesh Term/</td>
+		      <td>"Mesh Term"[Majr]</td>
+		      <td>Works with and without explode - have shown with explode here</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Mesh Term with subheading</td>
+		      <td>exp Mesh Term/dt</td>
+		      <td>"Mesh Term/drug therapy"[Mesh]</td>
+		      <td>PubMed automatically explodes subheadings, Ovid does not. In an Ovid-to-PubMed conversion, Transpose provides a warning - in a PubMed-to-Ovid conversion, it includes all exploded subheadings.</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Abstract</td>
+		      <td>.ab.</td>
+		      <td>N/A</td>
+		      <td>No equivalent in PubMed - closest equivalent is [tiab]</td>
+		      <td>Yes - a warning is given</td>
+	      </tr>
+	      <tr>
+		      <td>Affiliation/Institution</td>
+		      <td>.in.</td>
+		      <td>[ad]</td>
+		      <td>nbsp;</td>
+		      <td>PubMed to Ovid is working. Ovid-to-PubMed coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>All fields</td>
+		      <td>.af.</td>
+		      <td>[All Fields] or [All]</td>
+		      <td>nbsp;</td>
+		      <td>Ovid-to-PubMed is working; PubMed-to-Ovid takes [All Fields]. [All] coming soon!</td>
 	      </tr>
 			</table>
 <div class="w3-padding-8"></div>
