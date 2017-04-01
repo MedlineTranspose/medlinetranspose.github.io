@@ -76,9 +76,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		</div>
 			  <div class="w3-padding-8">
 				</div>
-    	<textarea class="w3-input w3-large w3-border w3-round-large" id="userEntry" value="Exercise Therapy/" required name="userInput" rows="7"></textarea>
 	</div>
 
+  <textarea class="w3-input w3-large w3-border w3-round-large" id="userEntry" value="Exercise Therapy/" required name="userInput" rows="7"></textarea>
 	<div class="w3-layout-cell w3-layout-middle">
     	<input id="ovid" class="w3-radio" type="radio" name="database" value="OTP">
     	<label class="w3-validate">Ovid to PubMed</label>
@@ -89,7 +89,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   	</div>
 
 	<div class="w3-container w3-layout-cell w3-layout-middle">
-		<button class="w3-btn w3-padding-large w3-round-large w3-theme" onClick="myFunction()">Submit</button></p>
+		<button class="w3-btn w3-padding-large w3-round-large w3-theme" id="submit" onClick="myFunction()">Submit</button></p>
 	</div>
 
 	  <div class="w3-padding-8">
@@ -102,12 +102,10 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 
 <!-- Search results -->
 <div class="w3-container w3-theme-l2 w3-padding-8">
+  <!-- anchor link to results -->
+  <a name = "results"></a>
 	<div class="w3-content">
-			<!-- <p>Your entry was:<br></p>
-				<p id="output0"></p>
-				<p id="output1"></p>
-				<p id="output2"></p> -->
-				<!-- Search Results -->
+      <!-- Search Results -->
 			<b><p class="w3-xlarge">Results</p></b>
 				<!-- results -->
 			<div class="w3-large">
@@ -142,6 +140,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 
 <script>
 
+//**************************************************************Functions start***********************************
+
 function mySmallNav() {
     var x = document.getElementById("small-nav");
     if (x.className.indexOf("w3-show") == -1) {
@@ -160,7 +160,6 @@ function myAccordion(id) {
     }
 }
 
-//**************************************************************Functions start***********************************
 function myFunction() {
 
 	var rb1 = document.getElementById("ovid");
@@ -169,9 +168,9 @@ function myFunction() {
 	var warnOTP = "Are you sure that you meant Ovid to PubMed? I see PubMed syntax in your entry.";
   	var warnPTO = "Are you sure that you meant PubMed to Ovid? I see Ovid syntax in your entry";
 	var warnNoChoice = "Please make a selection: Ovid to PubMed or PubMed to Ovid";
-  	warnOTP = warnOTP.fontcolor("red");
-  	warnPTO = warnPTO.fontcolor("red");
-	warnNoChoice = warnNoChoice.fontcolor("red");
+  	warnOTP = warnOTP.fontcolor("maroon");
+  	warnPTO = warnPTO.fontcolor("maroon");
+	warnNoChoice = warnNoChoice.fontcolor("maroon");
 
 
     if (rb1.checked && rb2.checked == false){
@@ -199,6 +198,9 @@ function myFunction() {
 	    document.getElementById("output5").innerHTML = warnNoChoice;
 	}
 
+  // anchor link to results section
+  window.location.hash = '';
+  window.location.hash = 'results';
 }
 
 function transposeOTP(inputline){
@@ -694,6 +696,9 @@ function formatKeyword(kwString) {
     }
     else if (kwFieldArray[b].search(/ui/i) >= 0){ // unique identifier
       kwFieldArray[b] = kwFieldArray[b].replace(/ui/i,"[pmid]");
+    }
+    else if (kwFieldArray[b].search(/in/i) >= 0){ // institution
+      kwFieldArray[b] = kwFieldArray[b].replace(/in/i,"[ad]");
     }
 		else {
       kwFieldArray[b] = "[" + kwFieldArray[b] + "]";
