@@ -52,11 +52,40 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 
 			<p>MEDLINE Transpose was developed to mitigate a common problem among information specialists: converting search syntax between PubMed and Ovid MEDLINE interfaces. When formulating a complex search strategy involving free text, controlled vocabulary terms, wildcards, or adjacency syntax, it is sometimes necessary to convert the strategy from one interface to another to capitalize on the strengths of each. However, transposing a strategy is not a straightforward process due to the different functions available and ways that the interfaces interpret user logic. For example, the PubMed interface automatically explodes subject headings, while the Ovid interface does not. Other search functions, such as TW (textword) in PubMed and MP (multipurpose) in Ovid search similar but slightly different combinations of fields, and require a thorough reading of help documentation to ensure the most accurate translation.</p>
 
-      <h4>Found a bug or have a suggestion? Contact the creators at medlinetranspose AT gmail DOT com.</h4>
+      <h4>Found a bug or have a suggestion? Contact the creators:</h4>
+</div>
 
-      <div class="w3-padding-8"></div>
-
+      <form class="w3-container w3-text-blue-grey" action="http://formspree.io/medlinetranspose@gmail.com" method="post" enctype="text/plain">
+        <div class="w3-row w3-section">
+          <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
+          <div class="w3-rest">
+        <input class="w3-input w3-border w3-round" type="text" name="name" placeholder="name">
+      </div>
     </div>
+
+    <div class="w3-row w3-section">
+      <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-envelope-o"></i></div>
+      <div class="w3-rest">
+        <input class="w3-input w3-border w3-round" type="email" name="_replyto" placeholder="email">
+      </div>
+    </div>
+
+    <div class="w3-row w3-section">
+      <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-pencil"></i></div>
+      <div class="w3-rest">
+        <textarea class="w3-input w3-border w3-round" type="textarea" rows="3" name="comment" placeholder="comment"></textarea>
+      </div>
+    </div>
+        <input type="submit" class="w3-btn w3-round w3-blue-grey"  value="Send">
+        <button class="w3-btn w3-round w3-blue-grey" type="reset">Reset</button>
+
+        <input type="hidden" name="_subject" value="New comment from MedlineTranspose" />
+        <input type="text" name="_gotcha" style="display:none" />
+      </form>
+
+      <div class="w3-padding-16"></div>
+
+
   </div>
 </div>
 
