@@ -925,7 +925,7 @@ function transposePTO(inputline) {
 				      }
 
               //is the term a keyword?
-              else if (notArray[k].search(/\[ti/i) >= 0 || notArray[k].search(/\[All fields/i) >= 0){
+              else if (notArray[k].search(/\[ti/i) >= 0 || notArray[k].search(/\[All/i) >= 0){
                     //testingArray[testingIndex] = "kw";
                     outputReceiver = formatKeywordPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
