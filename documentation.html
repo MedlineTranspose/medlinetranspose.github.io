@@ -108,40 +108,134 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 			<b><p class="w3-xlarge">Table of Ovid Field Codes and PubMed Tags</p></b>
 <p>Warning! Trying to understand Ovid Field Codes and PubMed Tags, especially which ones correspond, may induce nightmares. We're not joking! Ye be warned.</p>
       <table border="1">
+	      <caption>
+		      List of Ovid Field Codes and PubMed Tags
+	      </caption>
 	      <tr>
-		      <td><strong>Name</strong></td>
-		      <td><strong>Ovid Field Code</strong></td>
-		      <td><strong>PubMed Tag</strong></td>
-		      <td><strong>Notes and explanations</strong></td>
-		      <td><strong>Implemented?</strong></td>
+		      <th scope="col">Name</th>
+		      <th scope="col">Ovid Field Code</th>
+		      <th scope="col">PubMed Tag</th>
+		      <th scope="col">Notes and explanations</th>
+		      <th scope="col">Implemented?</th>
 	      </tr>
 	      <tr>
-		      <td>Mesh Term</td>
+		      <td><strong>Subject Heading Searches</strong></td>
+   		      <td>&nbsp;</td>
+   		      <td>&nbsp;</td>
+   		      <td>&nbsp;</td>
+  		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>MeSH Term</td>
 		      <td>exp Mesh Term/</td>
 		      <td>"Mesh Term"[Mesh]</td>
 		      <td>PubMed autoexplodes</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
-		      <td>Unexploded Mesh Term</td>
+		      <td>Unexploded MeSH Term</td>
 		      <td>Mesh Term/</td>
 		      <td>"Mesh Term"[Mesh:NoExp]</td>
 		      <td>nbsp;</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
-		      <td>Focussed Mesh Term</td>
+		      <td>Focussed MeSH Term</td>
 		      <td>exp *Mesh Term/</td>
 		      <td>"Mesh Term"[Majr]</td>
 		      <td>Works with and without explode - have shown with explode here</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
-		      <td>Mesh Term with subheading</td>
+		      <td>MeSH Term with subheading</td>
 		      <td>exp Mesh Term/dt</td>
 		      <td>"Mesh Term/drug therapy"[Mesh]</td>
 		      <td>PubMed automatically explodes subheadings, Ovid does not. In an Ovid-to-PubMed conversion, Transpose provides a warning - in a PubMed-to-Ovid conversion, it includes all exploded subheadings.</td>
 		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>MeSH Heading, Exploded</td>
+		      <td>.xm.</td>
+		      <td>[mh]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>MeSH Heading, Unexploded</td>
+		      <td>.sh.</td>
+		      <td>[mh:noexp]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>MeSH Heading Word</td>
+		      <td>.hw.</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Name of Substance Word</td>
+		      <td>.nm.</td>
+		      <td>[nm] or [supplementary concept]</td>
+		      <td>&nbsp;</td>
+		      <td>[supplementary concept] is implemented - others coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Pharmacological Action</td>
+		      <td>&nbsp;</td>
+		      <td>[pa] or [pharmacological action]</td>
+		      <td>Closest equivalent is Ovid is to search as if it were a MeSH term</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Protocol Supplementary Concept</td>
+		      <td>.ps.</td>
+		      <td>[supplementary concept]</td>
+		      <td>&nbsp;</td>
+		      <td>[supplementary concept] is implemented - others coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Protocol Supplementary Concept Word</td>
+		      <td>.px.</td>
+		      <td>&nbsp;</td>
+		      <td>This will work for a supplementary concept which is only one word long, but not for part of a phrase.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Rare Disease Supplementary Concept</td>
+		      <td>.rs.</td>
+		      <td>[supplementary concept]</td>
+		      <td>&nbsp;</td>
+		      <td>[supplementary concept] is implemented - others coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Rare Disease Supplementary Concept Word</td>
+		      <td>.rx.</td>
+		      <td>&nbsp;</td>
+		      <td>This will work for a supplementary concept which is only one word long, but not for part of a phrase.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Subheading, Exploded</td>
+		      <td>.xs.</td>
+		      <td>[sh] or [subheading]</td>
+		      <td>Ovid version will only accept 2-letter code</td>
+		      <td>[sh] and [subheading] are implemented - others coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Subheading, Floating</td>
+		      <td>.fs.</td>
+		      <td>[sh:noexp] or [subheading:noexp]</td>
+		      <td>&nbsp;</td>
+		      <td>Coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td><strong>Subject keyword searches</strong></td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Abstract</td>
@@ -151,19 +245,83 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Yes - a warning is given</td>
 	      </tr>
 	      <tr>
-		      <td>Affiliation/Institution</td>
-		      <td>.in.</td>
-		      <td>[ad]</td>
-		      <td>nbsp;</td>
-		      <td>Yes</td>
-	      </tr>
-	      <tr>
 		      <td>All fields</td>
 		      <td>.af.</td>
 		      <td>[All Fields] or [All]</td>
 		      <td>nbsp;</td>
 		      <td>Yes</td>
 	      </tr>
+	      <tr>
+		      <td>Keyword Heading / Other Term</td>
+		      <td>.kw.</td>
+		      <td>[ot]</td>
+		      <td>nbsp;</td>
+		      <td>.kw. is implemented - [ot] coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Keyword Heading Word</td>
+		      <td>.kf.</td>
+		      <td>&nbsp;</td>
+		      <td>nbsp;</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Other abstract</td>
+		      <td>.oa.</td>
+		      <td>&nbsp;</td>
+		      <td>nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Personal Name as Subject</td>
+		      <td>.pn.</td>
+		      <td>[ps] or [subject - personal name]</td>
+		      <td>nbsp;</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Text Word (Ovid)</td>
+		      <td>.tw.</td>
+		      <td>&nbsp;</td>
+		      <td>nbsp;</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Text Words (PubMed)</td>
+		      <td>.ti,ab,oa,sh,fs,pt,rn,pn.</td>
+		      <td>[tw]</td>
+		      <td>Includes all words and numbers in the title, abstract, other abstract, MeSH terms, MeSH subheadings, Publication Types, Substance Names, Personal Name as Subject, Corporate Author, Secondary Source, Comment/Correction Notes, and Other Terms (see Other Term [OT] above) typically non-MeSH subject terms (keywords), including NASA Space Flight Mission, assigned by an organization other than NLM.</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Title</td>
+		      <td>.ti.</td>
+		      <td>[ti] or [title]</td>
+		      <td>PubMed [ti] additionally searches for collection title.</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Title/Abstract</td>
+		      <td>.ti,ab,cl,oa,kw.</td>
+		      <td>[tiab] or [title/abstract]</td>
+		      <td>Words and numbers included in a citation's title, collection title, abstract, other abstract, and keywords</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td><strong>Subject-related keyword searches</strong></td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Affiliation/Institution</td>
+		      <td>.in.</td>
+		      <td>[ad]</td>
+		      <td>nbsp;</td>
+		      <td>Yes</td>
+	      </tr>
+	      
 			</table>
 <div class="w3-padding-8"></div>
     </div>
