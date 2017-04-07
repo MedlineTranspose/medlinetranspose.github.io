@@ -318,10 +318,338 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Affiliation/Institution</td>
 		      <td>.in.</td>
 		      <td>[ad]</td>
-		      <td>nbsp;</td>
+		      <td>&nbsp;</td>
 		      <td>Yes</td>
 	      </tr>
-	      
+	      <tr>
+		      <td>EC/RN Number</td>
+		      <td>.rn.</td>
+		      <td>[rn] or [ec/rn number]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Gene Symbol</td>
+		      <td>.gs.</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Gene Symbol Word</td>
+		      <td>.gw.</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Original/Transliterated Title</td>
+		      <td>.ot.</td>
+		      <td>[tt]</td>
+		      <td>&nbsp;</td>
+		      <td>.ot. is implemented, [tt] coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td><strong>Citation Searches</strong></td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Author</td>
+		      <td>.au.</td>
+		      <td>[au] or [author]</td>
+		      <td>Ovid requires format: last name, space, first initial, optional truncation, e.g. smith a$. Ovid field .ax. accepts a last name without a first initial.</td>
+		      <td>[au] and [author] are implemented - .au. coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Author, Corporate</td>
+		      <td>&nbsp;</td>
+		      <td>[cn] or [author - corporate]</td>
+		      <td>There is no specific field code for this in Ovid, you just use .au.</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Author, First</td>
+		      <td>.pa.</td>
+		      <td>[1au] or [author - first]</td>
+		      <td>&nbsp;</td>
+		      <td>.pa. and [author - first] implemented - [1au] coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Author Full Name</td>
+		      <td>.fa.</td>
+		      <td>[fau] or [author - full]</td>
+		      <td>&nbsp;</td>
+		      <td>.fa. and [author - full] are implemented - [fau] coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Author, Last</td>
+		      <td>&nbsp;</td>
+		      <td>[lastau] or [author - last]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Author Last Name</td>
+		      <td>.ax.</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>[au] or [author] accepts a last name without a first initial.</td>
+	      </tr>
+	      <tr>
+		      <td>Issue/Part</td>
+		      <td>.ip.</td>
+		      <td>[ip] or [issue]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Journal</td>
+		      <td>.jn.</td>
+		      <td>[ta] or [jt] or [journal]</td>
+		      <td>This might be phrase indexed - further investigation required before implementation.</td>
+		      <td>.jn. implemented - PubMed tags coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Page/Pagination</td>
+		      <td>.pg.</td>
+		      <td>[pg] or [pagination]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>PMID/Unique Identifier</td>
+		      <td>.ui.</td>
+		      <td>[pmid] or [uid]</td>
+		      <td>&nbsp;</td>
+		      <td>.ui. is implemented - PubMed tags coming soon!</td>
+	      </tr>
+	      <tr>
+		      <td>Source</td>
+		      <td>.so.</td>
+		      <td>&nbsp;</td>
+		      <td>This is broken up into several tags in PubMed. Investigation of format required before implementation.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Volume</td>
+		      <td>.vo.</td>
+		      <td>[vi]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Year of Publication</td>
+		      <td>.yr.</td>
+		      <td>&nbsp;</td>
+		      <td>This can be searched as the first 4 digits if the [dp] field in PubMed.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td><strong>Journal Related Searches</strong></td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Country of Publication</td>
+		      <td>.cp.</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>ISSN Electronic</td>
+		      <td>.es.</td>
+		      <td>[ta] or [jt] or [journal]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>ISSN Linking</td>
+		      <td>.il.</td>
+		      <td>[ta] or [jt] or [journal]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>ISSN Print</td>
+		      <td>.is.</td>
+		      <td>[ta] or [jt] or [journal]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Journal ISO Abbreviation</td>
+		      <td>.io.</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Journal Subset</td>
+		      <td>.sb.</td>
+		      <td>[sb]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Journal Word</td>
+		      <td>.jw.</td>
+		      <td>N/A</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>NLM Journal Code</td>
+		      <td>.jc.</td>
+		      <td>[jid]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>NLM Journal Name</td>
+		      <td>.nj.</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>NLM Journal Word</td>
+		      <td>.nw.</td>
+		      <td>N/A</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Place of Publication</td>
+		      <td>.pl.</td>
+		      <td>[pl]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td><strong>Limit Searches</strong></td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date, Beginning</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date, Completion/Entry</td>
+		      <td>.ed.</td>
+		      <td>[dcom]</td>
+		      <td>Format: YYYYMMDD in both databases. In Ovid, truncate with *. In PubMed, truncation is assumed (no symbol needed).</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date, Contribution</td>
+		      <td>.cb.</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date, Create</td>
+		      <td>.dt.?</td>
+		      <td>[crdt]</td>
+		      <td>The Ovid field called Create Date appears to correspond to the value of Entrez Date in PubMed - have contacted Ovid for clarification.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date, Ending</td>
+		      <td>.et.</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date, Entrez</td>
+		      <td>.ez.?</td>
+		      <td>[edat]</td>
+		      <td>The Ovid field called Entrez Date appears to correspond to the value of Create Date in PubMed - have contacted Ovid for clarification.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date, Mesh</td>
+		      <td>.da.</td>
+		      <td>[mhda]</td>
+		      <td>Format: YYYY/MM/DD HH:MM in both databases. In Ovid, use a space where there would be a slash, and truncate with *. In PubMed, use a slash, and truncation is assumed (no symbol needed).</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date, Modification/Revision</td>
+		      <td>.rd.</td>
+		      <td>[lr]</td>
+		      <td>Format: YYYYMMDD in both databases. In Ovid, truncate with *. In PubMed, truncation is assumed (no symbol needed).</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date of Publication</td>
+		      <td>.dp.</td>
+		      <td>[dp]</td>
+		      <td>Format: YYYY Mmm DD in both databases. In addition to regular date format, pubmed allows the following format: &ldquo;last X days&rdquo;[dp]; &ldquo;last X months&rdquo;[dp]; &ldquo;last X year&rdquo;[dp] and also records date exactly as published in some cases (e.g. winter 2007).</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date of Publication, Electronic</td>
+		      <td>.ep.</td>
+		      <td>[dep]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Date, Update</td>
+		      <td>.up.</td>
+		      <td>N/A</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Filter</td>
+		      <td>.et.</td>
+		      <td>[sb] or [filter]</td>
+		      <td>This may sometimes correspond to .sb. in Ovid. Further investigation required before implementation.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Language</td>
+		      <td>.lg.</td>
+		      <td>[la] or [lang]</td>
+		      <td>&nbsp;</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Publication Type, Exploded</td>
+		      <td>exp <em>Publication Type</em>/</td>
+		      <td>[pt] or [ptyp] or [publication type]</td>
+		      <td>E.g. exp Review/</td>
+		      <td>Yes</td>
+	      </tr>
+	      <tr>
+		      <td>Publication Type, Unexploded</td>
+		      <td>.pt.</td>
+		      <td>[pt:noexp] or [ptyp:noexp] or [publication type:noexp]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Status</td>
+		      <td>.st.</td>
+		      <td>[sb]</td>
+		      <td>.st. is one of the searches corresponding to [sb].</td>
+		      <td>&nbsp;</td>
+	      </tr>
 			</table>
 <div class="w3-padding-8"></div>
     </div>
