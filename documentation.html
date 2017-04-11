@@ -170,7 +170,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      <tr>
 		      <td>MeSH Heading Word</td>
 		      <td>.hw.</td>
-		      <td>&nbsp;</td>
+		      <td>N/A</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
@@ -248,42 +248,42 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>All fields</td>
 		      <td>.af.</td>
 		      <td>[All Fields] or [All]</td>
-		      <td>nbsp;</td>
+		      <td>&nbsp;</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Keyword Heading / Other Term</td>
 		      <td>.kw.</td>
 		      <td>[ot]</td>
-		      <td>nbsp;</td>
+		      <td>&nbsp;</td>
 		      <td>.kw. is implemented - [ot] coming soon!</td>
 	      </tr>
 	      <tr>
 		      <td>Keyword Heading Word</td>
 		      <td>.kf.</td>
+		      <td>N/A</td>
 		      <td>&nbsp;</td>
-		      <td>nbsp;</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Other abstract</td>
 		      <td>.oa.</td>
 		      <td>&nbsp;</td>
-		      <td>nbsp;</td>
+		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Personal Name as Subject</td>
 		      <td>.pn.</td>
 		      <td>[ps] or [subject - personal name]</td>
-		      <td>nbsp;</td>
+		      <td>&nbsp;</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Text Word (Ovid)</td>
 		      <td>.tw.</td>
 		      <td>&nbsp;</td>
-		      <td>nbsp;</td>
+		      <td>Searches in the title and abstract fields. Is equivalent to .ti,ab.</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
@@ -408,9 +408,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      <tr>
 		      <td>Journal</td>
 		      <td>.jn.</td>
-		      <td>[ta] or [jt] or [journal]</td>
-		      <td>This might be phrase indexed - further investigation required before implementation.</td>
-		      <td>.jn. implemented - PubMed tags coming soon!</td>
+		      <td>[journal]</td>
+		      <td>Phrase indexed - must have correct version of journal name.</td>
+		      <td>Coming soon!</td>
 	      </tr>
 	      <tr>
 		      <td>Page/Pagination</td>
@@ -455,9 +455,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
-		      <td>Country of Publication</td>
+		      <td>Country/Place of Publication</td>
 		      <td>.cp.</td>
-		      <td>&nbsp;</td>
+		      <td>[pl]</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
@@ -471,21 +471,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      <tr>
 		      <td>ISSN Linking</td>
 		      <td>.il.</td>
-		      <td>[ta] or [jt] or [journal]</td>
+		      <td>[ta] or [journal]</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>ISSN Print</td>
 		      <td>.is.</td>
-		      <td>[ta] or [jt] or [journal]</td>
+		      <td>[ta] or [journal]</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
-		      <td>Journal ISO Abbreviation</td>
+		      <td>Journal ISO/Title Abbreviation</td>
 		      <td>.io.</td>
-		      <td>&nbsp;</td>
+		      <td>[ta]</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
@@ -521,13 +521,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>NLM Journal Word</td>
 		      <td>.nw.</td>
 		      <td>N/A</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
-	      <tr>
-		      <td>Place of Publication</td>
-		      <td>.pl.</td>
-		      <td>[pl]</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
@@ -616,6 +609,13 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
+		      <td>Date, Version</td>
+		      <td>.vd.</td>
+		      <td>N/A</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
 		      <td>Filter</td>
 		      <td>.et.</td>
 		      <td>[sb] or [filter]</td>
@@ -658,6 +658,13 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
+		      <td>Article Identifier</td>
+		      <td>.id.</td>
+		      <td>[aid]</td>
+		      <td>In Ovid, replace any punctuation with spaces.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
 		      <td>Author Name ID</td>
 		      <td>.ai.</td>
 		      <td>[auid]</td>
@@ -665,10 +672,10 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
-		      <td>DOI</td>
-		      <td>.do.</td>
-		      <td>[aid] or [lid]</td>
-		      <td>&nbsp;</td>
+		      <td>DOI/Location ID/Publisher Item Identifier</td>
+		      <td>.do,di.</td>
+		      <td>[lid]</td>
+		      <td>In Ovid, replace any punctuation with spaces.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
@@ -703,13 +710,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Grant Organization</td>
 		      <td>.go.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
-	      <tr>
-		      <td>Location ID</td>
-		      <td>.do,di.</td>
-		      <td>[lid]</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
@@ -839,12 +839,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
-		      <td>Publisher Item Identifier</td>
-		      <td>.di.</td>
-		      <td>[lid]</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
 	      <tr>
 		      <td>Publishing Model</td>
 		      <td>.pi.</td>
@@ -855,8 +849,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      <tr>
 		      <td>Record Owner</td>
 		      <td>.ro.</td>
-		      <td>[owner]?</td>
 		      <td>&nbsp;</td>
+		      <td>This is listed under OWN in PubMed's Medline format display but there doesn't seem to be a searchable tag.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
