@@ -629,6 +629,10 @@ function formatKeyword(kwString) {
     var kwArray = kwString.split("."); // split into kw and field codes
     kwArray[1] = kwArray[1].replace(/\s/g,""); // remove any spaces from field codes
 
+  if (kwArray[1].search(/ti,ab,kw/i) >= 0) { // ti,ab,kw --> tiabkw
+    kwArray[1] = kwArray[1].replace(/ti,ab,kw/,"tiabkw");
+    }
+
 	if (kwArray[1].search(/ti,ab/i) >= 0) { // ti,ab --> tiab
 		kwArray[1] = kwArray[1].replace(/ti,ab/,"tiab");
 	}
@@ -642,7 +646,11 @@ function formatKeyword(kwString) {
     // loop through field codes applied to kw
     for (b = 0; b < kwFieldArray.length; b++) {
     	// convert field codes
-		if (kwFieldArray[b].search(/tiab/i) >= 0){ // title and abstract
+    if (kwFieldArray[b].search(/tiabkw/i) >= 0){ // title and abstract
+  			kwFieldArray[b] = kwFieldArray[b].replace(/tiabkw/i,"[tiab]");
+      kwWarningArray.push("<br /> In PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, the 'kw' field tag has been removed as it is redundant.");
+    }
+		else if (kwFieldArray[b].search(/tiab/i) >= 0){ // title and abstract
 			kwFieldArray[b] = kwFieldArray[b].replace(/tiab/i,"[tiab]");
       kwWarningArray.push("<br /> In Ovid, the .ti,ab command searches both title and abstract. However, in PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, this pubmed search may return more results than the original ovid one.");
 		}
