@@ -329,20 +329,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
-		      <td>Gene Symbol</td>
-		      <td>.gs.</td>
-		      <td>N/A</td>
-		      <td>Data was only entered into this field between 1991 and 1995.</td>
-		      <td>&nbsp;</td>
-	      </tr>
-	      <tr>
-		      <td>Gene Symbol Word</td>
-		      <td>.gw.</td>
-		      <td>N/A</td>
-		      <td>Data was only entered into this field between 1991 and 1995.</td>
-		      <td>&nbsp;</td>
-	      </tr>
-	      <tr>
 		      <td>Original/Transliterated Title</td>
 		      <td>.ot.</td>
 		      <td>[tt]</td>
@@ -696,14 +682,14 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Other ID</td>
 		      <td>.oi.</td>
 		      <td>&nbsp;</td>
-		      <td>There is a field for this in PubMed, but it is not recognised as a tag. Field = OID</td>
+		      <td>There is a field for this in PubMed, but it is not searchable as a tag. Field = OID</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>PMC Identifier</td>
 		      <td>.pm.</td>
 		      <td>&nbsp;</td>
-		      <td>You can search these without tags in PubMed, they're unique enough to just appear. There is a field for this as well, but it is not recognised as a tag. Field = PMC.</td>
+		      <td>You can search these without tags in PubMed, they're unique enough to just appear. There is a field for this as well, but it is not searchable as a tag. Field = PMC.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
@@ -724,7 +710,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Comments</td>
 		      <td>.cm.</td>
 		      <td>&nbsp;</td>
-		      <td>There are two fields for this in PubMed, but they are not recognised as tags. Fields = CON, CIN</td>
+		      <td>There are two fields for this in PubMed, but they are not searchable as tags. Fields = CON, CIN</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
@@ -738,7 +724,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Copyright Index</td>
 		      <td>.cr.</td>
 		      <td>&nbsp;</td>
+		      <td>No equivalent identifiable in PubMed.</td>
 		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Gene Symbol</td>
+		      <td>.gs.</td>
+		      <td>N/A</td>
+		      <td>There is a field for this in PubMed, but it is not searchable as a tag. Field = GS. Data was only entered into this field between 1991 and 1995.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Gene Symbol Word</td>
+		      <td>.gw.</td>
+		      <td>N/A</td>
+		      <td>There is a field for this in PubMed, but it is not searchable as a tag. Field = GS. Data was only entered into this field between 1991 and 1995.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
@@ -759,49 +759,42 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Investigator Affiliation</td>
 		      <td>.ia.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>There is a field for this in PubMed, but it is not searchable as a tag. Field = IRAD.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Investigator Full Name</td>
 		      <td>&nbsp;</td>
 		      <td>[fir]</td>
-		      <td>&nbsp;</td>
+		      <td>No exact equivalent in Ovid, but you could chop the end off the given names and then search it in .ir. (Format Surname I).</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Investigator Name ID</td>
 		      <td>.ix.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
-	      <tr>
-		      <td>Media Type</td>
-		      <td>.mt.</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>I think this might be a mashup of the [fir] field and another piece of data only available in the XML data in PubMed, which is Idenftifier Source. More investigation required. </td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Note, General</td>
 		      <td>.nt.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>This no longer appears in the list of Ovid Search Fields. Has it been retired?</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Publication History Status</td>
 		      <td>.ph.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>There is a field for this in PubMed, but it is not searchable as a tag. Field = PHST.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Publication Status</td>
 		      <td>.pp.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>There is a field for this in PubMed, but it is not searchable as a tag. Field = PST.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
@@ -816,7 +809,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Publishing Model</td>
 		      <td>.pi.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>This no longer appears in the list of Ovid Search Fields. Has it been retired?</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
@@ -830,21 +823,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Report Number</td>
 		      <td>.rr.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Season</td>
 		      <td>.se.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>This is for the month or season in which the article was published. Might be searchable as part of the [dp] field - must experiment.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Secondary Source AN</td>
 		      <td>.sa.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>This is equivalent of a "word" search in Ovid - searches for part of the Secondary Source ID. No equivalent - [si] requires full ID number.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
@@ -857,22 +850,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      <tr>
 		      <td>Secondary Source Link</td>
 		      <td>.sl.</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
-	      <tr>
-		      <td>Section</td>
-		      <td>.sn.</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>N/A</td>
+		      <td>Link possibly related to clinicaltrials.org?</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Space Flight Mission</td>
 		      <td>.sm.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>There is a field for this in PubMed, but it is not searchable as a tag. Field = SFM.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
@@ -886,12 +872,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Title Comment</td>
 		      <td>.tc.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>This no longer appears in the list of Ovid Search Fields. Has it been retired?</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Version ID</td>
-		      <td>.wi.</td>
+		      <td>.vi.</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
@@ -914,77 +900,77 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Book Authors</td>
 		      <td>.ba.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>Format: smith jc or smith j. No index provided in Ovid. Part of .au. - might be searched in [author]?</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Book Authors Full Name</td>
 		      <td>.bf.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid. Part of .da. - might be searched in [author -full]?</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Book Edition</td>
 		      <td>.bn.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Book Editors</td>
 		      <td>.be.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>Format: smith jc or smith j. No index provided in Ovid.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Book Part</td>
 		      <td>.pr.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>This refers to the chapter of the book being cited. No index provided in Ovid. </td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Book Title</td>
 		      <td>.bt.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid. Part of .so.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Book Volume</td>
 		      <td>.bv.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid. Part of .so.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Collection Title</td>
 		      <td>.cl.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Editor</td>
 		      <td>.ee.</td>
 		      <td>[ed] or [editor]</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Editor Full Name</td>
 		      <td>.fe.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>Editor Last Name</td>
 		      <td>.ex.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid. Part of ee and fe fields.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
@@ -1002,10 +988,24 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
+		      <td>Media Type</td>
+		      <td>.mt.</td>
+		      <td>&nbsp;</td>
+		      <td>&amp;Identifies the physical medium of the book citation.&amp; No index provided in Ovid.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      	      <tr>
+		      <td>Section</td>
+		      <td>.sn.</td>
+		      <td>&nbsp;</td>
+		      <td>This is a section of the book (a section that is not a chapter). No index provided in Ovid.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
 		      <td>Volume Book Title</td>
 		      <td>.vb.</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>No index provided in Ovid. Part of .so.</td>
 		      <td>&nbsp;</td>
 	      </tr>
 			</table>
