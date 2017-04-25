@@ -41,7 +41,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 </header>
 
 <!-- How it works -->
-<div class="w3-row-padding w3-theme-l4 w3-container">
+<div class="w3-row-padding w3-theme-l3 w3-container">
 	<div class="w3-content">
 		<div class="w3-container">
 			<b><p class="w3-xlarge">How MEDLINE Transpose works</p></b>
@@ -65,7 +65,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 
 
 <!-- What it doesn't do -->
-<div class="w3-row-padding w3-theme-l3 w3-container">
+<div class="w3-row-padding w3-theme-l4 w3-container">
 	<div class="w3-content">
 		<div class="w3-container">
 			<b><p class="w3-xlarge">What MEDLINE Transpose doesn't do</p></b>
@@ -85,46 +85,25 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   </div>
 </div>
 
-      <!-- Disclaimer-->
-<div class="w3-row-padding w3-theme-l4 w3-container">
-  <div class="w3-content">
-  	<div class="w3-container">
-  		<b><p class="w3-xlarge">Disclaimer</p></b>
-      <p>Transpose is a simple javascript application with no artificial intelligence system. It is intended to provide a basic conversion between the syntax of two MEDLINE interfaces for the sake of convenience only. It is possible that a mistake or inaccuracy may occur. We make no guarantees, and are not liable if any translations are inaccurate (but if you find a bug, please let us know!). Please check over the translations carefully before using them. Transpose is not a substitute for the judgement of someone trained in the use of Ovid MEDLINE or PubMed.</p>
-
-      <p>An understanding of how Transpose works and its limitations - as well as an understanding of the MEDLINE database - will help you in obtaining an accurate and usable translation.</p>
-
-			<h4>Found a bug or have a suggestion? Contact the creators at medlinetranspose AT gmail DOT com.</h4>
-      <div class="w3-padding-8"></div>
-
-		</div>
-	</div>
-</div>
-	
 	<!-- Field Codes Table-->
 <div class="w3-row-padding w3-theme-l3 w3-container">
 	<div class="w3-content">
-		<div class="w3-container">
+		<div class="w3-container w3-responsive">
 			<b><p class="w3-xlarge">Table of Ovid Field Codes and PubMed Tags</p></b>
 <p>Warning! Trying to understand Ovid Field Codes and PubMed Tags, especially which ones correspond, may induce nightmares. We're not joking! Ye be warned.</p>
 <p>Certain field codes do not currently have an index. As such, we were unable to perform any analysis, we were not able to obtain any examples. We will attempt further analysis at a later date, but for now, will focus on the field code / tag combinations for which there is a known conversion.</p>
-			<table border="1">
-	      <caption>
-		      List of Ovid Field Codes and PubMed Tags
+
+<!-- Subject Heading Searches -->
+      <table class="w3-table-all w3-hoverable">
+	      <caption class="w3-xlarge">
+		     Subject Heading Searches
 	      </caption>
-	      <tr>
+	      <tr class="w3-theme w3-large">
 		      <th scope="col">Name</th>
 		      <th scope="col">Ovid Field Code</th>
 		      <th scope="col">PubMed Tag</th>
 		      <th scope="col">Notes and explanations</th>
 		      <th scope="col">Implemented?</th>
-	      </tr>
-	      <tr>
-		      <td><strong>Subject Heading Searches</strong></td>
-   		      <td>&nbsp;</td>
-   		      <td>&nbsp;</td>
-   		      <td>&nbsp;</td>
-  		      <td>&nbsp;</td>
 	      </tr>
 	      <tr>
 		      <td>MeSH Term</td>
@@ -231,13 +210,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 		      <td>Coming soon!</td>
 	      </tr>
-	      <tr>
-		      <td><strong>Subject keyword searches</strong></td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
+      </table>
+
+<!-- Keyword Searches-->
+      <div class="w3-padding-16"></div>
+      <table class="w3-table-all w3-hoverable">
+        <caption class="w3-xlarge">
+        Keyword Searches
+        </caption>
+        <tr class="w3-theme w3-large">
+          <th scope="col">Name</th>
+          <th scope="col">Ovid Field Code</th>
+          <th scope="col">PubMed Tag</th>
+          <th scope="col">Notes and explanations</th>
+          <th scope="col">Implemented?</th>
+        </tr>
 	      <tr>
 		      <td>Abstract</td>
 		      <td>.ab.</td>
@@ -308,13 +295,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>Words and numbers included in a citation's title, collection title, abstract, other abstract, and keywords</td>
 		      <td>Yes</td>
 	      </tr>
-	      <tr>
-		      <td><strong>Subject-related keyword searches</strong></td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
+      </table>
+
+<!-- Subject-related keyword searches -->
+        <div class="w3-padding-16"></div>
+        <table class="w3-table-all w3-hoverable">
+          <caption class="w3-xlarge">
+          Subject-related keyword searches
+          </caption>
+          <tr class="w3-theme w3-large">
+            <th scope="col">Name</th>
+            <th scope="col">Ovid Field Code</th>
+            <th scope="col">PubMed Tag</th>
+            <th scope="col">Notes and explanations</th>
+            <th scope="col">Implemented?</th>
+          </tr>
 	      <tr>
 		      <td>Affiliation/Institution</td>
 		      <td>.in.</td>
@@ -336,13 +331,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 		      <td>.ot. is implemented, [tt] coming soon!</td>
 	      </tr>
-	      <tr>
-		      <td><strong>Citation Searches</strong></td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
+      </table>
+
+<!-- Citation Searches Table -->
+        <div class="w3-padding-16"></div>
+        <table class="w3-table-all w3-hoverable">
+          <caption class="w3-xlarge">
+          Citation Searches
+          </caption>
+          <tr class="w3-theme w3-large">
+            <th scope="col">Name</th>
+            <th scope="col">Ovid Field Code</th>
+            <th scope="col">PubMed Tag</th>
+            <th scope="col">Notes and explanations</th>
+            <th scope="col">Implemented?</th>
+          </tr>
 	      <tr>
 		      <td>Author</td>
 		      <td>.au.</td>
@@ -434,13 +437,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>This can be searched as the first 4 digits if the [dp] field in PubMed.</td>
 		      <td>&nbsp;</td>
 	      </tr>
-	      <tr>
-		      <td><strong>Journal Related Searches</strong></td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
+      </table>
+
+<!-- Journal-Related Searches Table -->
+      <div class="w3-padding-16"></div>
+      <table class="w3-table-all w3-hoverable">
+        <caption class="w3-xlarge">
+        Journal Related Searches
+        </caption>
+        <tr class="w3-theme w3-large">
+          <th scope="col">Name</th>
+          <th scope="col">Ovid Field Code</th>
+          <th scope="col">PubMed Tag</th>
+          <th scope="col">Notes and explanations</th>
+          <th scope="col">Implemented?</th>
+        </tr>
 	      <tr>
 		      <td>Country/Place of Publication</td>
 		      <td>.cp.</td>
@@ -511,13 +522,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
-	      <tr>
-		      <td><strong>Limit Searches</strong></td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
+      </table>
+
+<!-- Limit Searches Table-->
+        <div class="w3-padding-16"></div>
+        <table class="w3-table-all w3-hoverable">
+          <caption class="w3-xlarge">
+          Limit Searches
+          </caption>
+          <tr class="w3-theme w3-large">
+            <th scope="col">Name</th>
+            <th scope="col">Ovid Field Code</th>
+            <th scope="col">PubMed Tag</th>
+            <th scope="col">Notes and explanations</th>
+            <th scope="col">Implemented?</th>
+          </tr>
 	      <tr>
 		      <td>Date, Beginning</td>
 		      <td>.bd.</td>
@@ -637,13 +656,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.st. is one of the searches corresponding to [sb].</td>
 		      <td>&nbsp;</td>
 	      </tr>
-	      <tr>
-		      <td><strong>ID Numbers</strong></td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
+      </table>
+
+<!-- ID Nums Table -->
+        <div class="w3-padding-16"></div>
+        <table class="w3-table-all w3-hoverable">
+          <caption class="w3-xlarge">
+          ID Numbers
+          </caption>
+        <tr class="w3-theme w3-large">
+            <th scope="col">Name</th>
+            <th scope="col">Ovid Field Code</th>
+            <th scope="col">PubMed Tag</th>
+            <th scope="col">Notes and explanations</th>
+            <th scope="col">Implemented?</th>
+          </tr>
 	      <tr>
 		      <td>Article Identifier</td>
 		      <td>.id.</td>
@@ -693,13 +720,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>You can search these without tags in PubMed, they're unique enough to just appear. There is a field for this as well, but it is not searchable as a tag. Field = PMC.</td>
 		      <td>&nbsp;</td>
 	      </tr>
-	      <tr>
-		      <td><strong>Additional Stuff</strong></td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
+      </table>
+
+<!-- Additional Stuff Table-->
+        <div class="w3-padding-16"></div>
+        <table class="w3-table-all w3-hoverable">
+          <caption class="w3-xlarge">
+          Additional Stuff
+          </caption>
+          <tr class="w3-theme w3-large">
+            <th scope="col">Name</th>
+            <th scope="col">Ovid Field Code</th>
+            <th scope="col">PubMed Tag</th>
+            <th scope="col">Notes and explanations</th>
+            <th scope="col">Implemented?</th>
+          </tr>
 	      <tr>
 		      <td>Citation String</td>
 		      <td>.cs.</td>
@@ -883,13 +918,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
 	      </tr>
-	      <tr>
-		      <td><strong>Book Searches</strong></td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
-	      </tr>
+      </table>
+
+<!-- Book Searches Table-->
+        <div class="w3-padding-16"></div>
+        <table class="w3-table-all w3-hoverable">
+          <caption class="w3-xlarge">
+          Book Searches
+          </caption>
+          <tr class="w3-theme w3-large">
+            <th scope="col">Name</th>
+            <th scope="col">Ovid Field Code</th>
+            <th scope="col">PubMed Tag</th>
+            <th scope="col">Notes and explanations</th>
+            <th scope="col">Implemented?</th>
+          </tr>
 	      <tr>
 		      <td>Book Accession</td>
 		      <td>.bk.</td>
@@ -1010,9 +1053,26 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 	      </tr>
 			</table>
-<div class="w3-padding-8"></div>
+
+<div class="w3-padding-16"></div>
     </div>
   </div>
+</div>
+
+<!-- Disclaimer-->
+<div class="w3-row-padding w3-theme-l4 w3-container">
+<div class="w3-content">
+<div class="w3-container">
+<b><p class="w3-xlarge">Disclaimer</p></b>
+<p>Transpose is a simple javascript application with no artificial intelligence system. It is intended to provide a basic conversion between the syntax of two MEDLINE interfaces for the sake of convenience only. It is possible that a mistake or inaccuracy may occur. We make no guarantees, and are not liable if any translations are inaccurate (but if you find a bug, please let us know!). Please check over the translations carefully before using them. Transpose is not a substitute for the judgement of someone trained in the use of Ovid MEDLINE or PubMed.</p>
+
+<p>An understanding of how Transpose works and its limitations - as well as an understanding of the MEDLINE database - will help you in obtaining an accurate and usable translation.</p>
+
+<h4>Found a bug or have a suggestion? Contact the creators at medlinetranspose AT gmail DOT com.</h4>
+<div class="w3-padding-8"></div>
+
+</div>
+</div>
 </div>
 
 
