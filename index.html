@@ -231,7 +231,7 @@ function transposeOTP(inputline){
 	// convert adj to AND
 	if (inputline.search(/adj\d?/i) >= 0 ) {
 		inputline = inputline.replace(/adj\d?/ig,"AND");
-		warningArray.push("<br />PubMed does not support the use of adjacency. Converted ADJ to AND."); // warning message
+		warningArray.push("PubMed does not support the use of adjacency. Converted ADJ to AND."); // warning message
 		warningIndex++;
 	}
 	else {
@@ -279,7 +279,7 @@ function transposeOTP(inputline){
 						}
 						// if no field codes --> .af
 						if (mostRecentTag == "") {
-							warningArray.push("<br />The term <b>" + notArray[k].replace(/[()*$"]/g,"") + "</b> does not have a field code. The <b>[All Fields]</b> code has been applied.");
+							warningArray.push("The term <b>" + notArray[k].replace(/[()*$"]/g,"") + "</b> does not have a field code. The <b>[All Fields]</b> code has been applied.");
 							warningIndex++;
 							notArray[k] = notArray[k] + ".af";
 						}
@@ -333,10 +333,30 @@ function transposeOTP(inputline){
 	// filter underdefined, null from warning array
 	warningArray = warningArray.filter(String);
 
-	var warningString = warningArray.join(""); // warning array into one string
+  // split values in warningArray based on |, put into one total array
+  var m = null;
+  var n = null;
+  var warningArrayClean = [];
+  for (m = 0; m < warningArray.length; m++) {
+    if (warningArray[m].search("|") >= 0) { // if contains |
+      var arr = warningArray[m].split("|");
+      for (n = 0; n < arr.length; n++) {
+        // push all split values into warningArrayClean
+        warningArrayClean.push(arr[n]);
+      }
+    }
+    else // add value to warningArrayClean
+      warningArrayClean.push(warningArray[m]);
+  }
+
+  // remove duplicates from warningArrayClean
+  var uniqWarningArray = [...new Set(warningArrayClean)];
+
+  // warning array into a string for output
+	var warningString = uniqWarningArray.join("<p>");
 
 	document.getElementById("output3").innerHTML = outputline;
-    document.getElementById("output4").innerHTML = warningString;
+  document.getElementById("output4").innerHTML = warningString;
 	//document.getElementById("output5").innerHTML = testingArray;
 
 }  // this corresponds to the function declaration
@@ -449,25 +469,25 @@ function formatMesh (fmString) {
 
 				// search for diagnostic use -- no longer used
 				if (subHeadingArray[k].search("DU") >= 0) { // mesh contains subheading Diagnostic Use
-					fmWarningArray.push("<br />The subheading <b>Diagnostic Use</b> is no longer used. Remove it from your search or replace it with another subheading.");
+					fmWarningArray.push("The subheading <b>Diagnostic Use</b> is no longer used. Remove it from your search or replace it with another subheading.");
 				}
 
 				// radiography subheading
 				if (subHeadingArray[k].search("RA") >= 0) {
 					subHeadingArray[k] = "DG";
-					fmWarningArray.push("<br />The subheading <b>Radiography</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
+					fmWarningArray.push("The subheading <b>Radiography</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
 				}
 
 				// radionuclide subheading
 				if (subHeadingArray[k].search("RI") >= 0) {
 					subHeadingArray[k] = "DG";
-					fmWarningArray.push("<br />The subheading <b>radionuclide</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
+					fmWarningArray.push("The subheading <b>radionuclide</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
 				}
 
 				// ultrasonography subheading
 				if (subHeadingArray[k].search("US") >= 0) {
 					subHeadingArray[k] = "DG";
-					fmWarningArray.push("<br />The subheading <b>ultrasonographye</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
+					fmWarningArray.push("The subheading <b>ultrasonographye</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
 				}
 
 				// if a match with exploded subheadings list
@@ -480,58 +500,58 @@ function formatMesh (fmString) {
 						else {
 							switch (subHeadingArray[k]) {
 								case "AN":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>BL, CF, IP, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>BL, CF, IP, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "CY":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>UL.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>UL.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "EM":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>AB.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>AB.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "AH":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AG, AA, AI, and CS.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AG, AA, AI, and CS.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "DI":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>DG.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>DG.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "CO":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>SC.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>SC.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "MI":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>VI.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>VI.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "ET":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>CI, CO, SC, CN, EM, GE, IM, MI, VI, PS, and TM.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>CI, CO, SC, CN, EM, GE, IM, MI, VI, PS, and TM.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "OG":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EC, LJ, MA, ST, SD, TD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EC, LJ, MA, ST, SD, TD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "AE":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>PO and TO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>PO and TO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "PD":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AD, AE, PO, TO, AG, AI, CT, and PK.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AD, AE, PO, TO, AG, AI, CT, and PK.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "ME":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>BI, BL, CF, DF, EN, PK, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>BI, BL, CF, DF, EN, PK, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "PH":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>GE GD, IM, ME, BI, BL, CF, DF, EN, PK, UR, PP, and SE.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>GE GD, IM, ME, BI, BL, CF, DF, EN, PK, UR, PP, and SE.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "EP":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EH and MO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EH and MO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "SN":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EP, EH, MO, SD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EP, EH, MO, SD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "TU":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AD, AE, CT, and PO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AD, AE, CT, and PO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "SU":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "TH":
-                  fmWarningArray.push("<br />The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>DH, DT, NU, PC, RT, RH, SU, and TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>DH, DT, NU, PC, RT, RH, SU, and TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 							}
 						}
@@ -582,7 +602,7 @@ function formatMesh (fmString) {
 	fmString = fmString.replace(/exp /ig,""); // remove explode
 
  	// warning array into single string
- 	var fmWarning = fmWarningArray.join("");
+ 	var fmWarning = fmWarningArray.join("|");
 
 	fmOutputArray[0] = fmString;
     fmOutputArray[1] = fmWarning;
@@ -648,24 +668,24 @@ function formatKeyword(kwString) {
     	// convert field codes
     if (kwFieldArray[b].search(/tiabkw/i) >= 0){ // title and abstract
   			kwFieldArray[b] = kwFieldArray[b].replace(/tiabkw/i,"[tiab]");
-      kwWarningArray.push("<br /> In PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, the 'kw' field tag has been removed as it is redundant.");
+      kwWarningArray.push("In PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, the 'kw' field tag has been removed as it is redundant.");
     }
 		else if (kwFieldArray[b].search(/tiab/i) >= 0){ // title and abstract
 			kwFieldArray[b] = kwFieldArray[b].replace(/tiab/i,"[tiab]");
-      kwWarningArray.push("<br /> In Ovid, the .ti,ab command searches both title and abstract. However, in PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, this pubmed search may return more results than the original ovid one.");
+      kwWarningArray.push("In Ovid, the .ti,ab command searches both title and abstract. However, in PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, this pubmed search may return more results than the original ovid one.");
 		}
 		else if (kwFieldArray[b].search(/tw/i) >= 0){ // text word
 			kwFieldArray[b] = kwFieldArray[b].replace(/tw/i,"[tiab]");
-      kwWarningArray.push("<br /> In Ovid, the .tw or .ti,ab command searches both title and abstract. However, in PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, this pubmed search may return more results than the original ovid one. Please note also that while both Ovid MEDLINE and PubMed have a textword (tw) search, they search different fields in each database.");
+      kwWarningArray.push("In Ovid, the .tw or .ti,ab command searches both title and abstract. However, in PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, this pubmed search may return more results than the original ovid one. Please note also that while both Ovid MEDLINE and PubMed have a textword (tw) search, they search different fields in each database.");
 		}
 		else if (kwFieldArray[b].search(/mp/i) >= 0){ // multipurpose
 			kwFieldArray[b] = kwFieldArray[b].replace(/mp/i,"[tiab]");
-			kwWarningArray.push("<br />The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). Many of these field codes cannot be searched in PubMed. Search has been translated as [tiab] OR [nm] OR [mh] OR [tt] OR [pmid]. For an inexact, but simpler translation, you may wish to search this term as a text word [tw] search instead.");
+			kwWarningArray.push("The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). Many of these field codes cannot be searched in PubMed. Search has been translated as [tiab] OR [nm] OR [mh] OR [tt] OR [pmid]. For an inexact, but simpler translation, you may wish to search this term as a text word [tw] search instead.");
 			kwFieldArray.push("nm","mh","ot","ui");
 		}
 		else if (kwFieldArray[b].search(/ab/i) >= 0){ // abstract
 			kwFieldArray[b] = kwFieldArray[b].replace(/ab/i,"[tiab]");
-			kwWarningArray.push("<br />PubMed does not support abstract-only searches. <b>.ab</b> has been replaced with <b>[tiab]</b>, which may retrieve more results.");
+			kwWarningArray.push("PubMed does not support abstract-only searches. <b>.ab</b> has been replaced with <b>[tiab]</b>, which may retrieve more results.");
 		}
 		else if (kwFieldArray[b].search(/ot/i) >= 0){ // original title (transliterated title)
 			kwFieldArray[b] = kwFieldArray[b].replace(/ot/i,"[tt]");
@@ -696,11 +716,11 @@ function formatKeyword(kwString) {
     }
 		else if (kwFieldArray[b].search(/hw/i) >= 0){ // heading word (no translation)
 			kwFieldArray[b] = kwFieldArray[b].replace(/hw/i,"[mh]");
-      kwWarningArray.push("<br />PubMed does not support heading word (.hw) searches. The closest equivalent is mesh heading [mh], which may retrieve fewer results.");
+      kwWarningArray.push("PubMed does not support heading word (.hw) searches. The closest equivalent is mesh heading [mh], which may retrieve fewer results.");
 		}
     else if (kwFieldArray[b].search(/kf/i) >= 0){ // keyword heading word (no translation)
       kwFieldArray[b] = kwFieldArray[b].replace(/kf/i,"[ot]");
-      kwWarningArray.push("<br />PubMed does not support keyword heading word (.hw) searches. The closest equivalent is other term [ot], which may retrieve fewer results.");
+      kwWarningArray.push("PubMed does not support keyword heading word (.hw) searches. The closest equivalent is other term [ot], which may retrieve fewer results.");
     }
     else if (kwFieldArray[b].search(/ui/i) >= 0){ // unique identifier
       kwFieldArray[b] = kwFieldArray[b].replace(/ui/i,"[pmid]");
@@ -731,7 +751,7 @@ function formatKeyword(kwString) {
       kwArray[0] = kwArray[0].replace(/\"/g,"");
     }
 		else if (kwArray[0].search(/[A-Za-z][\?\#][A-Za-z]/) >= 0) { // wildcard ? or # is used
-			kwWarningArray.push("<br />PubMed does not support wildcards. For the most accurate translation, write out all possible word combinations.");
+			kwWarningArray.push("PubMed does not support wildcards. For the most accurate translation, write out all possible word combinations.");
 		}
 		else {
 			kwArray[0] = addQuotes(kwArray[0]); // normal keyword; add quotations
@@ -758,7 +778,7 @@ function formatKeyword(kwString) {
 	// kwString = kwTemp;
 
 	// warnings into single string
-	var kwWarningString = kwWarningArray.join("");
+	var kwWarningString = kwWarningArray.join("|");
 
 	kwOutputArray[0] = kwString;
     kwOutputArray[1] = kwWarningString;
