@@ -264,7 +264,7 @@ function transposeOTP(inputline){
 					for (k = notLengthCounter; k >= 0; k--){
 
                     // is it a MeSH term?
-                    if (notArray[k].search(/\//) >= 0|notArray[k].search(/\.fs/) >= 0|notArray[k].search(/\.xs/) >= 0|notArray[k].search(/\.sh/) >= 0){
+                    if (notArray[k].search(/\//) >= 0|notArray[k].search(/\.fs/) >= 0|notArray[k].search(/\.xs/) >= 0){
 						outputReceiver = formatMesh(notArray[k]);
 						notArray[k] = outputReceiver[0];
 						warningArray[warningIndex] = outputReceiver[1];
@@ -387,11 +387,6 @@ function formatMesh (fmString) {
 
 	// publication types
 	var pubType = ["addresses", "autobiography", "bibliography", "biography", "case reports", "classical article", "clinical conference", "clinical study", "clinical trial", "clinical trial, phase i", "clinical trial, phase ii", "clinical trial, phase iii", "clinical trial, phase iv", "collected works", "comparative study", "congresses", "consensus development conference", "consensus development conference, nih", "controlled clinical trial", "dataset", "dictionary", "directory", "duplicate publication", "editorial", "english abstract", "evaluation studies", "festschrift", "government publications", "guideline", "historical article", "interactive tutorial", "interview", "introductory journal article", "journal article", "lectures", "legal cases", "legislation", "letter", "meta-analysis", "meta analysis", "multicenter study", "news", "newspaper article", "observational study", "overall", "patient education handout", "periodical index", "personal narratives", "portraits", "practice guideline", "pragmatic clinical trial", "publication components", "publication formats", "publication type category", "randomized controlled trial", "research support, american recovery and reinvestment act", "research support, n.i.h., extramural", "research support, n.i.h., intramural", "research support, non-u.s. gov't research support, u.s. gov't, non-p.h.s.", "research support, u.s. gov't, p.h.s.", "review", "scientific integrity review", "study characteristics", "support of research", "technical report", "twin study", "validation studies", "video-audio media", "webcasts"];
-
-    // .sh syntax
-    if (fmString.search(".sh") >= 0) {
-    	fmString = fmString.replace(".sh","/");
-    }
 
 	// floating or exploded subheadings
     if (fmString.search(/\.fs/i) >= 0|fmString.search(/\.xs/i) >= 0) {
@@ -683,51 +678,169 @@ function formatKeyword(kwString) {
 			kwWarningArray.push("The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). Many of these field codes cannot be searched in PubMed. Search has been translated as [tiab] OR [nm] OR [mh] OR [tt] OR [pmid]. For an inexact, but simpler translation, you may wish to search this term as a text word [tw] search instead.");
 			kwFieldArray.push("nm","mh","ot","ui");
 		}
+    // field codes are listed alphabetically after this point
 		else if (kwFieldArray[b].search(/ab/i) >= 0){ // abstract
 			kwFieldArray[b] = kwFieldArray[b].replace(/ab/i,"[tiab]");
 			kwWarningArray.push("PubMed does not support abstract-only searches. <b>.ab</b> has been replaced with <b>[tiab]</b>, which may retrieve more results.");
 		}
-		else if (kwFieldArray[b].search(/ot/i) >= 0){ // original title (transliterated title)
-			kwFieldArray[b] = kwFieldArray[b].replace(/ot/i,"[tt]");
-		}
-		else if (kwFieldArray[b].search(/kw/i) >= 0){ // keyword (other term)
-			kwFieldArray[b] = kwFieldArray[b].replace(/kw/i,"[ot]");
-		}
-    else if (kwFieldArray[b].search(/fa/i) >= 0){ // full author name
-      kwFieldArray[b] = kwFieldArray[b].replace(/fa/i,"[fau]");
-    }
-    else if (kwFieldArray[b].search(/pa/i) >= 0){ // first author name
-      kwFieldArray[b] = kwFieldArray[b].replace(/pa/i,"[1au]");
-    }
-    else if (kwFieldArray[b].search(/pn/i) >= 0){ // peronal name as subject
-      kwFieldArray[b] = kwFieldArray[b].replace(/pn/i,"[ps]");
-    }
-		else if (kwFieldArray[b].search(/lg/i) >= 0){ // language
-			kwFieldArray[b] = kwFieldArray[b].replace(/lg/i,"[la]");
-		}
-		else if (kwFieldArray[b].search(/jn/i) >= 0){ // journal title
-			kwFieldArray[b] = kwFieldArray[b].replace(/jn/i,"[jt]");
-		}
-    else if (kwFieldArray[b].search(/ja/i) >= 0){ // journal title abbreviated
-      kwFieldArray[b] = kwFieldArray[b].replace(/ja/i,"[ta]");
+    // .ai —> [auid]
+    else if (kwFieldArray[b].search(/ai/i) >= 0){ // Author Name ID
+      kwFieldArray[b] = kwFieldArray[b].replace(/ai/i,"[auid]");
     }
     else if (kwFieldArray[b].search(/af/i) >= 0){ // all fields
       kwFieldArray[b] = kwFieldArray[b].replace(/af/i,"[all]");
     }
-		else if (kwFieldArray[b].search(/hw/i) >= 0){ // heading word (no translation)
-			kwFieldArray[b] = kwFieldArray[b].replace(/hw/i,"[mh]");
-      kwWarningArray.push("PubMed does not support heading word (.hw) searches. The closest equivalent is mesh heading [mh], which may retrieve fewer results.");
-		}
-    else if (kwFieldArray[b].search(/kf/i) >= 0){ // keyword heading word (no translation)
-      kwFieldArray[b] = kwFieldArray[b].replace(/kf/i,"[ot]");
-      kwWarningArray.push("PubMed does not support keyword heading word (.hw) searches. The closest equivalent is other term [ot], which may retrieve fewer results.");
+    else if (kwFieldArray[b].search(/ax/i) >= 0){ // Author Last Name
+      kwFieldArray[b] = kwFieldArray[b].replace(/ax/i,"[au]");
     }
-    else if (kwFieldArray[b].search(/ui/i) >= 0){ // unique identifier
-      kwFieldArray[b] = kwFieldArray[b].replace(/ui/i,"[pmid]");
+    else if (kwFieldArray[b].search(/ci/i) >= 0){ // Conflict of Interest
+      kwFieldArray[b] = kwFieldArray[b].replace(/ci/i,"[coi]");
+    }
+    else if (kwFieldArray[b].search(/cp/i) >= 0){ // country of publication
+      kwFieldArray[b] = kwFieldArray[b].replace(/cp/i,"[pl]");
+    }
+    else if (kwFieldArray[b].search(/da/i) >= 0){ // Date, Mesh
+      kwFieldArray[b] = kwFieldArray[b].replace(/da/i,"[mhda]");
+    }
+    else if (kwFieldArray[b].search(/do/i) >= 0){ // DOI/Location ID/Publisher Item Identifier
+      kwFieldArray[b] = kwFieldArray[b].replace(/do/i,"[lid]");
+    }
+    else if (kwFieldArray[b].search(/di/i) >= 0){ // DOI/Location ID/Publisher Item Identifier
+      kwFieldArray[b] = kwFieldArray[b].replace(/di/i,"[lid]");
+    }
+    else if (kwFieldArray[b].search(/dt/i) >= 0){ // Date, Create
+      kwFieldArray[b] = kwFieldArray[b].replace(/dt/i,"[crdt]");
+    }
+    else if (kwFieldArray[b].search(/ed/i) >= 0){ // Date, Completion/Entry
+      kwFieldArray[b] = kwFieldArray[b].replace(/ed/i,"[dcom]");
+    }
+    else if (kwFieldArray[b].search(/ee/i) >= 0){ // Editor
+      kwFieldArray[b] = kwFieldArray[b].replace(/ee/i,"[ed]");
+    }
+    else if (kwFieldArray[b].search(/ep/i) >= 0){ // Date of Publication, Electronic
+      kwFieldArray[b] = kwFieldArray[b].replace(/ep/i,"[dep]");
+    }
+    else if (kwFieldArray[b].search(/es/i) >= 0){ // ISSN Electronic
+      kwFieldArray[b] = kwFieldArray[b].replace(/es/i,"[ta]");
+    }
+    else if (kwFieldArray[b].search(/ez/i) >= 0){ // Date, Entrez
+      kwFieldArray[b] = kwFieldArray[b].replace(/ez/i,"[edat]");
+    }
+    else if (kwFieldArray[b].search(/fa/i) >= 0){ // full author name
+      kwFieldArray[b] = kwFieldArray[b].replace(/fa/i,"[fau]");
+    }
+    else if (kwFieldArray[b].search(/gr|gc|gi|no|go/i) >= 0){ // Grant Information
+      kwFieldArray[b] = kwFieldArray[b].replace(/gr|gc|gi|no|go/i,"[gr]");
+    }
+    else if (kwFieldArray[b].search(/hw/i) >= 0){ // heading word (no translation)
+      kwFieldArray[b] = kwFieldArray[b].replace(/hw/i,"[mh]");
+      kwWarningArray.push("PubMed does not support heading word (.hw) searches. The closest equivalent is mesh heading [mh], which may retrieve fewer results.");
+    }
+    else if (kwFieldArray[b].search(/ib/i) >= 0){ // ISBN
+      kwFieldArray[b] = kwFieldArray[b].replace(/ib/i,"[is]");
+    }
+    else if (kwFieldArray[b].search(/id/i) >= 0){ // Article Identifier
+      kwFieldArray[b] = kwFieldArray[b].replace(/id/i,"[aid]");
+    }
+    else if (kwFieldArray[b].search(/il/i) >= 0){ // ISSN Linking
+      kwFieldArray[b] = kwFieldArray[b].replace(/il/i,"[ta]");
     }
     else if (kwFieldArray[b].search(/in/i) >= 0){ // institution
       kwFieldArray[b] = kwFieldArray[b].replace(/in/i,"[ad]");
     }
+    else if (kwFieldArray[b].search(/io/i) >= 0){ // Journal ISO/Title Abbreviation
+      kwFieldArray[b] = kwFieldArray[b].replace(/io/i,"[ta]");
+    }
+    else if (kwFieldArray[b].search(/is/i) >= 0){ // ISSN Print
+      kwFieldArray[b] = kwFieldArray[b].replace(/is/i,"[ta]");
+    }
+    else if (kwFieldArray[b].search(/ja/i) >= 0){ // journal title abbreviated
+      kwFieldArray[b] = kwFieldArray[b].replace(/ja/i,"[ta]");
+    }
+    else if (kwFieldArray[b].search(/jc/i) >= 0){ // NLM Journal Code
+      kwFieldArray[b] = kwFieldArray[b].replace(/jc/i,"[jid]");
+    }
+    else if (kwFieldArray[b].search(/jn/i) >= 0){ // journal title
+      kwFieldArray[b] = kwFieldArray[b].replace(/jn/i,"[journal]");
+    }
+    // lancet.jw —> warning message that there is no equivalent. Change to [journal].
+    else if (kwFieldArray[b].search(/jw/i) >= 0){ // journal word
+      kwFieldArray[b] = kwFieldArray[b].replace(/jw/i,"[journal]");
+      kwWarningArray.push("PubMed does not support journal word (.jw) searches. The closest equivalent is [journal], which may retrieve fewer results.");
+    }
+    else if (kwFieldArray[b].search(/kf/i) >= 0){ // keyword heading word (no translation)
+      kwFieldArray[b] = kwFieldArray[b].replace(/kf/i,"[ot]");
+      kwWarningArray.push("PubMed does not support keyword heading word (.kf) searches. The closest equivalent is other term [ot], which may retrieve fewer results.");
+    }
+    else if (kwFieldArray[b].search(/kw/i) >= 0){ // keyword (other term)
+      kwFieldArray[b] = kwFieldArray[b].replace(/kw/i,"[ot]");
+    }
+    else if (kwFieldArray[b].search(/lg/i) >= 0){ // language
+      kwFieldArray[b] = kwFieldArray[b].replace(/lg/i,"[la]");
+    }
+    else if (kwFieldArray[b].search(/nj/i) >= 0){ // NLM Journal Name
+      kwFieldArray[b] = kwFieldArray[b].replace(/nj/i,"[journal]");
+    }
+    else if (kwFieldArray[b].search(/nm/i) >= 0){ // name of substance word
+      kwFieldArray[b] = kwFieldArray[b].replace(/nm/i,"[supplementary concept]");
+    }
+    else if (kwFieldArray[b].search(/nw/i) >= 0){ // NLM Journal Word<
+      kwFieldArray[b] = kwFieldArray[b].replace(/nw/i,"[journal]");
+      kwWarningArray.push("PubMed does not support NLM journal word (.nw) searches. The closest equivalent is [journal], which may retrieve fewer results.");
+    }
+    // .oa —> warning that there is no equivalent. "This is one of the many fields searched by the [tiab] and [tw] searches in PubMed, but it cannot be searched separately.” Change to [tiab].
+    else if (kwFieldArray[b].search(/oa/i) >= 0){ // original title (transliterated title)
+      kwFieldArray[b] = kwFieldArray[b].replace(/oa/i,"[tiab]");
+      kwWarningArray.push("PubMed does not support Other Abstract (.oa) field tag searching. This is one of the many fields searched by the [tiab] and [tw] searches in PubMed, but it cannot be searched separately. Field has been changed to [tiab]");
+    }
+		else if (kwFieldArray[b].search(/ot/i) >= 0){ // original title (transliterated title)
+			kwFieldArray[b] = kwFieldArray[b].replace(/ot/i,"[tt]");
+		}
+    else if (kwFieldArray[b].search(/pa/i) >= 0){ // first author name
+      kwFieldArray[b] = kwFieldArray[b].replace(/pa/i,"[1au]");
+    }
+    else if (kwFieldArray[b].search(/pb/i) >= 0){ // Publisher
+      kwFieldArray[b] = kwFieldArray[b].replace(/pb/i,"[pubn]");
+    }
+    else if (kwFieldArray[b].search(/pn/i) >= 0){ // peronal name as subject
+      kwFieldArray[b] = kwFieldArray[b].replace(/pn/i,"[ps]");
+    }
+    else if (kwFieldArray[b].search(/ps/i) >= 0){ // Protocol Supplementary Concept
+      kwFieldArray[b] = kwFieldArray[b].replace(/ps/i,"[supplementary concept]");
+    }
+    else if (kwFieldArray[b].search(/px/i) >= 0){ // Protocol Supplementary Concept Word
+      kwFieldArray[b] = kwFieldArray[b].replace(/px/i,"[supplementary concept]");
+      kwWarningArray.push("PubMed only supports .px searches that are one word long (no phrases).");
+    }
+    else if (kwFieldArray[b].search(/rd/i) >= 0){ // Date, Modification/Revision
+      kwFieldArray[b] = kwFieldArray[b].replace(/rd/i,"[lr]");
+    }
+    else if (kwFieldArray[b].search(/rs/i) >= 0){ // Rare Disease Supplementary Concept
+      kwFieldArray[b] = kwFieldArray[b].replace(/rs/i,"[supplementary concept]");
+    }
+    else if (kwFieldArray[b].search(/rx/i) >= 0){ // Rare Disease Supplementary Concept Word
+      kwFieldArray[b] = kwFieldArray[b].replace(/rx/i,"[supplementary concept]");
+      kwWarningArray.push("PubMed only supports .rx searches that are one word long (no phrases).");
+    }
+    else if (kwFieldArray[b].search(/sh/i) >= 0){ // mesh heading unexploded
+      kwFieldArray[b] = kwFieldArray[b].replace(/sh/i,"[mesh:noexp]");
+    }
+    else if (kwFieldArray[b].search(/st/i) >= 0){ // Status
+      kwFieldArray[b] = kwFieldArray[b].replace(/st/i,"[sb]");
+    }
+    else if (kwFieldArray[b].search(/ui/i) >= 0){ // unique identifier
+      kwFieldArray[b] = kwFieldArray[b].replace(/ui/i,"[pmid]");
+    }
+    else if (kwFieldArray[b].search(/vo/i) >= 0){ // volume
+      kwFieldArray[b] = kwFieldArray[b].replace(/vo/i,"[vi]");
+    }
+    else if (kwFieldArray[b].search(/xm/i) >= 0){ // mesh heading exploded
+      kwFieldArray[b] = kwFieldArray[b].replace(/xm/i,"[mh]");
+    }
+    else if (kwFieldArray[b].search(/yr/i) >= 0){ // year
+      kwFieldArray[b] = kwFieldArray[b].replace(/yr/i,"[dp]");
+    }
+    // else replace .## with [##]
 		else {
       kwFieldArray[b] = "[" + kwFieldArray[b] + "]";
 		}
