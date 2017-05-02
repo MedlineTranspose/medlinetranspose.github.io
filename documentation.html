@@ -138,32 +138,32 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.xm.</td>
 		      <td>[mh]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>MeSH Heading, Unexploded</td>
 		      <td>.sh.</td>
 		      <td>[mh:noexp]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>MeSH Heading Word</td>
 		      <td>.hw.</td>
 		      <td>N/A</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>Yes - a warning is given.</td>
 	      </tr>
 	      <tr>
 		      <td>Name of Substance Word</td>
 		      <td>.nm.</td>
 		      <td>[nm] or [supplementary concept]</td>
 		      <td>&nbsp;</td>
-		      <td>[supplementary concept] is implemented - others coming soon!</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Pharmacological Action</td>
-		      <td>&nbsp;</td>
+		      <td>n/a</td>
 		      <td>[pa] or [pharmacological action]</td>
 		      <td>Closest equivalent is Ovid is to search as if it were a MeSH term</td>
 		      <td>Yes</td>
@@ -173,42 +173,42 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.ps.</td>
 		      <td>[supplementary concept]</td>
 		      <td>&nbsp;</td>
-		      <td>[supplementary concept] is implemented - others coming soon!</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Protocol Supplementary Concept Word</td>
 		      <td>.px.</td>
 		      <td>&nbsp;</td>
 		      <td>This will work for a supplementary concept which is only one word long, but not for part of a phrase.</td>
-		      <td>&nbsp;</td>
+		      <td>Yes - a warning is given.</td>
 	      </tr>
 	      <tr>
 		      <td>Rare Disease Supplementary Concept</td>
 		      <td>.rs.</td>
 		      <td>[supplementary concept]</td>
 		      <td>&nbsp;</td>
-		      <td>[supplementary concept] is implemented - others coming soon!</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Rare Disease Supplementary Concept Word</td>
 		      <td>.rx.</td>
 		      <td>&nbsp;</td>
 		      <td>This will work for a supplementary concept which is only one word long, but not for part of a phrase.</td>
-		      <td>&nbsp;</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Subheading, Exploded</td>
 		      <td>.xs.</td>
 		      <td>[sh] or [subheading]</td>
 		      <td>Ovid version will only accept 2-letter code</td>
-		      <td>[sh] and [subheading] are implemented - others coming soon!</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Subheading, Floating</td>
 		      <td>.fs.</td>
 		      <td>[sh:noexp] or [subheading:noexp]</td>
 		      <td>&nbsp;</td>
-		      <td>Coming soon!</td>
+		      <td>.fs is implemented. [sh:noexp] coming soon.</td>
 	      </tr>
       </table>
 
@@ -244,7 +244,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.kw.</td>
 		      <td>[ot]</td>
 		      <td>&nbsp;</td>
-		      <td>.kw. is implemented - [ot] coming soon!</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Keyword Heading Word</td>
@@ -329,7 +329,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.ot.</td>
 		      <td>[tt]</td>
 		      <td>&nbsp;</td>
-		      <td>.ot. is implemented, [tt] coming soon!</td>
+		      <td>Yes</td>
 	      </tr>
       </table>
 
@@ -351,7 +351,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.au.</td>
 		      <td>[au] or [author]</td>
 		      <td>Ovid requires format: last name, space, first initial, optional truncation, e.g. smith a$. Ovid field .ax. accepts a last name without a first initial.</td>
-		      <td>[au] and [author] are implemented - .au. coming soon!</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Author, Corporate</td>
@@ -376,7 +376,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      </tr>
 	      <tr>
 		      <td>Author, Last</td>
-		      <td>&nbsp;</td>
+		      <td>n/a</td>
 		      <td>[lastau] or [author - last]</td>
 		      <td>&nbsp;</td>
 		      <td>&nbsp;</td>
@@ -386,28 +386,28 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.ax.</td>
 		      <td>&nbsp;</td>
 		      <td>[au] or [author] accepts a last name without a first initial.</td>
-		      <td>&nbsp;</td>
+		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Issue/Part</td>
 		      <td>.ip.</td>
 		      <td>[ip] or [issue]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.ip is implemented. Others coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Journal</td>
 		      <td>.jn.</td>
 		      <td>[journal]</td>
 		      <td>Phrase indexed - must have correct version of journal name.</td>
-		      <td>Coming soon!</td>
+		      <td>.jn is implemented - [journal] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Page/Pagination</td>
 		      <td>.pg.</td>
 		      <td>[pg] or [pagination]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.pg is implemented. Others coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>PMID/Unique Identifier</td>
@@ -428,14 +428,14 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.vo.</td>
 		      <td>[vi]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.vo is implemented. [vi] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Year of Publication</td>
 		      <td>.yr.</td>
 		      <td>&nbsp;</td>
 		      <td>This can be searched as the first 4 digits if the [dp] field in PubMed.</td>
-		      <td>&nbsp;</td>
+		      <td>Yes</td>
 	      </tr>
       </table>
 
@@ -457,56 +457,56 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.cp.</td>
 		      <td>[pl]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.cp is implemented. [pl] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>ISSN Electronic</td>
 		      <td>.es.</td>
 		      <td>[ta] or [journal]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.es is implemented. [ta] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>ISSN Linking</td>
 		      <td>.il.</td>
 		      <td>[ta] or [journal]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.il is implemented. [ta] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>ISSN Print</td>
 		      <td>.is.</td>
 		      <td>[ta] or [journal]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.is is implemented. [ta] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Journal ISO/Title Abbreviation</td>
 		      <td>.io.</td>
 		      <td>[ta]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.io is implemented. [ta] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Journal Subset</td>
 		      <td>.sb.</td>
 		      <td>[sb]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.sb is implemented. [sb] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Journal Word</td>
 		      <td>.jw.</td>
-		      <td>N/A</td>
+		      <td>n/a</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>Yes - a warning is given.</td>
 	      </tr>
 	      <tr>
 		      <td>NLM Journal Code</td>
 		      <td>.jc.</td>
 		      <td>[jid]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.jc is implemented. [jid] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>NLM Journal Name</td>
@@ -518,9 +518,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      <tr>
 		      <td>NLM Journal Word</td>
 		      <td>.nw.</td>
-		      <td>N/A</td>
+		      <td>n/a</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>Yes - a warning is given.</td>
 	      </tr>
       </table>
 
@@ -549,7 +549,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.ed.</td>
 		      <td>[dcom]</td>
 		      <td>Format: YYYYMMDD in both databases. In Ovid, truncate with *. In PubMed, truncation is assumed (no symbol needed).</td>
-		      <td>&nbsp;</td>
+		      <td>.ed is implemented. [dcom] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Date, Contribution</td>
@@ -563,7 +563,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.dt.?</td>
 		      <td>[crdt]</td>
 		      <td>The Ovid field called Create Date appears to correspond to the value of Entrez Date in PubMed - have contacted Ovid for clarification.</td>
-		      <td>&nbsp;</td>
+		      <td>.dt is implemented. [crdt] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Date, Ending</td>
@@ -577,35 +577,35 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.ez.?</td>
 		      <td>[edat]</td>
 		      <td>The Ovid field called Entrez Date appears to correspond to the value of Create Date in PubMed - have contacted Ovid for clarification.</td>
-		      <td>&nbsp;</td>
+		      <td>.ez is implemented. [edat] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Date, Mesh</td>
 		      <td>.da.</td>
 		      <td>[mhda]</td>
 		      <td>Format: YYYY/MM/DD HH:MM in both databases. In Ovid, use a space where there would be a slash, and truncate with *. In PubMed, use a slash, and truncation is assumed (no symbol needed).</td>
-		      <td>&nbsp;</td>
+		      <td>.da is implemented. [mhda] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Date, Modification/Revision</td>
 		      <td>.rd.</td>
 		      <td>[lr]</td>
 		      <td>Format: YYYYMMDD in both databases. In Ovid, truncate with *. In PubMed, truncation is assumed (no symbol needed).</td>
-		      <td>&nbsp;</td>
+		      <td>.rd is implemented. [lr] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Date of Publication</td>
 		      <td>.dp.</td>
 		      <td>[dp]</td>
 		      <td>Format: YYYY Mmm DD in both databases. In addition to regular date format, pubmed allows the following format: &ldquo;last X days&rdquo;[dp]; &ldquo;last X months&rdquo;[dp]; &ldquo;last X year&rdquo;[dp] and also records date exactly as published in some cases (e.g. winter 2007).</td>
-		      <td>&nbsp;</td>
+		      <td>.dp is implemented. [dp] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Date of Publication, Electronic</td>
 		      <td>.ep.</td>
 		      <td>[dep]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.ep is implemented. [dep] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Date, Update</td>
@@ -623,7 +623,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      </tr>
 	      <tr>
 		      <td>Filter</td>
-		      <td>.et.</td>
+		      <td>.sb.</td>
 		      <td>[sb] or [filter]</td>
 		      <td>This may sometimes correspond to .sb. in Ovid. Further investigation required before implementation.</td>
 		      <td>&nbsp;</td>
@@ -640,7 +640,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>exp <em>Publication Type</em>/</td>
 		      <td>[pt] or [ptyp] or [publication type]</td>
 		      <td>E.g. exp Review/</td>
-		      <td>Yes</td>
+		      <td>PubMed to Ovid is implemented. Ovid to PubMed coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Publication Type, Unexploded</td>
@@ -654,7 +654,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.st.</td>
 		      <td>[sb]</td>
 		      <td>.st. is one of the searches corresponding to [sb].</td>
-		      <td>&nbsp;</td>
+		      <td>.st is implemented. [sb] coming soon.</td>
 	      </tr>
       </table>
 
@@ -676,28 +676,28 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.id.</td>
 		      <td>[aid]</td>
 		      <td>In Ovid, replace any punctuation with spaces.</td>
-		      <td>&nbsp;</td>
+		      <td>.id is implemented. [aid] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Author Name ID</td>
 		      <td>.ai.</td>
 		      <td>[auid]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.ai is implemented. [auid] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>DOI/Location ID/Publisher Item Identifier</td>
 		      <td>.do,di.</td>
 		      <td>[lid]</td>
 		      <td>In Ovid, replace any punctuation with spaces.</td>
-		      <td>&nbsp;</td>
+		      <td>.do and .di have been implmented. [lid] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Grant Information</td>
 		      <td>.gr,gc,gi,no,go.</td>
 		      <td>[gr] or [grant number]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.gr,gc,gi,no,go. is implemented. [gr] coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Object ID</td>
@@ -754,7 +754,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.ci.</td>
 		      <td>[coi] or [cois]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.ci implemneted. Others coming soon!</td>
 	      </tr>
 	      <tr>
 		      <td>Copyright Index</td>
@@ -789,7 +789,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.ir.</td>
 		      <td>[ir] or [investigator]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.ir is implemented. Others coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Investigator Affiliation</td>
@@ -838,7 +838,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.pb.</td>
 		      <td>[pubn]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.pb is implemented. [pubn] coming soon.</td>
 	      </tr>
 	      <tr>
 	      <tr>
@@ -881,7 +881,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.si.</td>
 		      <td>[si] or [secondary source id]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.si implemented. Others coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Secondary Source Link</td>
@@ -1001,7 +1001,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.ee.</td>
 		      <td>[ed] or [editor]</td>
 		      <td>No index provided in Ovid.</td>
-		      <td>&nbsp;</td>
+		      <td>.ee is implemented. Others coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Editor Full Name</td>
@@ -1029,7 +1029,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>.ib.</td>
 		      <td>[is] or [isbn]</td>
 		      <td>&nbsp;</td>
-		      <td>&nbsp;</td>
+		      <td>.ib is implemented. Others coming soon.</td>
 	      </tr>
 	      <tr>
 		      <td>Media Type</td>
