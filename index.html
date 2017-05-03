@@ -1013,7 +1013,7 @@ function transposePTO(inputline) {
               //is the term a controlled non-MesH?
 
 				      //is the term a Pharmacologic Action?
-				      else if (notArray[k].search(/\[pa/i) >= 0 || notArray[k].search(/\[pharm/i) >= 0){
+				      else if (notArray[k].search(/\[pa\]/i) >= 0 || notArray[k].search(/\[pharm/i) >= 0){
 					          notArray[k] = notArray[k].replace(/\[p[\w| ]+\]/i,"[Mesh]");
 					          outputReceiver = formatMeshPTO(notArray[k]);
 					          notArray[k] = outputReceiver[0];
@@ -1058,8 +1058,8 @@ function transposePTO(inputline) {
 					          warningArray[warningIndex] = outputReceiver[1];
 				      }
 
-				      //is the term an author-type strategy?
-				      else if (notArray[k].search(/\[Au/i) >= 0 || notArray[k].search(/\[cn/i) >=0){
+				      //is the term an author?
+				      else if (notArray[k].search(/\[Au/i) >= 0 || notArray[k].search(/\[cn/i) >=0 || notArray[k].search(/\[1au/i) >= 0 || notArray[k].search(/\[fau/i) >= 0){
 					          outputReceiver = formatAuthorPTO(notArray[k]);
 					          notArray[k] = outputReceiver[0];
 					          warningArray[warningIndex] = outputReceiver[1];
@@ -1085,6 +1085,11 @@ function transposePTO(inputline) {
               //is the term a language limit?
               else if (notArray[k].search(/\[la/i) >= 0){
                     notArray[k] = formatLimitPTO(notArray[k]);
+              }
+		    
+	      //is the term a citation number?
+              else if (notArray[k].search(/\[ip\]/i) >= 0 || notArray[k].search(/\[issue\]/i) >= 0 || notArray[k].search(/\[pg\]/i) >= 0 || notArray[k].search(/\[pagination\]/i) >= 0 || notArray[k].search(/\[vi\]/i) >= 0){
+                    notArray[k] = formatCitationPTO(notArray[k]);
               }
 
               //is the term a subset search for systematic reviews?
@@ -1365,7 +1370,7 @@ function formatControlledPTO(cvString) {
     }
 
 	//reformat subheadings to exploded subheadings in Ovid syntex
-    else if (cvString.search(/\[sh/i) >= 0 || cvString.search(/\[subheading/i) >= 0){
+    else if (cvString.search(/\[sh\]/i) >= 0 || cvString.search(/\[subheading\]/i) >= 0){
         cvString = cvString.replace(/\[sh\]/i,"");
         cvString = removeQuotesPTO(cvString);
         cvOutputArray = formatSubheadingsPTO(cvString);
@@ -1377,6 +1382,14 @@ function formatControlledPTO(cvString) {
             cvOutputArray[0] = cvOutputArray[0].slice(0,2);
             cvOutputArray[0] = cvOutputArray[0] + ".xs.";
         }
+    }
+	
+    //unexploded subheadings are simpler
+    else if (cvString.search(/\[sh:noexp\]/i) >= 0 || cvString.search(/\[subheading:noexp\]/i) >= 0){
+        cvString = cvString.replace(/\[sh:noexp\]/i,".fs.");
+        cvString = cvString.replace(/\[subheading:noexp\]/i,".fs.");
+        cvString = removeQuotesPTO(cvString);
+        cvOutputArray[0] = cvString;
     }
 
 	//reformats supplementary concepts - not exactly, but as closely as possible with the Ovid interface.
@@ -1438,18 +1451,26 @@ function formatControlledPTO(cvString) {
 		auString = auString.replace(/\[Author - Full\]/i,".fa.");
 		auString = removeQuotesPTO(auString);
 	}
-	else if (auString.search(/\[Author - First/i) >= 0){
-    if (auString.search(/ /) >= 0){
-      auString = auString.replace(/\[Author - First\]/i,".pa.");
-    }
-    else{
-      auString = auString.replace(/\[Author - First\]/i," $.pa.");
-    }
+	else if (auString.search(/\[fau/i) >= 0){
+    		auString = auString.replace(/\[fau\]/i,".fa.");
 		auString = removeQuotesPTO(auString);
 	}
-	//check if these get the same number of results!
-	else if (auString.search(/\[Author - Last/i) >= 0){
-		auString = auString.replace(/\[Author - Last\]/i,".ax.");
+	else if (auString.search(/\[Author - First/i) >= 0){
+    		if (auString.search(/ /) >= 0){
+      			auString = auString.replace(/\[Author - First\]/i,".pa.");
+    		}
+    		else{
+      			auString = auString.replace(/\[Author - First\]/i," $.pa.");
+    		}
+		auString = removeQuotesPTO(auString);
+	}
+	else if (auString.search(/\[1au/i) >= 0){
+    		if (auString.search(/ /) >= 0){
+      			auString = auString.replace(/\[1au\]/i,".pa.");
+   		}
+    		else{
+      			auString = auString.replace(/\[1au\]/i," $.pa.");
+    		}
 		auString = removeQuotesPTO(auString);
 	}
 	else if (auString.search(/\[Author - Identifier/i) >= 0){
@@ -1478,6 +1499,46 @@ function formatControlledPTO(cvString) {
 	return auOutputArray;
 
 }
+
+//****************************************************************************************************Citation*******************************************************************
+ function formatCitationPTO(citString){
+
+     //make a variable to hold any warnings
+    //var citWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    //var citOutputArray = [null, null];
+
+	//check for a volume number search
+	if (citString.search(/\[vi/i) >= 0){
+		citString = citString.replace(/\[vi\]/i,".vp.");
+		citString = removeQuotesPTO(citString);
+	}
+  //check for an issue number search
+  else if (citString.search(/\[ip/i) >= 0){
+    citString = citString.replace(/\[ip\]/i,".ip.");
+		citString = removeQuotesPTO(citString);
+	}
+  else if (citString.search(/\[issue/i) >= 0){
+    citString = citString.replace(/\[issue\]/i,".ip.");
+    citString = removeQuotesPTO(citString);
+  }
+  //check for a page number search
+  else if (citString.search(/\[pg/i) >= 0){
+    citString = citString.replace(/\[pg\]/i,".pg.");
+		citString = removeQuotesPTO(citString);
+	}
+  else if (citString.search(/\[pagination/i) >= 0){
+    citString = citString.replace(/\[pagination\]/i,".pg.");
+		citString = removeQuotesPTO(citString);
+	}
+
+	//citOutputArray[0] = citString;
+	//citOutputArray[1] = citWarning;
+	return citString;
+
+}
+
 
 //****************************************************************************************************Keywords*******************************************************************
 
