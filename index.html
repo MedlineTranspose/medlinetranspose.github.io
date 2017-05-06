@@ -1002,7 +1002,7 @@ function transposePTO(inputline) {
               //this checks for the attributes of the search term.
 
               //is the term is a MeSH term?
-              if (notArray[k].search(/\[M/i) >= 0){
+              if (notArray[k].search(/\[Me/i) >= 0 || notArray[k].search(/\[Ma/i) >= 0 || notArray[k].search(/\[MH\]/i) >= 0){
                     testingArray[testingIndex] = "mesh";
                     outputReceiver = formatMeshPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
@@ -1347,29 +1347,37 @@ function formatControlledPTO(cvString) {
 	var tempCV = "null";
 
     //reformat publication types (three variants)
-    //in Ovid, to get an exploded Publication Type, you can enter it as if it were a MeSH term.
+
     if (cvString.search(/\[pt/i) >= 0 || cvString.search(/\[publication/i) >= 0){
-        cvString = cvString.replace(/\[ptyp\]/i,"/");
-        cvString = cvString.replace(/\[Publication Type\]/i,"/");
-        cvString = cvString.replace(/\[pt\]/i,"/");
-        cvOutputArray[1] = cvString.replace(/\//,"");
-        cvString = removeQuotesPTO(cvString);
-
+	//if it is unexploded, you can use the Ovid field tag.
+      	if (cvString.search(/:NoExp/i) >= 0){
+		cvString = cvString.replace(/\[ptyp:NoExp\]/i,".pt.");
+        	cvString = cvString.replace(/\[Publication Type:NoExp\]/i,".pt.");
+        	cvString = cvString.replace(/\[pt:NoExp\]/i,".pt.");
+        	cvString = removeQuotesPTO(cvString);
+        }
+	//in Ovid, to get an exploded Publication Type, you can enter it as if it were a MeSH term.
+	else{
+        	cvString = cvString.replace(/\[ptyp\]/i,"/");
+        	cvString = cvString.replace(/\[Publication Type\]/i,"/");
+        	cvString = cvString.replace(/\[pt\]/i,"/");
+       	 	cvOutputArray[1] = cvString.replace(/\//,"");
+       	 	cvString = removeQuotesPTO(cvString);
 		// check if the string has a leading parenthesis - the double equals means only in the first position
-        if (cvString.search(/\(/) == 0){
-            cvString = cvString.replace(/^\(+/,'$&exp ');
-        }
-
-        //if there is no leading parenthesis
-        else{
-            cvString = "exp " + cvString;
-        }
-        cvOutputArray[0] = cvString;
-        cvOutputArray[1] = "In PubMed, Publication Types are exploded, and this Ovid search replicates the explosion. If you prefer not to explode this term, please use " + cvOutputArray[1] + ".pt. instead.";
-        cvOutputArray[1] = cvOutputArray[1].fontcolor("blue");
+        	if (cvString.search(/\(/) == 0){
+            		cvString = cvString.replace(/^\(+/,'$&exp ');
+        	}
+		//if there is no leading parenthesis
+        	else{
+            		cvString = "exp " + cvString;
+        	}
+        	cvWarning = "In PubMed, Publication Types are exploded, and this Ovid search replicates the explosion. If you prefer not to explode this term, please use " + cvOutputArray[1] + ".pt. instead.";
+        	cvWarning = cvWarning.fontcolor("blue");
+    	}
+	cvOutputArray[0] = cvString;
+	cvOutputArray[1] = cvWarning;
     }
-
-	//reformat subheadings to exploded subheadings in Ovid syntex
+    //reformat subheadings to exploded subheadings in Ovid syntax
     else if (cvString.search(/\[sh\]/i) >= 0 || cvString.search(/\[subheading\]/i) >= 0){
         cvString = cvString.replace(/\[sh\]/i,"");
         cvString = removeQuotesPTO(cvString);
