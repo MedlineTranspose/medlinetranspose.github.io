@@ -1002,7 +1002,7 @@ function transposePTO(inputline) {
               //this checks for the attributes of the search term.
 
               //is the term is a MeSH term?
-              if (notArray[k].search(/\[Me/i) >= 0 || notArray[k].search(/\[Ma/i) >= 0 || notArray[k].search(/\[MH\]/i) >= 0){
+              if (notArray[k].search(/\[Me/i) >= 0 || notArray[k].search(/\[Ma/i) >= 0 || notArray[k].search(/\[MH\]/i) >= 0 || notArray[k].search(/\[MH\:Noexp\]/i) >= 0){
                     testingArray[testingIndex] = "mesh";
                     outputReceiver = formatMeshPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
@@ -1057,13 +1057,23 @@ function transposePTO(inputline) {
 					          notArray[k] = outputReceiver[0];
 					          warningArray[warningIndex] = outputReceiver[1];
 				      }
+		    
+              //is the term an ID number?
+              else if (notArray[k].search(/\[pmid/i) >= 0 || notArray[k].search(/\[uid/i) >= 0 || notArray[k].search(/\[auid/i) >= 0 || notArray[k].search(/\[jid/i) >= 0){
+                    notArray[k] = formatIdNumbersPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+              else if (notArray[k].search(/\[gr/i) >= 0 || notArray[k].search(/\[si/i) >= 0 || notArray[k].search(/\[se/i) >= 0 || notArray[k].search(/\[is/i) >= 0){
+                    notArray[k] = formatIdNumbersPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
 
-				      //is the term an author?
-				      else if (notArray[k].search(/\[Au/i) >= 0 || notArray[k].search(/\[cn/i) >=0 || notArray[k].search(/\[1au/i) >= 0 || notArray[k].search(/\[fau/i) >= 0){
-					          outputReceiver = formatAuthorPTO(notArray[k]);
-					          notArray[k] = outputReceiver[0];
-					          warningArray[warningIndex] = outputReceiver[1];
-				      }
+              //is the term an author?
+              else if (notArray[k].search(/\[Au/i) >= 0 || notArray[k].search(/\[cn/i) >=0 || notArray[k].search(/\[1au/i) >= 0 || notArray[k].search(/\[fau/i) >= 0){
+                    outputReceiver = formatAuthorPTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
 
               //is the term a keyword?
               else if (notArray[k].search(/\[ti/i) >= 0 || notArray[k].search(/\[All/i) >= 0){
@@ -1590,6 +1600,37 @@ function formatKeywordPTO(kwString) {
     fkwOutputArray[0] = kwString;
     fkwOutputArray[1] = fkwWarning;
     return fkwOutputArray;
+}
+	
+//****************************************************************************************************ID Numbers*******************************************************************
+
+function formatIdNumbersPTO(idString) {
+
+    //reformat language limit
+    if (idString.search(/\[pmid/i) >= 0 || idString.search(/\[uid/i) >= 0){
+        idString = idString.replace(/\[pmid\]/i,".ui.");
+        idString = idString.replace(/\[uid\]/i,".ui.");
+    }
+    else if (idString.search(/\[auid/i) >= 0){
+        idString = idString.replace(/\[auid\]/i,".ai.");
+    }
+    else if (idString.search(/\[jid/i) >= 0){
+        idString = idString.replace(/\[jid\]/i,".jc.");
+    }
+    else if (idString.search(/\[gr/i) >= 0){
+        idString = idString.replace(/\[gr\]/i,".gr,gc,gi,no,go.");
+        idString = idString.replace(/\[grant number\]/i,".gr,gc,gi,no,go.");
+    }
+    else if (idString.search(/\[si/i) >= 0 || idString.search(/\[se/i) >= 0){
+        idString = idString.replace(/\[si\]/i,".si.");
+        idString = idString.replace(/\[secondary source id\]/i,".si.");
+    }
+    else if (idString.search(/\[is/i) >= 0){
+        idString = idString.replace(/\[is\]/i,".ib.");
+        idString = idString.replace(/\[isbn\]/i,".ib.");
+    }
+
+    return idString;
 }
 
 //****************************************************************************************************Limits*******************************************************************
