@@ -1012,16 +1012,16 @@ function transposePTO(inputline) {
 
               //is the term a controlled non-MesH?
 
-				      //is the term a Pharmacologic Action?
-				      else if (notArray[k].search(/\[pa\]/i) >= 0 || notArray[k].search(/\[pharm/i) >= 0){
-					          notArray[k] = notArray[k].replace(/\[p[\w| ]+\]/i,"[Mesh]");
-					          outputReceiver = formatMeshPTO(notArray[k]);
-					          notArray[k] = outputReceiver[0];
-					          warningArray[warningIndex] = outputReceiver[1];
-				      }
+              //is the term a Pharmacologic Action?
+              else if (notArray[k].search(/\[pa\]/i) >= 0 || notArray[k].search(/\[pharm/i) >= 0){
+                    notArray[k] = notArray[k].replace(/\[p[\w| ]+\]/i,"[Mesh]");
+                    outputReceiver = formatMeshPTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
 
               //is the term a publication type?
-              else if (notArray[k].search(/\[pt/i) >= 0 || notArray[k].search(/\[pub/i) >= 0){
+              else if (notArray[k].search(/\[pt/i) >= 0 || notArray[k].search(/\[publication/i) >= 0){
                     outputReceiver = formatControlledPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
                     warningArray[warningIndex] = outputReceiver[1];
@@ -1037,26 +1037,26 @@ function transposePTO(inputline) {
                     warningArray[warningIndex] = outputReceiver[1];
               }
 
-				      //is the term a supplementary concept?
-				      else if (notArray[k].search(/\[supplementary/i) >= 0){
-					          outputReceiver = formatControlledPTO(notArray[k]);
-					          notArray[k] = outputReceiver[0];
-					          warningArray[warningIndex] = outputReceiver[1];
-				      }
+              //is the term a supplementary concept?
+              else if (notArray[k].search(/\[supplementary/i) >= 0){
+                    outputReceiver = formatControlledPTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
 
-				      //is the term a personal name as subject?
-				      else if (notArray[k].search(/\[subject/i) >= 0 || notArray[k].search(/\[ps/i) >= 0){
-					          outputReceiver = formatControlledPTO(notArray[k]);
-					          notArray[k] = outputReceiver[0];
-					          warningArray[warningIndex] = outputReceiver[1];
-				      }
+              //is the term a personal name as subject?
+              else if (notArray[k].search(/\[subject/i) >= 0 || notArray[k].search(/\[ps/i) >= 0){
+                    outputReceiver = formatControlledPTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
 
-				      //is the term an affiliation or institution?
-				      else if (notArray[k].search(/\[Affiliation/i) >= 0 || notArray[k].search(/\[ad/i) >= 0){
-					          outputReceiver = formatControlledPTO(notArray[k]);
-					          notArray[k] = outputReceiver[0];
-					          warningArray[warningIndex] = outputReceiver[1];
-				      }
+              //is the term an affiliation or institution?
+              else if (notArray[k].search(/\[Affiliation/i) >= 0 || notArray[k].search(/\[ad/i) >= 0){
+                    outputReceiver = formatControlledPTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
 		    
               //is the term an ID number?
               else if (notArray[k].search(/\[pmid/i) >= 0 || notArray[k].search(/\[uid/i) >= 0 || notArray[k].search(/\[auid/i) >= 0 || notArray[k].search(/\[jid/i) >= 0){
@@ -1073,6 +1073,30 @@ function transposePTO(inputline) {
                     outputReceiver = formatAuthorPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
                     warningArray[warningIndex] = outputReceiver[1];
+              }
+		    
+              //is the term journal title or issn?
+              else if (notArray[k].search(/\[journal/i) >= 0 || notArray[k].search(/\[ta/i) >= 0){
+                    notArray[k] = formatJournalPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+
+              //is the term about the journal publisher?
+              else if (notArray[k].search(/\[pl/i) >= 0 || notArray[k].search(/\[pubn/i) >= 0){
+                    notArray[k] = formatJournalPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+
+              //is the term about the editor?
+              else if (notArray[k].search(/\[ed\]/i) >= 0 || notArray[k].search(/\[editor/i) >= 0){
+                    notArray[k] = formatJournalPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+
+              //is the term about conflict of interest?
+              else if (notArray[k].search(/\[coi/i) >= 0){
+                    notArray[k] = formatJournalPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
               }
 
               //is the term a keyword?
@@ -1557,7 +1581,39 @@ function formatControlledPTO(cvString) {
 
 }
 
+//****************************************************************************************************Journal*******************************************************************
 
+function formatJournalPTO(jnString) {
+
+    //reformat journal title
+    if (jnString.search(/\[journal/i) >= 0){
+        jnString = jnString.replace(/\[journal\]/i,".jn,ja,es,il,is.");
+    }
+    //reformat title abbreviation
+    else if (jnString.search(/\[ta/i) >= 0){
+        jnString = jnString.replace(/\[ta\]/i,".ja,es,il,is.");
+    }
+    //reformat place of publication
+    if (jnString.search(/\[pl/i) >= 0){
+        jnString = jnString.replace(/\[pl\]/i,".cp.");
+    }
+    //reformat publisher
+    else if (jnString.search(/\[pubn/i) >= 0){
+        jnString = jnString.replace(/\[pubn\]/i,".pb.");
+    }
+    //reformat editor
+    else if (jnString.search(/\[ed/i) >= 0){
+        jnString = jnString.replace(/\[ed\]/i,".ee.");
+        jnString = jnString.replace(/\[editor\]/i,".ee.");
+    }
+    //reformat conflict of interest information
+    else if (jnString.search(/\[coi/i) >= 0){
+        jnString = jnString.replace(/\[coi\]/i,".ci.");
+        jnString = jnString.replace(/\[cois\]/i,".ci.");
+    }
+
+    return jnString;
+}
 //****************************************************************************************************Keywords*******************************************************************
 
 function formatKeywordPTO(kwString) {
@@ -1606,25 +1662,30 @@ function formatKeywordPTO(kwString) {
 
 function formatIdNumbersPTO(idString) {
 
-    //reformat language limit
+    //reformat pmid
     if (idString.search(/\[pmid/i) >= 0 || idString.search(/\[uid/i) >= 0){
         idString = idString.replace(/\[pmid\]/i,".ui.");
         idString = idString.replace(/\[uid\]/i,".ui.");
     }
+    //reformat author ID
     else if (idString.search(/\[auid/i) >= 0){
         idString = idString.replace(/\[auid\]/i,".ai.");
     }
+    //reformat NLM journal code
     else if (idString.search(/\[jid/i) >= 0){
         idString = idString.replace(/\[jid\]/i,".jc.");
     }
+    //reformat grant information
     else if (idString.search(/\[gr/i) >= 0){
         idString = idString.replace(/\[gr\]/i,".gr,gc,gi,no,go.");
         idString = idString.replace(/\[grant number\]/i,".gr,gc,gi,no,go.");
     }
+    //reformat secondary source ID
     else if (idString.search(/\[si/i) >= 0 || idString.search(/\[se/i) >= 0){
         idString = idString.replace(/\[si\]/i,".si.");
         idString = idString.replace(/\[secondary source id\]/i,".si.");
     }
+    //reformat isbn information
     else if (idString.search(/\[is/i) >= 0){
         idString = idString.replace(/\[is\]/i,".ib.");
         idString = idString.replace(/\[isbn\]/i,".ib.");
