@@ -186,7 +186,7 @@ function myFunction() {
 	if (mfInputline.search(/exp/i) >= 0 && mfInputline.search(/\//i) >= 0){
           document.getElementById("output5").innerHTML = warnPTO;
         }
-        else if (mfInputline.search(/[.]\w\w[.]/) >= 0){
+        else if (mfInputline.search(/[.]\w\w[.]/) >= 0 && mfInputline.search(/[.]\d\d[.]/) < 0){
           document.getElementById("output5").innerHTML = warnPTO;
         }
         else{
@@ -1067,6 +1067,10 @@ function transposePTO(inputline) {
                     notArray[k] = formatIdNumbersPTO(notArray[k]);
                     warningArray[warningIndex] = "null";
               }
+              else if (notArray[k].search(/\[lid/i) >= 0 || notArray[k].search(/\[aid/i) >= 0){
+                    notArray[k] = formatIdNumbersPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
 
               //is the term an author?
               else if (notArray[k].search(/\[Au/i) >= 0 || notArray[k].search(/\[cn/i) >=0 || notArray[k].search(/\[1au/i) >= 0 || notArray[k].search(/\[fau/i) >= 0){
@@ -1689,6 +1693,14 @@ function formatIdNumbersPTO(idString) {
     else if (idString.search(/\[is/i) >= 0){
         idString = idString.replace(/\[is\]/i,".ib.");
         idString = idString.replace(/\[isbn\]/i,".ib.");
+    }
+    //reformat aid and lid - ovid requires spaces rather than punctuation
+    else if (idString.search(/\[lid/i) >= 0 || idString.search(/\[aid/i) >= 0){
+        idString = idString.replace(/\[lid\]/i,"MYTEMPLID");
+        idString = idString.replace(/\[aid\]/i,"MYTEMPAID");
+        idString = idString.replace(/[.\/\(\)\[\]]/g," ");
+        idString = idString.replace(/MYTEMPLID/i,".do,di.");
+        idString = idString.replace(/MYTEMPAID/i,".id.");
     }
 
     return idString;
