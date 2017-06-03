@@ -1080,7 +1080,7 @@ function transposePTO(inputline) {
               }
 		    
               //is the term journal title or issn?
-              else if (notArray[k].search(/\[journal/i) >= 0 || notArray[k].search(/\[ta/i) >= 0){
+              else if (notArray[k].search(/\[jour/i) >= 0 || notArray[k].search(/\[ta/i) >= 0){
                     notArray[k] = formatJournalPTO(notArray[k]);
                     warningArray[warningIndex] = "null";
               }
@@ -1101,6 +1101,18 @@ function transposePTO(inputline) {
               else if (notArray[k].search(/\[coi/i) >= 0){
                     notArray[k] = formatJournalPTO(notArray[k]);
                     warningArray[warningIndex] = "null";
+              }
+		    
+              //is the term a date?
+              else if (notArray[k].search(/\[mhda/i) >= 0 || notArray[k].search(/\[crdt/i) >= 0 || notArray[k].search(/\[edat/i) >= 0){
+                    outputReceiver = formatDatePTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+              else if (notArray[k].search(/\[dcom/i) >= 0 || notArray[k].search(/\[lr/i) >= 0 || notArray[k].search(/\[dep/i) >= 0 || notArray[k].search(/\[dp/i) >= 0){
+                    outputReceiver = formatDatePTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
               }
 
               //is the term a keyword?
@@ -1590,7 +1602,8 @@ function formatControlledPTO(cvString) {
 function formatJournalPTO(jnString) {
 
     //reformat journal title
-    if (jnString.search(/\[journal/i) >= 0){
+    if (jnString.search(/\[jour/i) >= 0){
+	jnString = jnString.replace(/\[jour\]/i,".jn,ja,es,il,is.");
         jnString = jnString.replace(/\[journal\]/i,".jn,ja,es,il,is.");
     }
     //reformat title abbreviation
@@ -1618,6 +1631,83 @@ function formatJournalPTO(jnString) {
 
     return jnString;
 }
+	
+//****************************************************************************************************Dates*******************************************************************
+
+function formatDatePTO(dtString) {
+
+  //make a variable to hold any warnings
+ var dtWarning = "null";
+
+ //make an array to hold the outputs (string and warnings)
+ var dtOutputArray = [null, null];
+
+    //reformat Mesh Date
+    if (dtString.search(/\[mhda/i) >= 0){
+        if (dtString.length < 20){
+          dtString = dtString.replace(/\[mhda\]/i,"*.da.");
+        }
+        else{
+          dtString = dtString.replace(/\[mhda\]/i,".da.");
+        }
+        dtString = dtString.replace(/\//g," ");
+    }
+    //reformat the create date and the entrez date (according to current Ovid backwards configuration)
+    else if (dtString.search(/\[edat/i) >= 0 || dtString.search(/\[crdt/i) >= 0){
+        if (dtString.length < 22){
+          dtString = dtString.replace(/\[edat\]/i,"*.dt.");
+          dtString = dtString.replace(/\[crdt\]/i,"*.ez.");
+        }
+        else{
+          dtString = dtString.replace(/\[edat\]/i,".dt.");
+          dtString = dtString.replace(/\[crdt\]/i,".ez.");
+        }
+        dtString = dtString.replace(/\//g," ");
+        dtWarning = "The value of [crdt] corresponds to the value of Entrez Date in Ovid, and the value of [edat] corresponds to the value of Create Date in Ovid. The Ovid support team is looking into this."
+        dtWarning = dtWarning.fontcolor("blue");
+    }
+    //reformat the date completed
+    else if (dtString.search(/\[dcom/i) >= 0){
+      if (dtString.length < 14){
+        dtString = dtString.replace(/\[dcom\]/i,"*.ed.");
+      }
+    else{
+        dtString = dtString.replace(/\[dcom\]/i,".ed.");
+      }
+    }
+    //reformat the revision date
+    else if (dtString.search(/\[lr/i) >= 0){
+      if (dtString.length < 12){
+        dtString = dtString.replace(/\[lr\]/i,"*.rd.");
+      }
+      else{
+        dtString = dtString.replace(/\[lr\]/i,".rd.");
+      }
+    }
+    //reformat the date of electronic publication
+    else if (dtString.search(/\[dep/i) >= 0){
+      if (dtString.length < 14){
+        dtString = dtString.replace(/\[dep\]/i,"*.ep.");
+      }
+      else{
+        dtString = dtString.replace(/\[dep\]/i,".ep.");
+      }
+    }
+    //reformat date of publication
+    else if (dtString.search(/\[dp/i) >= 0){
+      if (dtString.length < 15){
+        dtString = dtString.replace(/\[dp\]/i,"*.dp.");
+      }
+      else{
+        dtString = dtString.replace(/\[dp\]/i,".dp.");
+      }
+    }
+    dtOutputArray[0] = dtString;
+    dtOutputArray[1] = dtWarning;
+
+    return dtOutputArray;
+}
+
 //****************************************************************************************************Keywords*******************************************************************
 
 function formatKeywordPTO(kwString) {
