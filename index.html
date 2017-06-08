@@ -237,6 +237,17 @@ function transposeOTP(inputline){
 	else {
 		// do nothing
 	}
+	
+	  //look for MeSH terms containing boolean operators
+  if (inputline.search(/"[\w\s]* and [\w\s]*"\//ig) >= 0){
+    inputline = inputline.replace(/("[\w\s]*) and ([\w\s]*"\/)/ig, "$1 GRRRAND $2");
+  }
+  if (inputline.search(/"[\w\s]* or [\w\s]*"\//i) >= 0){
+    inputline = inputline.replace(/("[\w\s]*) or ([\w\s]*"\/)/ig, "$1 ARRGHOR $2");
+  }
+  if (inputline.search(/"[\w\s]* not [\w\s]*"\//i) >= 0){
+    inputline = inputline.replace(/("[\w\s]*) not ([\w\s]*"\/)/ig, "$1 SERENOTY $2");
+  }
 
     //split user input by any OR operators and put the pieces into an array
     var orArray = inputline.split(/ OR /i);
@@ -354,6 +365,16 @@ function transposeOTP(inputline){
 
   // warning array into a string for output
 	var warningString = uniqWarningArray.join("<p>");
+	
+	  if (outputline.search(/GRRRAND/i) >= 0){
+    outputline = outputline.replace(/GRRRAND/ig, " and ");
+  }
+  if (outputline.search(/ARRGHOR/i) >= 0){
+    outputline = outputline.replace(/ARRGHOR/ig, " or ");
+  }
+  if (outputline.search(/SERENOTY/i) >= 0){
+    outputline = outputline.replace(/SERENOTY/ig, " not ");
+  }
 
 	document.getElementById("output3").innerHTML = outputline;
   document.getElementById("output4").innerHTML = warningString;
