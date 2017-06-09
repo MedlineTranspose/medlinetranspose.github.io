@@ -1116,6 +1116,13 @@ function transposePTO(inputline) {
                     warningArray[warningIndex] = outputReceiver[1];
               }
 		    
+              //is the term an investigator?
+              else if (notArray[k].search(/\[ir/i) >= 0 || notArray[k].search(/\[investigator/i) >=0){
+                    outputReceiver = formatAuthorPTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+		    
               //is the term journal title or issn?
               else if (notArray[k].search(/\[jour/i) >= 0 || notArray[k].search(/\[ta/i) >= 0){
                     notArray[k] = formatJournalPTO(notArray[k]);
@@ -1575,6 +1582,11 @@ function formatControlledPTO(cvString) {
 	else if (auString.search(/\[Author - Corporate/i) >= 0 || auString.search(/\[cn/i) >= 0){
 		auString = auString.replace(/\[Author - Corporate\]/i,".fa,au.");
 		auString = auString.replace(/\[cn\]/i,".fa,au.");
+		auString = removeQuotesPTO(auString);
+	}
+	else if (auString.search(/\[ir/i) >= 0 || auString.search(/\[investigator/i) >= 0){
+		auString = auString.replace(/\[investigator\]/i,".ir.");
+		auString = auString.replace(/\[ir\]/i,".ir.");
 		auString = removeQuotesPTO(auString);
 	}
 	else{
