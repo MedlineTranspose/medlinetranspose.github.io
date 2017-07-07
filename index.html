@@ -1186,12 +1186,18 @@ function transposePTO(inputline) {
                     notArray[k] = formatCitationPTO(notArray[k]);
               }
 
-              //is the term a subset search for systematic reviews?
-              else if (notArray[k].search(/systematic\[sb/i) >= 0){
-                    notArray[k] = "limit \[previous search\] to systematic reviews"
-                    notArray[k] = notArray[k].fontcolor("blue");
-                    warningArray[warningIndex] = "This term should be applied as a limit in the Ovid interface."
-                    warningArray[warningIndex] = warningArray[warningIndex].fontcolor("blue");
+              //is the term a subset limit?
+              else if (notArray[k].search(/\[sb/i) >= 0){
+                    outputReceiver = formatLimitPTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+		    
+              //is the term a text limit?
+              else if (notArray[k].search(/\[text\]/i) >= 0){
+                    outputReceiver = formatLimitPTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
               }
 
               //does the term have an unrecognised tag?
@@ -1202,16 +1208,24 @@ function transposePTO(inputline) {
 
               else {
                     //testingArray[testingIndex] = "nosyntax";
-                    //if there is one or more parentheses at the end, put the tag inside the parentheses
-                    if (notArray[k].search(/\)/) >= 0){
-                      notArray[k] = notArray[k].replace(/\)+/g,".af.$&");
+                    //check to see if it is a jsubset without a tag
+                    if (notArray[k].search(/jsubset/i) >= 0){
+                      notArray[k] = notArray[k] + "[text]";
+                      outputReceiver = formatLimitPTO(notArray[k]);
+                      notArray[k] = outputReceiver[0];
+                      warningArray[warningIndex] = outputReceiver[1];
                     }
-                    //else just stick it on the end.
+                    //check to see if it is a pmc ID term, which do not require tags
+		    else if (notArray[k].search(/PMC/i) >=0){
+                      notArray[k] = notArray[k] + ".pm.";
+		    }
+                    //otherwise, assume the term is a bare keyword, and make it an all fields search, but throw a warning.
                     else{
                       notArray[k] = notArray[k] + ".af.";
-                    }
-                    warningArray[warningIndex] = "This term did not have a tag. For simplicity, it has been translated as an \"all fields\" search in Ovid syntax. However, this may not be an accurate translation. For the most accurate translation, please enter this term into the PubMed interface, and look on the right-hand side of your results. Copy the text in the Search Details display and enter it into Transpose for an accurate translation into Ovid syntax. ";
-                    warningArray[warningIndex] = warningArray[warningIndex].fontcolor("blue");
+                      notArray[k] = notArray[k].fontcolor("red");
+                      warningArray[warningIndex] = "This term did not have a tag. For simplicity, it has been translated as an \"all fields\" search in Ovid syntax. However, this may not be an accurate translation. For the most accurate translation, please enter this term into the PubMed interface, and look on the right-hand side of your results. Copy the text in the Search Details display and enter it into Transpose for an accurate translation into Ovid syntax. ";
+                      warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+                  }
               }
 
               //add the parentheses back in
@@ -1767,12 +1781,17 @@ function formatKeywordPTO(kwString) {
     //make an array to hold the outputs (string and warnings)
     var fkwOutputArray = [null, null];
 
-    //reformat keywords being searched in the title and abstract
-    if (kwString.search(/\[ti/i) >= 0){
-        kwString = kwString.replace(/\[tiab\]/i,".ti,ab,cl,oa,kw,kf.");
+    //reformat keywords being searched in the title
+    if (kwString.search(/\[ti\]/i) >= 0 || kwString.search(/\[title\]/i) >= 0){
 	kwString = kwString.replace(/\[title\]/i,".ti,bt.");
-	kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,cl,oa,kw,kf.");
 	kwString = kwString.replace(/\[ti\]/i,".ti,bt.");
+    }
+    //reformat keywords being searched in the title and abstract
+    else if (kwString.search(/\[tiab\]/i) >= 0 || kwString.search(/\[title/i) >= 0){
+        kwString = kwString.replace(/\[tiab\]/i,".ti,ab,cl,oa,kw,kf.");
+	kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,cl,oa,kw,kf.");
+	fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates the most accurate translation in Ovid Medline syntax. We plan to add an option here for a less accurate, more efficient translation, in the near future. In the meantime, you could use a word processor's find and replace option to adjust the search fields.";
+	fkwWarning = fkwWarning.fontcolor("blue");							    
     }
     //reformat keywords being searched in all fields
     else if (kwString.search(/\[All/i) >= 0){
@@ -1849,6 +1868,18 @@ function formatIdNumbersPTO(idString) {
 
 function formatLimitPTO(limString) {
 
+  //make a variable to hold any warnings
+  var limWarning = "null";
+
+  //make an array to hold the outputs (string and warnings)
+  var limOutputArray = [null, null];
+
+  //make a variable to determine whether there is warning or not
+  var limWarnYN = 0;
+
+  //make a variable for outputs with quotes
+  var limQuotes = 0;
+
     //reformat language limit
     if (limString.search(/\[lang/i) >= 0){
         limString = limString.replace(/\[lang\]/i,".lg.");
@@ -1856,8 +1887,111 @@ function formatLimitPTO(limString) {
     else if (limString.search(/\[la/i) >= 0){
         limString = limString.replace(/\[la\]/i,".lg.");
     }
+    //is the term a subset search?
+    else if (limString.search(/\[sb/i) >= 0){
+        limString = limString.replace(/\[sb\]/i,"");
+        limString = limString.replace(/"/g,"");
+        //compare the subheading to a list of all subheadings and convert to Ovid syntax, preserving explosions
+         switch (limString){
+             case "aids":
+                 limString = "aids hiv journal.sb.";
+                 break;
+             case "bioethics":
+                 limString = "bioethics journals.sb.";
+                 break;
+             case "cancer":
+                 limString = "limit [previous search] to cancer";
+                 limWarnYN = 1;
+                 break;
+             case "cam":
+                 limString = "limit [previous search] to Complementary Medicine";
+                 limWarnYN = 1;
+                 break;
+             case "dietsuppl":
+                 limString = "limit [previous search] to Dietary Supplements";
+                 limWarnYN = 1;
+                 break;
+             case "history":
+                 limString = '"history of medicine journals".sb.';
+                 limQuotes = 1;
+                 break;
+             case "space":
+                 limString = '"national aeronautics and space administration nasa journals".sb.';
+                 limQuotes = 1;
+                 break;
+             case "systematic":
+                 limString = "limit [previous search] to Systematic Reviews";
+                 limWarnYN = 1;
+                 break;
+             case "tox":
+                 limString = "limit [previous search] to Toxicology";
+                 limWarnYN = 1;
+                 break;
+             case "veterinary":
+                 limString = "limit [previous search] to Veterinary Science";
+                 limWarnYN = 1;
+                 break;
+             case "free full text":
+                 limString = "No equivalent! See Warning.";
+                 limString = limString.fontcolor("blue");
+                 limWarning = "Ovid Medline does not provide a limit for articles available in full text for free.";
+                 break;
+             case "full text":
+                 limString = "limit [previous search] to full text";
+                 limString = limString.fontcolor("blue");
+                 limWarning = "This term should be applied as a limit in the Ovid interface. Please note that Ovid's full text filter is quite different from PubMed's. If you are attempting to compare output between the two databases, you may wish to remove all full text filters from both searches.";
+                 break;
+             case "pubmed pmc":
+                 limString = "No equivalent! See Warning.";
+                 limString = limString.fontcolor("blue");
+                 limWarning = "Ovid Medline does not provide a limit for articles available in the PubMed Central collection.";
+                 break;
+             case "publisher":
+                 limString = "limit [previous search] to publisher";
+                 limString = limString.fontcolor("blue");
+                 limWarning = "This term should be applied as a limit in the Ovid interface. Although this is the official translation for this term, in practice it often returns zero results in Ovid. You may wish to try using NOT medline.st. as an alternative.";
+                 break;
+             case "inprocess":
+                 limString = "in process.st.";
+                 break;
+             case "medline":
+                 limString = "medline.st.";
+                 break;
+             case "oldmedline":
+                 limString = "oldmedline citations.sb.";
+                 break;
+             case "pubmednotmedline":
+                 limString = '"pubmed not medline".st.';
+                 break;
+             case "indatareview":
+                 limString = "in data review.st.";
+                 break;
+          }
 
-    return limString;
+          if (limWarnYN == 1){
+            limString = limString.fontcolor("blue");
+            limWarning = "This term should be applied as a limit in the Ovid interface."
+            limWarning = limWarning.fontcolor("blue");
+          }
+    }
+    //is the term a subset text search?
+    else if (limString.search(/\[text/i) >= 0){
+        limString = limString.replace(/\[text\]/i,".sb.");
+        limString = limString.replace(/"/g,"");
+        limString = limString.replace(/jsubset/i,"");
+        if (limString.search(/hasabstract/i) >= 0){
+          limString = "limit [previous search] to abstracts";
+          limString = limString.fontcolor("blue");
+          limWarning = "This term should be applied as a limit in the Ovid interface."
+          limWarning = limWarning.fontcolor("blue");
+        }
+    }
+
+
+    //package up the results ready to be returned
+    limOutputArray[0] = limString;
+    limOutputArray[1] = limWarning;
+    return limOutputArray;
 }
 
 //****************************************************************************************************Filters*******************************************************************
