@@ -1067,6 +1067,294 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		      <td>&nbsp;</td>
 	      </tr>
 			</table>
+			
+<!-- Subset Searches Table-->
+        <div class="w3-padding-16"></div>
+        <table class="w3-table-all w3-hoverable">
+          <caption class="w3-xlarge">
+          Subset Searches
+          </caption>
+          <tr class="w3-theme w3-large">
+            <th scope="col">Name</th>
+            <th scope="col">Ovid Syntax</th>
+            <th scope="col">PubMed Syntax</th>
+            <th scope="col">Notes and explanations</th>
+            <th scope="col">Implemented?</th>
+	</tr>
+		<tr>
+		      <td>All Citations Search</td>
+		      <td>docz.dz</td>
+		      <td>all[sb]</td>
+		      <td>To find all citations in the database.</td>
+		      <td>&nbsp;</td>
+		</tr>
+		<tr>
+		      <td>AIDS Subset</td>
+		      <td>aids hiv journals.sb. or limit [previous search] to AIDS</td>
+		      <td>aids[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search].</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Bioethics Subset</td>
+		      <td>bioethicsjournals.sb. or limit [previous search] to bioethics</td>
+		      <td>bioethics[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search].</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Cancer Subset</td>
+		      <td>limit [previous search] to cancer</td>
+		      <td>cancer[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search].</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Complementary and Alternative Medicine Subset</td>
+		      <td>limit [previous search] to Complementary Medicine</td>
+		      <td>cam[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search].</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Dietary Supplements Subset</td>
+		      <td>limit [previous search] to Dietary Supplements</td>
+		      <td>dietsuppl[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search].</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>History of Medicine Journals Subset</td>
+		      <td>"history of medicine journals".sb. or limit [previous search] to History of Medicine</td>
+		      <td>history[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search]. For Ovid field tag version, quotes are necessary because of the "of".</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Space Life Sciences Subset</td>
+		      <td>"national aeronautics and space administration nasa journals".sb. or limit [previous search] to Space Life Sciences.</td>
+		      <td>space[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search]. For Ovid field tag version, quotes are necessary because of the "and".</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Systematic Reviews</td>
+		      <td>limit [previous search] to Systematic Reviews</td>
+		      <td>systematic[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search].</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Toxicology Subset</td>
+		      <td>limit [previous search] to Toxicology</td>
+		      <td>tox[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search].</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Veterinary Science Subset</td>
+		      <td>limit [previous search] to Veterinary Science</td>
+		      <td>veterinary[sb]</td>
+		      <td>To use the Ovid limit version, substitute the search number of interest instead of [previous search].</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Free Full Text Subset</td>
+		      <td>&nbsp;</td>
+		      <td>free full text[sb]</td>
+		      <td>No equivalent in Ovid. You might be able to find a few of the same results with limit [previous search] to full text, but that would miss many of the free ones and also include any of your institution's subscriptions, so the results would be quite different.</td>
+		      <td>Yes - a warning is given.</td>
+	      </tr>
+	      <tr>
+		      <td>Full Text Subset</td>
+		      <td>&nbsp;</td>
+		      <td>full text[sb]</td>
+		      <td>This finds any articles where full text is available online, including those that are for purchase. No equivalent in Ovid.</td>
+		      <td>Yes - warning is given.</td>
+	      </tr>
+	      <tr>
+		      <td>Local Full text Subset</td>
+		      <td>limit [previous search] to full text</td>
+		      <td>[check with your library to see if a filter has been set up]</td>
+		      <td>Check with your library to see if a filter has been set up to limit a PubMed search to only the articles in journals to which the library subscribes. However, please note that the Ovid local full text filter and the PubMed one may return very different results. The Ovid interface appears to have a great deal of difficulty in making their full text filter accurate.</td>
+		      <td>No - this search is too dependent on local variables.</td>
+	      </tr>
+	      <tr>
+		      <td>PubMed Central Subset</td>
+		      <td>&nbsp;</td>
+		      <td>pubmed pmc[sb]</td>
+		      <td>No equivalent in Ovid.</td>
+		      <td>Yes - a warning is given.</td>
+	      </tr>
+	      <tr>
+		      <td>Publisher Subset</td>
+		      <td>&nbsp;</td>
+		      <td>publisher[sb]</td>
+		      <td>In theory, Ovid has limit [previous search] to publisher, but this limit returns zero results.</td>
+		      <td>Yes - a warning is given.</td>
+	      </tr>
+	      	      <tr>
+		      <td>In Process Articles Subset</td>
+		      <td>in process.st.</td>
+		      <td>inprocess[sb]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Medline (Indexed) Articles Subset</td>
+		      <td>medline.st.</td>
+		      <td>medline[sb]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Old Medline Articles Subset</td>
+		      <td>om.sb. or oldmedline citations.st.</td>
+		      <td>oldmedline[sb]</td>
+		      <td>&nbsp;</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>PubMed Not Medline Articles Subset</td>
+		      <td>"pubmed not medline".st.</td>
+		      <td>pubmednotmedline[sb]</td>
+		      <td>The Ovid version requires quotes because of the "not"</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>In Data Review Articles Subset</td>
+		      <td>in data review.st.</td>
+		      <td>indatareview[sb]</td>
+		      <td>Quotes are not necessary for the Ovid one - I checked!</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Core Clinical Journals (AIM) Subset</td>
+		      <td>aim.sb.</td>
+		      <td>jsubsetaim[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Biotechnology Journals Subset</td>
+		      <td>b.sb.</td>
+		      <td>jsubsetb[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Communication Disorders Journals Subset</td>
+		      <td>c.sb. or limit [previous search] to communication disorders journals</td>
+		      <td>jsubsetc[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Dental Journals Subset</td>
+		      <td>d.sb.</td>
+		      <td>jsubsetd[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Bioethics Subset</td>
+		      <td>e.sb.</td>
+		      <td>jsubsete[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Foreign Journals Subset</td>
+		      <td>f.sb.</td>
+		      <td>jsubsetf[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>H? Subset</td>
+		      <td>h.sb.</td>
+		      <td>jsubseth[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Index Medicus Journals Subset</td>
+		      <td>im.sb.</td>
+		      <td>jsubsetim[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>J? Subset</td>
+		      <td>j.sb.</td>
+		      <td>jsubsetj[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Consumer Health Journals Subset</td>
+		      <td>k.sb.</td>
+		      <td>jsubsetk[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Nursing Journals Subset</td>
+		      <td>n.sb.</td>
+		      <td>jsubsetn[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>Q? Subset</td>
+		      <td>q.sb.</td>
+		      <td>jsubsetq[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>QIS? Subset</td>
+		      <td>qis.sb.</td>
+		      <td>jsubsetqis[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>QO? Subset</td>
+		      <td>qo.sb.</td>
+		      <td>jsubsetqo[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>R? Subset</td>
+		      <td>r.sb.</td>
+		      <td>jsubsetr[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>S? Subset</td>
+		      <td>s.sb.</td>
+		      <td>jsubsets[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>T? Subset</td>
+		      <td>t.sb.</td>
+		      <td>jsubsett[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+	      <tr>
+		      <td>X? Subset</td>
+		      <td>x.sb.</td>
+		      <td>jsubsetx[text]</td>
+		      <td>The PubMed version may also be entered without the [text] part.</td>
+		      <td>&nbsp;</td>
+	      </tr>
+			</table>
 
 <div class="w3-padding-16"></div>
     </div>
