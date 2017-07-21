@@ -1490,7 +1490,8 @@ function formatControlledPTO(cvString) {
         cvString = cvString.replace(/\[sh\]/i,"");
         cvString = removeQuotesPTO(cvString);
         cvOutputArray = formatSubheadingsPTO(cvString);
-		//this checks to see if there are narrower term subheadings and chops them off if there are. This is just for efficiency.
+        cvOutputArray[0] = cvOutputArray[0].replace(/\"/,"");
+        //this checks to see if there are narrower term subheadings and chops them off if there are. This is just for efficiency.
         if (cvOutputArray[0].length == 0){
             cvOutputArray[0] = "\[Please see warning below\]";
         }
