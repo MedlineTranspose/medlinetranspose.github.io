@@ -1104,7 +1104,7 @@ function transposePTO(inputline) {
                     notArray[k] = formatIdNumbersPTO(notArray[k]);
                     warningArray[warningIndex] = "null";
               }
-              else if (notArray[k].search(/\[lid/i) >= 0 || notArray[k].search(/\[aid/i) >= 0){
+              else if (notArray[k].search(/\[lid/i) >= 0 || notArray[k].search(/\[aid/i) >= 0 || notArray[k].search(/\[rn/i) >= 0 || notArray[k].search(/\[ec\/rn/i) >= 0){
                     notArray[k] = formatIdNumbersPTO(notArray[k]);
                     warningArray[warningIndex] = "null";
               }
@@ -1490,7 +1490,8 @@ function formatControlledPTO(cvString) {
         cvString = cvString.replace(/\[sh\]/i,"");
         cvString = removeQuotesPTO(cvString);
         cvOutputArray = formatSubheadingsPTO(cvString);
-		//this checks to see if there are narrower term subheadings and chops them off if there are. This is just for efficiency.
+        cvOutputArray[0] = cvOutputArray[0].replace(/\"/,"");
+        //this checks to see if there are narrower term subheadings and chops them off if there are. This is just for efficiency.
         if (cvOutputArray[0].length == 0){
             cvOutputArray[0] = "\[Please see warning below\]";
         }
@@ -1860,6 +1861,11 @@ function formatIdNumbersPTO(idString) {
         idString = idString.replace(/MYTEMPLID/i,".do,di.");
         idString = idString.replace(/MYTEMPAID/i,".id.");
     }
+    //reformat ec/rn number
+    else if (idString.search(/\[rn/i) >= 0 || idString.search(/\[ec\/rn number/i) >= 0){
+        idString = idString.replace(/\[rn\]/i,".rn.");
+        idString = idString.replace(/\[ec\/rn number\]/i,".rn.");
+    }
 
     return idString;
 }
@@ -1891,10 +1897,14 @@ function formatLimitPTO(limString) {
     else if (limString.search(/\[sb/i) >= 0){
         limString = limString.replace(/\[sb\]/i,"");
         limString = limString.replace(/"/g,"");
+        limString = limString.toLowerCase();
         //compare the subheading to a list of all subheadings and convert to Ovid syntax, preserving explosions
          switch (limString){
              case "aids":
                  limString = "aids hiv journal.sb.";
+                 break;
+             case "all":
+                 limString = "docz.dz.";
                  break;
              case "bioethics":
                  limString = "bioethics journals.sb.";
