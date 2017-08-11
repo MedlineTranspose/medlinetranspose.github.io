@@ -1260,7 +1260,7 @@ function transposePTO(inputline) {
               }
 
               //is the term a supplementary concept?
-              else if (notArray[k].search(/\[supplementary/i) >= 0){
+              else if (notArray[k].search(/\[supplementary/i) >= 0 || notArray[k].search(/\[nm/i) >= 0){
                     outputReceiver = formatControlledPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
                     warningArray[warningIndex] = outputReceiver[1];
@@ -1295,7 +1295,7 @@ function transposePTO(inputline) {
               }
 
               //is the term an author?
-              else if (notArray[k].search(/\[Au/i) >= 0 || notArray[k].search(/\[cn/i) >=0 || notArray[k].search(/\[1au/i) >= 0 || notArray[k].search(/\[fau/i) >= 0){
+              else if (notArray[k].search(/\[Au/i) >= 0 || notArray[k].search(/\[cn/i) >=0 || notArray[k].search(/\[1au/i) >= 0 || notArray[k].search(/\[fau/i) >= 0 || notArray[k].search(/\[lastau/i) >= 0){
                     outputReceiver = formatAuthorPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
                     warningArray[warningIndex] = outputReceiver[1];
@@ -1345,7 +1345,7 @@ function transposePTO(inputline) {
               }
 
               //is the term a keyword?
-              else if (notArray[k].search(/\[ti/i) >= 0 || notArray[k].search(/\[All/i) >= 0){
+              else if (notArray[k].search(/\[ti/i) >= 0 || notArray[k].search(/\[All/i) >= 0 || notArray[k].search(/\[ot/i) >= 0 || notArray[k].search(/\[tt/i) >= 0){
                     //testingArray[testingIndex] = "kw";
                     outputReceiver = formatKeywordPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
@@ -1363,12 +1363,28 @@ function transposePTO(inputline) {
 
               //is the term a language limit?
               else if (notArray[k].search(/\[la/i) >= 0){
-                    notArray[k] = formatLimitPTO(notArray[k]);
+                    outputReceiver = formatLimitPTO(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1]; 
               }
 
 	      //is the term a citation number?
               else if (notArray[k].search(/\[ip\]/i) >= 0 || notArray[k].search(/\[issue\]/i) >= 0 || notArray[k].search(/\[pg\]/i) >= 0 || notArray[k].search(/\[pagination\]/i) >= 0 || notArray[k].search(/\[vi\]/i) >= 0){
                     notArray[k] = formatCitationPTO(notArray[k]);
+              }
+		    
+              //is the term an ID number?
+              else if (notArray[k].search(/\[pmid/i) >= 0 || notArray[k].search(/\[uid/i) >= 0 || notArray[k].search(/\[auid/i) >= 0 || notArray[k].search(/\[jid/i) >= 0){
+                    notArray[k] = formatIdNumbersPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+              else if (notArray[k].search(/\[gr/i) >= 0 || notArray[k].search(/\[si/i) >= 0 || notArray[k].search(/\[se/i) >= 0 || notArray[k].search(/\[is/i) >= 0){
+                    notArray[k] = formatIdNumbersPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+              else if (notArray[k].search(/\[lid/i) >= 0 || notArray[k].search(/\[aid/i) >= 0 || notArray[k].search(/\[rn/i) >= 0 || notArray[k].search(/\[ec\/rn/i) >= 0){
+                    notArray[k] = formatIdNumbersPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
               }
 
               //is the term a subset limit?
@@ -1715,8 +1731,9 @@ function formatControlledPTO(cvString) {
     }
 
 	//reformats supplementary concepts - not exactly, but as closely as possible with the Ovid interface.
-	else if (cvString.search(/\[supp/i) >= 0){
-    cvString = cvString.replace(/\[supplementary concept\]/i,"");
+	else if (cvString.search(/\[supp/i) >= 0 || cvString.search(/\[nm/i) >= 0){
+		cvString = cvString.replace(/\[supplementary concept\]/i,"");
+		cvString = cvString.replace(/\[nm\]/i,"");
 		if (cvString.search(/ /) >= 0){
 			cvString = cvString.replace(/^"/,"(");
 			cvString = cvString.replace(/"$/,")");
@@ -1740,7 +1757,7 @@ function formatControlledPTO(cvString) {
 
 	//reformats "personal name as subject" strategies.
 	else if (cvString.search(/\[subject/i) >= 0 || cvString.search(/\[ps/i) >= 0){
-		cvString = cvString.replace(/\[Subject - Personal Name]/i,".pn.");
+		cvString = cvString.replace(/\[Subject\W{1,3}Personal Name]/i,".pn.");
 		cvString = cvString.replace(/\[ps]/i,".pn.");
 		cvString = removeQuotesPTO(cvString);
 		cvOutputArray[0] = cvString;
@@ -1769,20 +1786,20 @@ function formatControlledPTO(cvString) {
     var auOutputArray = [null, null];
 
 	//check for a full name search for author
-	if (auString.search(/\[Author - Full/i) >= 0){
-		auString = auString.replace(/\[Author - Full\]/i,".fa.");
+	if (auString.search(/\[Author\W{1,3}Full/i) >= 0){
+		auString = auString.replace(/\[Author\W{1,3}Full\]/i,".fa.");
 		auString = removeQuotesPTO(auString);
 	}
 	else if (auString.search(/\[fau/i) >= 0){
     		auString = auString.replace(/\[fau\]/i,".fa.");
 		auString = removeQuotesPTO(auString);
 	}
-	else if (auString.search(/\[Author - First/i) >= 0){
+	else if (auString.search(/\[Author\W{1,3}First/i) >= 0){
     		if (auString.search(/ /) >= 0){
-      			auString = auString.replace(/\[Author - First\]/i,".pa.");
+      			auString = auString.replace(/\[Author\W{1,3}First\]/i,".pa.");
     		}
     		else{
-      			auString = auString.replace(/\[Author - First\]/i," $.pa.");
+      			auString = auString.replace(/\[Author\W{1,3}First\]/i," $.pa.");
     		}
 		auString = removeQuotesPTO(auString);
 	}
@@ -1795,14 +1812,21 @@ function formatControlledPTO(cvString) {
     		}
 		auString = removeQuotesPTO(auString);
 	}
-	else if (auString.search(/\[Author - Identifier/i) >= 0){
-		auString = auString.replace(/\[Author - Identifier\]/i,".ai.");
+	else if (auString.search(/\[Author\W{1,3}Identifier/i) >= 0){
+		auString = auString.replace(/\[Author\W{1,3}Identifier\]/i,".ai.");
 		auString = removeQuotesPTO(auString);
 	}
-	else if (auString.search(/\[Author - Corporate/i) >= 0 || auString.search(/\[cn/i) >= 0){
-		auString = auString.replace(/\[Author - Corporate\]/i,".fa,au.");
+	else if (auString.search(/\[Author\W{1,3}Corporate/i) >= 0 || auString.search(/\[cn/i) >= 0){
+		auString = auString.replace(/\[Author\W{1,3}Corporate\]/i,".fa,au.");
 		auString = auString.replace(/\[cn\]/i,".fa,au.");
 		auString = removeQuotesPTO(auString);
+	}
+	else if (auString.search(/\[Author\W{1,3}Last/i) >= 0 || auString.search(/\[lastau/i) >= 0){
+		auString = auString.replace(/\[Author\W{1,3}Last\]/i,".fa,au.");
+		auString = auString.replace(/\[lastau\]/i,".fa,au.");
+		auString = removeQuotesPTO(auString);
+		auWarning = "Last Author search not available in Ovid. The closest approximation is to search in the author or full author.";
+		auWarning = auWarning.fontcolor("blue");
 	}
 	else if (auString.search(/\[ir/i) >= 0 || auString.search(/\[investigator/i) >= 0){
 		auString = auString.replace(/\[investigator\]/i,".ir.");
@@ -1991,6 +2015,7 @@ function formatKeywordPTO(kwString) {
     if (kwString.search(/\[ti\]/i) >= 0 || kwString.search(/\[title\]/i) >= 0){
 	kwString = kwString.replace(/\[title\]/i,".ti,bt.");
 	kwString = kwString.replace(/\[ti\]/i,".ti,bt.");
+	kwString = removeQuotesPTO(kwString);
     }
     //reformat keywords being searched in the title and abstract
     else if (kwString.search(/\[tiab\]/i) >= 0 || kwString.search(/\[title/i) >= 0){
@@ -1998,11 +2023,21 @@ function formatKeywordPTO(kwString) {
 	kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,cl,oa,kw,kf.");
 	fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates the most accurate translation in Ovid Medline syntax. We plan to add an option here for a less accurate, more efficient translation, in the near future. In the meantime, you could use a word processor's find and replace option to adjust the search fields.";
 	fkwWarning = fkwWarning.fontcolor("blue");
+
+	kwString = removeQuotesPTO(kwString);
+    }
+    //reformat keywords being searched in the other title or translated title
+    else if (kwString.search(/\[ot\]/i) >= 0 || kwString.search(/\[tt/i) >= 0){
+        kwString = kwString.replace(/\[ot\]/i,".kw.");
+        kwString = kwString.replace(/\[tt\]/i,".ot.");
+        kwString = removeQuotesPTO(kwString);
+
     }
     //reformat keywords being searched in all fields
     else if (kwString.search(/\[All/i) >= 0){
         kwString = kwString.replace(/\[All fields\]/i,".af.");
 	kwString = kwString.replace(/\[All\]/i,".af.");
+	kwString = removeQuotesPTO(kwString);
     }
 
     //reformat keywords being searched in Text Words (this is precise according to PubMed documentation) Add a suggestion: .mp. as an alternate.
@@ -2011,6 +2046,7 @@ function formatKeywordPTO(kwString) {
         kwString = kwString.fontcolor("blue");
         fkwWarning = "This is a literal translation of the Text Word tag in PubMed. If you do not require an exact replication, you may wish to use .mp. instead.";
         fkwWarning = fkwWarning.fontcolor("blue");
+	kwString = removeQuotesPTO(kwString);
     }
     //reformat keywords being searched in Text Words (this is precise according to PubMed documentation) Add a suggestion: .mp. as an alternate.
     else if (kwString.search(/\[text word/i) >= 0){
@@ -2018,6 +2054,7 @@ function formatKeywordPTO(kwString) {
         kwString = kwString.fontcolor("blue");
         fkwWarning = "This is a literal translation of the Text Word tag in PubMed. If you do not require an exact replication, you may wish to use .mp. instead.";
         fkwWarning = fkwWarning.fontcolor("blue");
+	kwString = removeQuotesPTO(kwString);
     }
 
     //package up the results ready to be returned
@@ -2185,7 +2222,7 @@ function formatLimitPTO(limString) {
 
           if (limWarnYN == 1){
             limString = limString.fontcolor("blue");
-            limWarning = "This term should be applied as a limit in the Ovid interface."
+            limWarning = "This term should be applied as a limit in the Ovid interface.";
             limWarning = limWarning.fontcolor("blue");
           }
     }
@@ -2197,7 +2234,7 @@ function formatLimitPTO(limString) {
         if (limString.search(/hasabstract/i) >= 0){
           limString = "limit [previous search] to abstracts";
           limString = limString.fontcolor("blue");
-          limWarning = "This term should be applied as a limit in the Ovid interface."
+          limWarning = "This term should be applied as a limit in the Ovid interface.";
           limWarning = limWarning.fontcolor("blue");
         }
     }
