@@ -3,7 +3,7 @@
 
 <head>
 <title>Medline Transpose</title>
-	
+
 	<!--Google Analytics -->
 	<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -74,21 +74,31 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		<!-- accordion -->
 		<div class="w3-accordion">
 			<button onClick="myAccordion('Ovid-Acc')" class="w3-btn w3-round-large w3-theme">
-			Ovid Examples
+			Ovid Example
 			</button>
 			<div id="Ovid-Acc" class="w3-accordion-content w3-container">
-				<p>(losartan intervention for endpoint reduction.ti,ab.) or (exp *Losartan/ and (exp Echocardiography/ or exp Electrocardiography/)) or (exp Losartan/ and (exp Atrial Function/ or exp Heart Atria/ or exp Atrial Remodeling/))</p>
-				<p>(exp Foster Home Care/ or exp Adoption/) and (exp American Native Continental Ancestry Group/ or exp Health Services, Indigenous/ or (aboriginal$ or "first nations" or "first nation" or indigenous or native$ or (indian$ not India) or inuit$ or metis or autochthon$).ti,ab,kw.)</p>
+				<p><b>Try pasting the following into the box below, then select "Ovid to PubMed":</b></p>
+				<p>anxiety, separation/th or exp "attention deficit and disruptive behavior disorders"/<br>
+				separation anxiety.ti,ab<br>
+				(ADD or ADHD).ti,ab<br>
+				Cognitive Therapy/ <br>
+				exp Mind-Body Therapies/<br>
+				or/1-3<br>
+				or/4-5<br>
+				6 and 7</p>
 			</div>
 
 						  <div class="w3-padding-4">
 				</div>
 			<button onClick="myAccordion('PubMed-Acc')" class="w3-btn w3-round-large w3-theme">
-			PubMed Examples
+			PubMed Example
 			</button>
 			<div id="PubMed-Acc" class="w3-accordion-content w3-container">
-				<p>"Common Cold/therapy"[Majr] AND ("Vitamin C"[Mesh] OR "Zinc"[Mesh terms]) AND english[lang] AND review[ptyp]</p>
-				<p>("Anticoagulants"[Pharmacological Action] OR noac*[tiab] OR doac*[tiab] OR "new oral"[tiab] OR "novel oral"[tiab] OR "non-vitamin k"[tiab] OR "nonvitamin k"[tiab] OR "direct oral"[tiab]) AND ("Frail Elderly"[Mesh] OR ((Aged"[Mesh] OR elder*[all fields] OR geriatr*[all fields] OR "older adult"[all fields] OR "older adults"[all fields] OR "late life"[all fields] OR "later life"[all fields]) AND ("Thinness"[Mesh] OR underweight[tiab] OR under-weight[tiab] OR thin[tiab] OR frail*[tiab] OR "low body weight"[tiab]))) AND ("Administration, Oral"[Mesh] OR oral*[tiab]) AND english[lang]</p>
+				<p><b>Try pasting the following into the box below, then select "PubMed to Ovid":</b></p>
+				<p>"Brain Concussion"[Mesh] OR "Brain Injuries"[Mesh:NoExp] <br>
+				"Depression"[Mesh] OR "Depressive Disorder"[Mesh] OR depress*[tiab]<br>
+				#1 and #2<br>
+				#3 and jsubsetaim[text]</p>
 		</div>
 			  <div class="w3-padding-8">
 				</div>
@@ -229,13 +239,20 @@ function transposeOTP(inputline){
     // warnings array
     var warningArray = [];
     var warningIndex = 0;
-	var wi = 0;
+		var wi = 0;
     var wiPlus = 1;
 
 	var numCloseParens = 0;
 	var totalCloseParens = 0;
 	var numOpenParens = 0;
 	var totalOpenParens = 0;
+
+	var range = [];
+	var operator = "";
+	var start = null;
+	var end = null;
+	var rangeString = "";
+	var p = null;
 
 	// testing array
 	// var testingArray = [null, null];
@@ -253,22 +270,55 @@ function transposeOTP(inputline){
 	else {
 		// do nothing
 	}
-	
+
 	  //look for MeSH terms containing boolean operators
-  if (inputline.search(/"[\w\s]* and [\w\s]*"\//ig) >= 0){
-    inputline = inputline.replace(/("[\w\s]*) and ([\w\s]*"\/)/ig, "$1 GRRRAND $2");
+  if (inputline.search(/"[\w\s]* and [\w\s]*"[ \/\.]+/ig) >= 0){
+    inputline = inputline.replace(/("[\w\s]*) and ([\w\s]*"[ \/\.]+)/ig, "$1 GRRRAND $2");
   }
-  if (inputline.search(/"[\w\s]* or [\w\s]*"\//i) >= 0){
-    inputline = inputline.replace(/("[\w\s]*) or ([\w\s]*"\/)/ig, "$1 ARRGHOR $2");
+  if (inputline.search(/"[\w\s]* or [\w\s]*"[ \/\.]+/i) >= 0){
+    inputline = inputline.replace(/("[\w\s]*) or ([\w\s]*"[ \/\.]+)/ig, "$1 ARRGHOR $2");
   }
-  if (inputline.search(/"[\w\s]* not [\w\s]*"\//i) >= 0){
-    inputline = inputline.replace(/("[\w\s]*) not ([\w\s]*"\/)/ig, "$1 SERENOTY $2");
+  if (inputline.search(/"[\w\s]* not [\w\s]*"[ \/\.]+/i) >= 0){
+		inputline = inputline.replace(/("[\w\s]*) not ([\w\s]*"[ \/\.]+)/ig, "$1 SERENOTY $2");
   }
 
+// split user input based on line breaks
+var lineBreakArray = inputline.split(/[\n\r]/);
+var lineBreakCounter = lineBreakArray.length - 1;
+var lineBreakLength = lineBreakArray.length;
+for (s = lineBreakCounter; s >= 0; s--) {
+
+	// format limits
+	if (lineBreakArray[s].search(/limit [\d]+ to/i) >= 0) {
+		lineBreakArray[s] = lineBreakArray[s].replace(/\.*/g, ""); //remove any existing periods
+		lineBreakArray[s] = lineBreakArray[s] + ".limit" // temporary field code
+		lineBreakArray[s] = lineBreakArray[s].replace(/(and|or|not)/g,".limit $1"); // temporary field code
+		lineBreakArray[s] = lineBreakArray[s].replace(/[()]*/g,""); // remove any parenthesis
+		lineBreakArray[s] = formatLimitOTP(lineBreakArray[s]);
+	}
+
+	// look for or/1-3 syntax construction
+	if (lineBreakArray[s].search(/(or|and|not)\/([\d]+)-([\d]+)/i) >= 0){
+		operator = lineBreakArray[s].replace(/(or|and|not)\/([\d]+)-([\d]+)/,"$1");
+		start = parseInt(lineBreakArray[s].replace(/(or|and|not)\/([\d]+)-([\d]+)/,"$2"));
+		end = parseInt(lineBreakArray[s].replace(/(or|and|not)\/([\d]+)-([\d]+)/,"$3"));
+
+			// expand range into individual numbers
+			for (var p = start; p <= end; p++) {
+					range.push(p);
+			}
+
+			// join range with boolean operator
+			var rangeString = range.join(".number " + operator + " "); // temporary field code
+					rangeString = rangeString + ".number"; // temporary field code
+					lineBreakArray[s] = rangeString;
+	}
+	range = []; // clear range array
+
     //split user input by any OR operators and put the pieces into an array
-    var orArray = inputline.split(/ OR /i);
+  var orArray = lineBreakArray[s].split(/ OR /i);
 	var orLengthCounter = orArray.length - 1; // for nested parenthasis
-    var orLength = orArray.length;
+  var orLength = orArray.length;
 	var mostRecentTag = "";
 
 		// nested parenthasis
@@ -276,7 +326,7 @@ function transposeOTP(inputline){
 
             //split the string by any AND operators and put the pieces into an array
             var andArray = orArray[i].split(/ AND /i);
-			var andLengthCounter = andArray.length - 1; // for nested parenthasis
+						var andLengthCounter = andArray.length - 1; // for nested parenthasis
             var andLength = andArray.length;
 
 				// nested parenthasis
@@ -284,33 +334,43 @@ function transposeOTP(inputline){
 
                 	//split the string by any NOT operators and put the pieces into an array
                     var notArray = andArray[j].split(/ NOT /i);
-					var notLengthCounter = notArray.length - 1; // for nested parenthasis
+										var notLengthCounter = notArray.length - 1; // for nested parenthasis
                     var notLength = notArray.length;
 
 					// nested parenthasis
 					for (k = notLengthCounter; k >= 0; k--){
 
                     // is it a MeSH term?
-                    if (notArray[k].search(/\//) >= 0|notArray[k].search(/\.fs/) >= 0|notArray[k].search(/\.xs/) >= 0){
-						outputReceiver = formatMesh(notArray[k]);
-						notArray[k] = outputReceiver[0];
-						warningArray[warningIndex] = outputReceiver[1];
-                    }
+            if (notArray[k].search(/\//) >= 0){
+							outputReceiver = formatMesh(notArray[k]);
+							notArray[k] = outputReceiver[0];
+							warningArray[warningIndex] = outputReceiver[1];
+          	}
 
-                    // is the term a keyword?
-                    else {
-						// if a regular keyword
-						if (notArray[k].search(/\./) >= 0) { //
-							var mostRecentTagArray = notArray[k].match(/\.[a-zA-Z,/-]+/);
-							mostRecentTag = mostRecentTagArray[0]; // mostRecentTag = keyword field code
-						}
-						// if no field codes --> .af
+            // is the term a keyword?
+            else {
+							// if a regular keyword
+							if (notArray[k].search(/\./) >= 0) { //
+								var mostRecentTagArray = notArray[k].match(/\.[ a-zA-Z,\/.]+$/);
+								mostRecentTag = mostRecentTagArray[0]; // mostRecentTag = keyword field code
+							}
+
+						// if no field codes
 						if (mostRecentTag == "") {
-							warningArray.push("The term <b>" + notArray[k].replace(/[()*$"]/g,"") + "</b> does not have a field code. The <b>[All Fields]</b> code has been applied.");
-							warningIndex++;
-							notArray[k] = notArray[k] + ".af";
+							// if a number
+							if (notArray[k].search(/^[\(\s]*[\d]+[\s\)]*/) >= 0) { // search for numbers
+								notArray[k] = notArray[k] + ".number";
+							}
+							// otherwise give it an all fields tag
+							else {
+								warningArray.push("For any terms without field codes, the All Fields [all] code has been applied.");
+								warningIndex++;
+								notArray[k] = addQuotes(notArray[k]);
+								notArray[k] = notArray[k] + ".af";
+							}
 						}
 
+						// ensure parenthasis aren't screwed up
 						if (notArray[k].search(/[)]/) > 0) {
 							numCloseParens = notArray[k].match(/[)]/g).length;
 						}
@@ -346,8 +406,9 @@ function transposeOTP(inputline){
 						outputReceiver = formatKeyword(notArray[k]);
 						notArray[k] = outputReceiver[0];
 						warningArray[warningIndex] = outputReceiver[1];
-                    }
-                    warningIndex++;
+            }
+
+            warningIndex++;
 					// testingIndex++;
 
 				} // notLengthCounter
@@ -355,10 +416,16 @@ function transposeOTP(inputline){
 			} // andLengthCounter
             orArray[i] = andArray.join(" AND ");
 		} // orLengthCounter
-        outputline = orArray.join(" OR ");
+        lineBreakArray[s] = orArray.join(" OR ");
+				// deal with blank lines
+				if (lineBreakArray[s].search(/^[" ]*\[all\]/i) >= 0) {
+					lineBreakArray[s] = "";
+				}
+	} // lineBreakCounter
+			outputline = lineBreakArray.join("<br />");
 
 	// filter underdefined, null from warning array
-	warningArray = warningArray.filter(String);
+	// warningArray = warningArray.filter(String);
 
   // split values in warningArray based on |, put into one total array
   var m = null;
@@ -381,7 +448,7 @@ function transposeOTP(inputline){
 
   // warning array into a string for output
 	var warningString = uniqWarningArray.join("<p>");
-	
+
 	  if (outputline.search(/GRRRAND/i) >= 0){
     outputline = outputline.replace(/GRRRAND/ig, " and ");
   }
@@ -425,7 +492,7 @@ function formatMesh (fmString) {
 	// publication types
 	var pubType = ["addresses", "autobiography", "bibliography", "biography", "case reports", "classical article", "clinical conference", "clinical study", "clinical trial", "clinical trial, phase i", "clinical trial, phase ii", "clinical trial, phase iii", "clinical trial, phase iv", "collected works", "comparative study", "congresses", "consensus development conference", "consensus development conference, nih", "controlled clinical trial", "dataset", "dictionary", "directory", "duplicate publication", "editorial", "english abstract", "evaluation studies", "festschrift", "government publications", "guideline", "historical article", "interactive tutorial", "interview", "introductory journal article", "journal article", "lectures", "legal cases", "legislation", "letter", "meta-analysis", "meta analysis", "multicenter study", "news", "newspaper article", "observational study", "overall", "patient education handout", "periodical index", "personal narratives", "portraits", "practice guideline", "pragmatic clinical trial", "publication components", "publication formats", "publication type category", "randomized controlled trial", "research support, american recovery and reinvestment act", "research support, n.i.h., extramural", "research support, n.i.h., intramural", "research support, non-u.s. gov't research support, u.s. gov't, non-p.h.s.", "research support, u.s. gov't, p.h.s.", "review", "scientific integrity review", "study characteristics", "support of research", "technical report", "twin study", "validation studies", "video-audio media", "webcasts"];
 
-	// floating or exploded subheadings
+	// floating or exploded subheadings --> these are now handled in keyword processing. to delete.
     if (fmString.search(/\.fs/i) >= 0|fmString.search(/\.xs/i) >= 0) {
     	fmString = fmString.toUpperCase();
     	fmSubheadingArray = fmString.split(".");
@@ -443,6 +510,7 @@ function formatMesh (fmString) {
     	}
 		fmSubheadingArray[0] = addQuotes(fmSubheadingArray[0]);
 		fmString = fmSubheadingArray[0] + fmSubheadingArray[1];
+		fmString = fmString.toLowerCase();
     } // end .fs and .xs processing
 
 
@@ -452,7 +520,7 @@ function formatMesh (fmString) {
  		var fmBeg = new RegExp(/^[\n\r (]*/); // matches anything before mesh
  		fmBeg = fmBeg.exec(fmString);
 
- 		var fmMesh = new RegExp(/[a-zA-Z, "*]+[a-zA-Z, "()-]*(?="?\/)/); // match the mesh term, incl ""
+ 		var fmMesh = new RegExp(/[\w, "()-]+(?=\/)/); // match the mesh term, incl "" and exp and *
  		fmMesh = fmMesh.exec(fmString);
 
  		var fmSubHead = new RegExp(/[\/][.,a-zA-Z ]*/); // matches subheadings and slash
@@ -465,13 +533,18 @@ function formatMesh (fmString) {
 
 		// publication type processing
 		for (i = 0; i < pubType.length; i++) {
-			if (fmMesh[0].toLowerCase() == pubType[i]) {
-				fmMeshType = "[pt]";
+			if (fmMesh[0].toLowerCase().search(pubType[i]) >= 0) {
+				if (fmString.search(/exp /i) >= 0) {
+					fmMeshType = "[pt]";
+				}
+				else {
+					fmMeshType = "[pt:noexp]";
+				}
 			}
 		}
 
 		// mesh type processing
-		if (fmMeshType == "[pt]"){
+		if (fmMeshType.search(/pt/i) >= 0){
 			// do nothing
 		}
 		else if (fmString.search(/\*/) >= 0 && fmString.search(/exp /i) >= 0){
@@ -488,10 +561,10 @@ function formatMesh (fmString) {
 		}
 
  		// format subheadings
-  		if (fmSubHead[0].search(/[a-zA-Z ,.\r\n]$/) >= 0) { // if contains subheadings
-  			// split into array
+  		if (fmSubHead[0].search(/[a-zA-Z]/) >= 0) { // if contains subheadings
+				fmSubHead[0] = fmSubHead[0].replace(/[\s]*/g,""); // remove any white space
   			fmSubHead[0] = fmSubHead[0].toUpperCase(); // uppercase to match subheading code array above
-			fmSubHead[0] = fmSubHead[0].replace(/[\/]/,""); // remove slash
+				fmSubHead[0] = fmSubHead[0].replace(/[\/]/,""); // remove slash
   			var subHeadingArray = fmSubHead[0].split(","); // array of subheading codes from user input
 
   			// go through each subheading in array
@@ -532,58 +605,58 @@ function formatMesh (fmString) {
 						else {
 							switch (subHeadingArray[k]) {
 								case "AN":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>BL, CF, IP, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>BL, CF, IP, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "CY":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>UL.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheading <b>UL.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "EM":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>AB.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheading <b>AB.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "AH":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AG, AA, AI, and CS.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>AG, AA, AI, and CS.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "DI":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>DG.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheading <b>DG.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "CO":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>SC.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheading <b>SC.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "MI":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>VI.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheading <b>VI.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "ET":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>CI, CO, SC, CN, EM, GE, IM, MI, VI, PS, and TM.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>CI, CO, SC, CN, EM, GE, IM, MI, VI, PS, and TM.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "OG":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EC, LJ, MA, ST, SD, TD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>EC, LJ, MA, ST, SD, TD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "AE":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>PO and TO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>PO and TO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "PD":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AD, AE, PO, TO, AG, AI, CT, and PK.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>AD, AE, PO, TO, AG, AI, CT, and PK.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "ME":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>BI, BL, CF, DF, EN, PK, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>BI, BL, CF, DF, EN, PK, and UR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "PH":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>GE GD, IM, ME, BI, BL, CF, DF, EN, PK, UR, PP, and SE.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>GE GD, IM, ME, BI, BL, CF, DF, EN, PK, UR, PP, and SE.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "EP":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EH and MO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>EH and MO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "SN":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>EP, EH, MO, SD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>EP, EH, MO, SD, and UT.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "TU":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>AD, AE, CT, and PO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>AD, AE, CT, and PO.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "SU":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheading <b>TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheading <b>TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 								case "TH":
-                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In Ovid, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','') + "</b> with the subheadings <b>DH, DT, NU, PC, RT, RH, SU, and TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
+                  fmWarningArray.push("The subheading <b>" + subHeadingArray[k] + "</b> is automatically exploded in PubMed. In PubMed, this search will return more results because it will also search for the MeSH term <b>" +  fmMesh.toString().replace('exp ','').replace("GRRRAND","and").replace("ARRGHOR","or").replace("SERENOTY","not") + "</b> with the subheadings <b>DH, DT, NU, PC, RT, RH, SU, and TR.</b> For more information see <a href='https://www.nlm.nih.gov/mesh/subhierarchy.html' target='_blank'>this page</a>.");
 									break;
 							}
 						}
@@ -617,6 +690,7 @@ function formatMesh (fmString) {
 
 			fmString = fmBeg[0] + fmString + fmEnd[0]; // add any beginning parenthasis to string
 
+			// add additional parenthesis if there are multiple subheadings
 			if (fmString.search("OR") > 0) {
 				fmString = "(" + fmString + ")";
 			}
@@ -656,6 +730,11 @@ function formatKeyword(kwString) {
 	// to hold array of field codes
 	var kwFieldArray = [];
 
+
+	// for floating/exploded subheadings
+	var subHeadingList = ["Abnormalities", "Administration and Dosage", "Adverse Effects", "Agonists", "Analogs and Derivatives", "Analysis", "Anatomy and Histology", "Antagonists and Inhibitors", "Biosynthesis", "Blood Supply", "Blood", "Cerebrospinal Fluid", "Chemical Synthesis", "Chemically Induced", "Chemistry", "Classification", "Complications", "Congenital", "Contraindications", "Cytology", "Deficiency", "Diagnosis", "Diagnostic Use", "Diet Therapy", "Diagnostic Imaging", "Drug Effects", "Drug Therapy", "Economics", "Education", "Embryology", "Enzymology", "Epidemiology", "Ethics", "Ethnology", "Etiology", "Genetics", "Growth and Development", "History", "Immunology", "Injuries", "Innervation", "Instrumentation", "Isolation and Purification", "Legislation and Jurisprudence", "Manpower", "Metabolism", "Methods", "Microbiology", "Mortality", "Nursing", "Organization and Administration", "Parasitology", "Pathogenicity", "Pathology", "Pharmacokinetics", "Pharmacology", "Physiology", "Physiopathology", "Poisoning", "Prevention and Control", "Psychology", "Radiation Effects", "Radiotherapy", "Rehabilitation", "Secondary", "Secretion", "Standards", "Statistics and Numerical Data", "Supply and Distribution", "Surgery", "Therapeutic Use", "Therapy", "Toxicity", "Transmission", "Transplantation", "Trends", "Ultrastructure", "Urine", "Utilization", "Veterinary", "Virology"];
+	var subHeadingCode = ["AB", "AD", "AE", "AG", "AA", "AN", "AH", "AI", "BI", "BS", "BL", "CF", "CS", "CI", "CH", "CL", "CO", "CN", "CT", "CY", "DF", "DI","DU", "DH", "DG", "DE", "DT", "EC", "ED", "EM", "EN", "EP", "ES", "EH", "ET", "GE", "GD", "HI", "IM", "IN", "IR", "IS", "IP", "LJ", "MA", "ME", "MT", "MI", "MO", "NU", "OG", "PS", "PY", "PA", "PK", "PD", "PH", "PP", "PO", "PC", "PX", "RE", "RT", "RH", "SC", "SE", "ST", "SN", "SD", "SU", "TU", "TH", "TO", "TM", "TR", "TD", "UL", "UR", "UT", "VE", "VI"];
+
 	// variable to hold any beginning parenthesis
 	var kwBeg = new RegExp(/^[\n\r (]*/);
 		kwBeg = kwBeg.exec(kwString);
@@ -670,7 +749,7 @@ function formatKeyword(kwString) {
 
  	var kwNested = false;
 
- 	if (kwString.search(/\)\./) >= 0) { // if nested parenthesis
+ 	if (kwString.search(/\)\s*\./) >= 0) { // if nested parenthesis
 	 	kwNested = true;
 	}
 	else {
@@ -736,6 +815,13 @@ function formatKeyword(kwString) {
     else if (kwFieldArray[b].search(/cp/i) >= 0){ // country of publication
       kwFieldArray[b] = kwFieldArray[b].replace(/cp/i,"[pl]");
     }
+		else if (kwFieldArray[b].search(/dz/i) >= 0 && kwArray[0].search(/docz/i) >= 0){ // docz.dz
+      kwFieldArray[b] = kwFieldArray[b].replace(/dz/i,"[sb]");
+			kwArray[0] = "all";
+		}
+		else if (kwFieldArray[b].search(/pt/i) >= 0){ // publication type
+			kwFieldArray[b] = kwFieldArray[b].replace(/pt/i,"[pt:noexp]");
+		}
     else if (kwFieldArray[b].search(/da/i) >= 0){ // Date, Mesh
       kwFieldArray[b] = kwFieldArray[b].replace(/da/i,"[mhda]");
     }
@@ -766,6 +852,12 @@ function formatKeyword(kwString) {
     else if (kwFieldArray[b].search(/fa/i) >= 0){ // full author name
       kwFieldArray[b] = kwFieldArray[b].replace(/fa/i,"[fau]");
     }
+		else if (kwFieldArray[b].search(/fs/i) >=0){ // floating subheading
+      kwFieldArray[b] = kwFieldArray[b].replace(/fs/i,"[sh:noexp]");
+    }
+		else if (kwFieldArray[b].search(/xs/i) >=0){ // exploded subheading
+			kwFieldArray[b] = kwFieldArray[b].replace(/xs/i,"[sh]");
+		}
     else if (kwFieldArray[b].search(/gr|gc|gi|no|go/i) >= 0){ // Grant Information
       kwFieldArray[b] = kwFieldArray[b].replace(/gr|gc|gi|no|go/i,"[gr]");
     }
@@ -819,7 +911,7 @@ function formatKeyword(kwString) {
       kwFieldArray[b] = kwFieldArray[b].replace(/nj/i,"[journal]");
     }
     else if (kwFieldArray[b].search(/nm/i) >= 0){ // name of substance word
-      kwFieldArray[b] = kwFieldArray[b].replace(/nm/i,"[supplementary concept]");
+      kwFieldArray[b] = kwFieldArray[b].replace(/nm/i,"[nm]");
     }
     else if (kwFieldArray[b].search(/nw/i) >= 0){ // NLM Journal Word<
       kwFieldArray[b] = kwFieldArray[b].replace(/nw/i,"[journal]");
@@ -859,11 +951,50 @@ function formatKeyword(kwString) {
       kwFieldArray[b] = kwFieldArray[b].replace(/rx/i,"[supplementary concept]");
       kwWarningArray.push("PubMed only supports .rx searches that are one word long (no phrases).");
     }
+		else if (kwFieldArray[b].search(/sb/i) >= 0){ // subsets
+			if (kwArray[0].search(/aids hiv journals/i) >= 0) {
+				kwArray[0] = kwArray[0].replace(/aids hiv journals/i,"aids");
+			}
+			else if (kwArray[0].search(/bioethicsjournals/i) >= 0) {
+				kwArray[0] = kwArray[0].replace(/bioethicsjournals/i,"bioethics");
+			}
+			else if (kwArray[0].search(/history of medicine journals/i) >= 0) {
+				kwArray[0] = kwArray[0].replace(/history of medicine journals/i,"history");
+			}
+			else if (kwArray[0].search(/national aeronautics GRRRAND space  administration nasa journals/i) >= 0) {
+				kwArray[0] = kwArray[0].replace(/national aeronautics GRRRAND space  administration nasa journals/i,"space");
+			}
+			else if (kwArray[0].search(/om/i) >= 0) {
+				kwArray[0] = kwArray[0].replace(/om/i,"oldmedline");
+			}
+			else if (kwArray[0].search(/[a-zA-Z]{1,3}/i) >= 0) { // match between 1 and 3 alpha characters
+				kwArray[0] = kwArray[0].replace(/[a-zA-Z]{1,3}/i,"jsubset$&");
+				kwFieldArray[b] = kwFieldArray[b].replace(/sb/i,"[text]");
+			}
+			else {
+				// do nothing
+			}
+		}
     else if (kwFieldArray[b].search(/sh/i) >= 0){ // mesh heading unexploded
       kwFieldArray[b] = kwFieldArray[b].replace(/sh/i,"[mesh:noexp]");
     }
     else if (kwFieldArray[b].search(/st/i) >= 0){ // Status
-      kwFieldArray[b] = kwFieldArray[b].replace(/st/i,"[sb]");
+			kwFieldArray[b] = kwFieldArray[b].replace(/st/i,"[sb]");
+			if (kwArray[0].search(/in process/i) >= 0) {
+				kwArray[0] = kwArray[0].replace(/in process/i,"inprocess");
+			}
+			else if (kwArray[0].search(/oldmedline citations/i) >= 0) {
+				kwArray[0] = kwArray[0].replace(/oldmedline citations/i,"oldmedline");
+			}
+			else if (kwArray[0].search(/pubmed SERENOTY medline/i) >= 0) {
+				kwArray[0] = kwArray[0].replace(/pubmed SERENOTY medline/i,"pubmednotmedline");
+			}
+			else if (kwArray[0].search(/in data review/i) >= 0) {
+				kwArray[0] = kwArray[0].replace(/in data review/i,"indatareview");
+			}
+			else {
+				// do nothing
+			}
     }
     else if (kwFieldArray[b].search(/ui/i) >= 0){ // unique identifier
       kwFieldArray[b] = kwFieldArray[b].replace(/ui/i,"[pmid]");
@@ -877,12 +1008,12 @@ function formatKeyword(kwString) {
     else if (kwFieldArray[b].search(/yr/i) >= 0){ // year
       kwFieldArray[b] = kwFieldArray[b].replace(/yr/i,"[dp]");
     }
-    // else replace .## with [##]
+    // else replace .xx with [xx]
 		else {
       kwFieldArray[b] = "[" + kwFieldArray[b] + "]";
 		}
 
-		// add quotes
+		// truncation and wildcards and numbers
 		if (kwArray[0].search(/\*/g) >= 0) { // truncation * is used (end of kw)
 			// don't add quotes
 			// remove any existing quotes
@@ -894,8 +1025,8 @@ function formatKeyword(kwString) {
 			// remove any existing quotes
 			kwArray[0] = kwArray[0].replace(/\"/g,"");
 		}
-    else if (kwArray[0].search(/\:/g) >= 0) { // truncation $ is used (end of kw)
-      kwArray[0] = kwArray[0].replace(/\:/,"*"); // convert $ --> *
+    else if (kwArray[0].search(/\:/g) >= 0) { // truncation : is used (end of kw)
+      kwArray[0] = kwArray[0].replace(/\:/,"*"); // convert : --> *
       // don't add quotes
       // remove any existing quotes
       kwArray[0] = kwArray[0].replace(/\"/g,"");
@@ -903,8 +1034,31 @@ function formatKeyword(kwString) {
 		else if (kwArray[0].search(/[A-Za-z][\?\#][A-Za-z]/) >= 0) { // wildcard ? or # is used
 			kwWarningArray.push("PubMed does not support wildcards. For the most accurate translation, write out all possible word combinations.");
 		}
+		// if it's a number
+		else if (kwFieldArray[b].search("number") >= 0) {
+			kwFieldArray[b] = kwFieldArray[b].replace("[number]","");
+			kwArray[0] = "#" + kwArray[0];
+		}
+		// if it's a limit
+		else if (kwFieldArray[b].search("limit") >= 0) {
+			kwFieldArray[b] = "";
+		}
+
+		// if it's a floating/exploded subheading
+		else if (kwFieldArray[b].search(/sh/i) >= 0) {
+			kwArray[0] = kwArray[0].toUpperCase();
+			// replace two letter code with full subheading
+			for (c=0; c < subHeadingCode.length; c++) {
+				if (kwArray[0] == subHeadingCode[c]) {
+					kwArray[0] = subHeadingList[c];
+				}
+			}
+		kwArray[0] = addQuotes(kwArray[0]);
+		}
+
+		// normal keyword; add quotations
 		else {
-			kwArray[0] = addQuotes(kwArray[0]); // normal keyword; add quotations
+			kwArray[0] = addQuotes(kwArray[0]);
 		}
 
 		// format back into full keyword strings
@@ -940,13 +1094,36 @@ function formatKeyword(kwString) {
 function addQuotes(aqString) {
 
 	if (aqString.search(/\"/) >= 0) { // if string already has quotes
-		// do nothing
+		aqString = aqString.replace(/\"/g,"");
+		aqString = aqString.replace(/[\(\)a-zA-Z\d \/,*-]+/,"\"$&\"");
 	}
 
 	else {
-		aqString = aqString.replace(/[a-zA-Z\d \/,*-]+/,"\"$&\""); // add quotes
+		aqString = aqString.replace(/[\(\)a-zA-Z\d \/,*-]+/,"\"$&\""); // add quotes
 	}
 	return aqString;
+
+} // function end
+
+// ****************************************** FORMAT OTP LIMITS ******************************************
+
+function formatLimitOTP(flString) {
+
+	flString = flString.replace(/limit (\d+) to/i,"$1 and ");
+
+	flString = flString.replace(/aids/i,"aids[sb]");
+	flString = flString.replace(/bioethics/i,"bioethics[sb]");
+	flString = flString.replace(/cancer/i,"cancer[sb]");
+	flString = flString.replace(/Complementary Medicine/i,"cam[sb]");
+	flString = flString.replace(/Dietary Supplements/i,"dietsuppl[sb]");
+	flString = flString.replace(/History of Medicine/i,"history[sb]");
+	flString = flString.replace(/Space Life Sciences/i,"space[sb]");
+	flString = flString.replace(/Systematic Reviews/i,"systematic[sb]");
+	flString = flString.replace(/Toxicology/i,"tox[sb]");
+	flString = flString.replace(/Veterinary Science/i,"veterinary[sb]");
+	flString = flString.replace(/communication disorders journals/i,"jsubsetc[text]");
+
+	return flString;
 
 } // function end
 
@@ -992,11 +1169,19 @@ function transposePTO(inputline) {
     inputline = inputline.replace(/ and \(/g," AND \(");
     inputline = inputline.replace(/ not \(/g," NOT \(");
 
-    //split the string by the word "Filter" to find any limits
-    var filterArray = inputline.split(" Filters: ");
+	//split by linebreaks
+	var lineArray = inputline.split(/[\n\r]/);
+
+		// go through each element in the array
+		var h;
+		for (h = 0; h < lineArray.length; h++) {
+
+		//split the string by the word "Filter" to find any limits
+    //var filterArray = lineArray[h].split(" Filters: ");
+		lineArray[h] = lineArray[h].replace(/ Filters:/,"<br />");
 
     //split the string by any OR operators and put the pieces into an array
-    var orArray = filterArray[0].split(" OR ");
+    var orArray = lineArray[h].split(" OR ");
     //document.getElementById("output1").innerHTML = orArray;
     var orLength = orArray.length;
     var i;
@@ -1095,20 +1280,34 @@ function transposePTO(inputline) {
                     warningArray[warningIndex] = outputReceiver[1];
               }
 
+              //is the term an ID number?
+              else if (notArray[k].search(/\[pmid/i) >= 0 || notArray[k].search(/\[uid/i) >= 0 || notArray[k].search(/\[auid/i) >= 0 || notArray[k].search(/\[jid/i) >= 0){
+                    notArray[k] = formatIdNumbersPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+              else if (notArray[k].search(/\[gr/i) >= 0 || notArray[k].search(/\[si/i) >= 0 || notArray[k].search(/\[se/i) >= 0 || notArray[k].search(/\[is/i) >= 0){
+                    notArray[k] = formatIdNumbersPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+              else if (notArray[k].search(/\[lid/i) >= 0 || notArray[k].search(/\[aid/i) >= 0 || notArray[k].search(/\[rn/i) >= 0 || notArray[k].search(/\[ec\/rn/i) >= 0){
+                    notArray[k] = formatIdNumbersPTO(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+
               //is the term an author?
               else if (notArray[k].search(/\[Au/i) >= 0 || notArray[k].search(/\[cn/i) >=0 || notArray[k].search(/\[1au/i) >= 0 || notArray[k].search(/\[fau/i) >= 0 || notArray[k].search(/\[lastau/i) >= 0){
                     outputReceiver = formatAuthorPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
                     warningArray[warningIndex] = outputReceiver[1];
               }
-		    
+
               //is the term an investigator?
               else if (notArray[k].search(/\[ir/i) >= 0 || notArray[k].search(/\[investigator/i) >=0){
                     outputReceiver = formatAuthorPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
                     warningArray[warningIndex] = outputReceiver[1];
               }
-		    
+
               //is the term journal title or issn?
               else if (notArray[k].search(/\[jour/i) >= 0 || notArray[k].search(/\[ta/i) >= 0){
                     notArray[k] = formatJournalPTO(notArray[k]);
@@ -1132,7 +1331,7 @@ function transposePTO(inputline) {
                     notArray[k] = formatJournalPTO(notArray[k]);
                     warningArray[warningIndex] = "null";
               }
-		    
+
               //is the term a date?
               else if (notArray[k].search(/\[mhda/i) >= 0 || notArray[k].search(/\[crdt/i) >= 0 || notArray[k].search(/\[edat/i) >= 0){
                     outputReceiver = formatDatePTO(notArray[k]);
@@ -1168,7 +1367,7 @@ function transposePTO(inputline) {
                     notArray[k] = outputReceiver[0];
                     warningArray[warningIndex] = outputReceiver[1]; 
               }
-		    
+
 	      //is the term a citation number?
               else if (notArray[k].search(/\[ip\]/i) >= 0 || notArray[k].search(/\[issue\]/i) >= 0 || notArray[k].search(/\[pg\]/i) >= 0 || notArray[k].search(/\[pagination\]/i) >= 0 || notArray[k].search(/\[vi\]/i) >= 0){
                     notArray[k] = formatCitationPTO(notArray[k]);
@@ -1194,7 +1393,7 @@ function transposePTO(inputline) {
                     notArray[k] = outputReceiver[0];
                     warningArray[warningIndex] = outputReceiver[1];
               }
-		    
+
               //is the term a text limit?
               else if (notArray[k].search(/\[text\]/i) >= 0){
                     outputReceiver = formatLimitPTO(notArray[k]);
@@ -1217,18 +1416,35 @@ function transposePTO(inputline) {
                       notArray[k] = outputReceiver[0];
                       warningArray[warningIndex] = outputReceiver[1];
                     }
-                    //check to see if it is a pmc ID term, which do not require tags
-		    else if (notArray[k].search(/PMC/i) >=0){
+
+									//check to see if it is a pmc ID term, which do not require tags
+		    			else if (notArray[k].search(/PMC/i) >=0){
                       notArray[k] = notArray[k] + ".pm.";
-		    }
-                    //otherwise, assume the term is a bare keyword, and make it an all fields search, but throw a warning.
-                    else{
+		    				}
+
+							// check to see if it's a line number
+							else if (notArray[k].search("#") >= 0) {
+									notArray[k] = notArray[k].replace(/#/g,"");
+							}
+
+								//otherwise, assume the term is a bare keyword, and make it an all fields search, but throw a warning.
+              else if (notArray[k].search(/\w/) >= 0) { // if it contains any alphanumeric character (ie not empty)
                       notArray[k] = notArray[k] + ".af.";
                       notArray[k] = notArray[k].fontcolor("red");
                       warningArray[warningIndex] = "This term did not have a tag. For simplicity, it has been translated as an \"all fields\" search in Ovid syntax. However, this may not be an accurate translation. For the most accurate translation, please enter this term into the PubMed interface, and look on the right-hand side of your results. Copy the text in the Search Details display and enter it into Transpose for an accurate translation into Ovid syntax. ";
                       warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
                   }
-              }
+
+								else {
+									// do nothing
+								}
+						}
+
+						// deal with any lingering line numbers
+						if (notArray[k].search("#") >= 0) {
+								notArray[k] = notArray[k].replace(/#/g,"");
+						}
+
 
               //add the parentheses back in
               if (parenArray.length > 1){
@@ -1248,22 +1464,25 @@ function transposePTO(inputline) {
         } //this corresponds to the and for-loop
         orArray[i] = andArray.join(" and ");
     }//this corresponds to the or for-loop
-    filterArray[0] = orArray.join(" or ");
+    lineArray[h] = orArray.join(" or ");
+	}//this corresponds to the linebreak for-loop
+	outputline = lineArray.join("<br />");
 
-    if (filterArray.length > 1){
+    //if (filterArray.length > 1){
      //split the string by any semicolons and put the pieces into an array
-            var limitArray = filterArray[1].split("; ");
-            var limitLength = limitArray.length;
-            var l;
+            //var limitArray = filterArray[1].split("; ");
+            //var limitLength = limitArray.length;
+            //var l;
 
             // go through each element in the array
-            for (l = 0; l < limitLength; l++){
+            //for (l = 0; l < limitLength; l++){
 
                 //this checks for the attributes of the search term.
 
-            } // this corresponds to the limit for-loop
-    }
-    outputline = filterArray.join("<br>");
+            //} // this corresponds to the limit for-loop
+    //} // filter for-loop
+
+    //outputline = filterArray.join("<br />");
 
     //document.getElementById("output1").innerHTML = inputline;
     //document.getElementById("output2").innerHTML = testingArray;
@@ -1502,7 +1721,7 @@ function formatControlledPTO(cvString) {
             cvOutputArray[0] = cvOutputArray[0] + ".xs.";
         }
     }
-	
+
     //unexploded subheadings are simpler
     else if (cvString.search(/\[sh:noexp\]/i) >= 0 || cvString.search(/\[subheading:noexp\]/i) >= 0){
         cvString = cvString.replace(/\[sh:noexp\]/i,".fs.");
@@ -1705,7 +1924,7 @@ function formatJournalPTO(jnString) {
 
     return jnString;
 }
-	
+
 //****************************************************************************************************Dates*******************************************************************
 
 function formatDatePTO(dtString) {
@@ -1804,6 +2023,7 @@ function formatKeywordPTO(kwString) {
 	kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,cl,oa,kw,kf.");
 	fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates the most accurate translation in Ovid Medline syntax. We plan to add an option here for a less accurate, more efficient translation, in the near future. In the meantime, you could use a word processor's find and replace option to adjust the search fields.";
 	fkwWarning = fkwWarning.fontcolor("blue");
+
 	kwString = removeQuotesPTO(kwString);
     }
     //reformat keywords being searched in the other title or translated title
@@ -1811,6 +2031,7 @@ function formatKeywordPTO(kwString) {
         kwString = kwString.replace(/\[ot\]/i,".kw.");
         kwString = kwString.replace(/\[tt\]/i,".ot.");
         kwString = removeQuotesPTO(kwString);
+
     }
     //reformat keywords being searched in all fields
     else if (kwString.search(/\[All/i) >= 0){
@@ -1841,7 +2062,7 @@ function formatKeywordPTO(kwString) {
     fkwOutputArray[1] = fkwWarning;
     return fkwOutputArray;
 }
-	
+
 //****************************************************************************************************ID Numbers*******************************************************************
 
 function formatIdNumbersPTO(idString) {
@@ -2354,9 +2575,9 @@ function formatSubheadingsPTO (fshString){
 
 <!-- Start of StatCounter Code for Default Guide -->
 <script type="text/javascript">
-var sc_project=11377022; 
-var sc_invisible=1; 
-var sc_security="ba30c3ae"; 
+var sc_project=11377022;
+var sc_invisible=1;
+var sc_security="ba30c3ae";
 var scJsHost = (("https:" == document.location.protocol) ?
 "https://secure." : "http://www.");
 document.write("<sc"+"ript type='text/javascript' src='" +
