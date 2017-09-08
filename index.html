@@ -2046,8 +2046,9 @@ function formatKeywordPTO(kwString, uPref) {
 	    kwString = kwString.replace(/\[tiab\]/i,".ti,ab.");
 	    kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab.");
 	    fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates an efficient translation for daily use - if you prefer something more accurate, please choose the Accuracy option.";
-	fkwWarning = fkwWarning.fontcolor("blue");
-	kwString = removeQuotesPTO(kwString);
+	    fkwWarning = fkwWarning.fontcolor("blue");
+	    kwString = removeQuotesPTO(kwString);
+	}
     }
     //reformat keywords being searched in the other title or translated title
     else if (kwString.search(/\[ot\]/i) >= 0 || kwString.search(/\[tt/i) >= 0){
@@ -2555,7 +2556,7 @@ function formatSubheadingsPTO (fshString){
         case "statistics and numerical data":
             fshString = "sn,ep,sd,ut,eh,mo";
             break;
-        case "strandards":
+        case "standards":
             fshString = "st";
             break;
         case "surgery":
