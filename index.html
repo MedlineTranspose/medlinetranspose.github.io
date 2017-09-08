@@ -421,7 +421,7 @@ for (s = lineBreakCounter; s >= 0; s--) {
 						}
 
 						// all keyword processing
-						outputReceiver = formatKeyword(notArray[k]);
+						outputReceiver = formatKeyword(notArray[k], uPref);
 						notArray[k] = outputReceiver[0];
 						warningArray[warningIndex] = outputReceiver[1];
             }
@@ -735,7 +735,7 @@ function formatMesh (fmString) {
 } // function end
 
 // ****************************************** KEYWORDS ******************************************
-function formatKeyword(kwString) {
+function formatKeyword(kwString, uPref) {
 
 	kwTemp = kwString;
 
