@@ -113,6 +113,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     	<label class="w3-validate">PubMed to Ovid</label>
     	<br><br>
   	</div>
+	    
+	<div class="w3-layout-cell w3-layout-middle">
+    	<input id="accuracy" class="w3-radio" type="radio" name="preference" value="accuracy">
+    	<label class="w3-validate">Accuracy</label>
+    	<br>
+    	<input id="efficiency" class="w3-radio" type="radio" name="preference" value="efficiency">
+    	<label class="w3-validate">Efficiency</label>
+    	<br><br>
+  	</div>
 
 	<div class="w3-container w3-layout-cell w3-layout-middle">
 		<button class="w3-btn w3-padding-large w3-round-large w3-theme" id="submit" onClick="myFunction()">Submit</button></p>
@@ -197,7 +206,16 @@ function myFunction() {
   	warnOTP = warnOTP.fontcolor("maroon");
   	warnPTO = warnPTO.fontcolor("maroon");
 	warnNoChoice = warnNoChoice.fontcolor("maroon");
+	var prefRB1 = document.getElementById("accuracy");
+	var prefRB2 = document.getElementById("efficiency");
+	var userPref = 0;
 
+	if (prefRB1.checked){
+		userPref = 0;
+	}
+	else if (prefRB2.checked){
+		userPref = 1;
+	}
 
     if (rb1.checked && rb2.checked == false){
 	if (mfInputline.search(/\[/i) >= 0 && mfInputline.search(/\]/i) >= 0){
@@ -206,7 +224,7 @@ function myFunction() {
         else{
           document.getElementById("output5").innerHTML = "";
         }
-    	transposeOTP(mfInputline);
+    	transposeOTP(mfInputline, userPref);
     }
     else if (rb1.checked == false && rb2.checked){
 	if (mfInputline.search(/exp/i) >= 0 && mfInputline.search(/\//i) >= 0){
@@ -218,7 +236,7 @@ function myFunction() {
         else{
           document.getElementById("output5").innerHTML = "";
         }
-      	transposePTO(mfInputline);
+      	transposePTO(mfInputline, userPref);
     }
 	else if (rb1.checked == false && rb2.checked == false){
 	    document.getElementById("output5").innerHTML = warnNoChoice;
@@ -229,7 +247,7 @@ function myFunction() {
   window.location.hash = 'results';
 }
 
-function transposeOTP(inputline){
+function transposeOTP(inputline, uPref){
 
     //read in the user input (Ovid search strategy)
     //var inputline = document.getElementById("userEntry").value;
@@ -790,9 +808,15 @@ function formatKeyword(kwString) {
       kwWarningArray.push("In Ovid, the .tw or .ti,ab command searches both title and abstract. However, in PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, this pubmed search may return more results than the original ovid one. Please note also that while both Ovid MEDLINE and PubMed have a textword (tw) search, they search different fields in each database.");
 		}
 		else if (kwFieldArray[b].search(/mp/i) >= 0){ // multipurpose
-			kwFieldArray[b] = kwFieldArray[b].replace(/mp/i,"[tiab]");
-			kwWarningArray.push("The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). Many of these field codes cannot be searched in PubMed. Search has been translated as [tiab] OR [nm] OR [mh] OR [tt] OR [pmid]. For an inexact, but simpler translation, you may wish to search this term as a text word [tw] search instead.");
-			kwFieldArray.push("nm","mh","ot","ui");
+			if (uPref == 0){
+				kwFieldArray[b] = kwFieldArray[b].replace(/mp/i,"[tiab]");
+				kwWarningArray.push("The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). Many of these field codes cannot be searched in PubMed. Search has been translated as [tiab] OR [nm] OR [mh] OR [tt] OR [pmid]. For an inexact, but simpler translation  to [tw], choose the Efficiency option.");
+				kwFieldArray.push("nm","mh","ot","ui");
+			}
+			else{
+				kwFieldArray[b] = kwFieldArray[b].replace(/mp/i,"[tw]");
+				kwWarningArray.push("The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). For simplicity, this search has been translated as [tw]. For a more exact translation, choose the Accuracy option.");
+			}
 		}
     // field codes are listed alphabetically after this point
 		else if (kwFieldArray[b].search(/ab/i) >= 0){ // abstract
@@ -820,7 +844,14 @@ function formatKeyword(kwString) {
 			kwArray[0] = "all";
 		}
 		else if (kwFieldArray[b].search(/pt/i) >= 0){ // publication type
+			if (uPref == 0){
 			kwFieldArray[b] = kwFieldArray[b].replace(/pt/i,"[pt:noexp]");
+			kwWarningArray.push("The publication type (pt) field tag does not automatically explode in Ovid, and so this translation duplicates that in PubMed. For an inexact, but simpler translation  to [pt], choose the Efficiency option.");
+		}
+		else {
+			kwFieldArray[b] = kwFieldArray[b].replace(/pt/i,"[pt]");
+			kwWarningArray.push("The publication type (pt) field tag does not automatically explode in Ovid, and automatically explodes in PubMed. To search this term without exploding in PubMed, choose the Accuracy option.");
+		}
 		}
     else if (kwFieldArray[b].search(/da/i) >= 0){ // Date, Mesh
       kwFieldArray[b] = kwFieldArray[b].replace(/da/i,"[mhda]");
@@ -1129,7 +1160,7 @@ function formatLimitOTP(flString) {
 
 //*********************************************PTO functions start***********************************************
 
-function transposePTO(inputline) {
+function transposePTO(inputline, uPref) {
 
 
     //document.getElementById("output4").innerHTML ="yikes";
@@ -1347,7 +1378,7 @@ function transposePTO(inputline) {
               //is the term a keyword?
               else if (notArray[k].search(/\[ti/i) >= 0 || notArray[k].search(/\[All/i) >= 0 || notArray[k].search(/\[ot/i) >= 0 || notArray[k].search(/\[tt/i) >= 0){
                     //testingArray[testingIndex] = "kw";
-                    outputReceiver = formatKeywordPTO(notArray[k]);
+                    outputReceiver = formatKeywordPTO(notArray[k], uPref);
                     notArray[k] = outputReceiver[0];
                     //warningArray[warningIndex] = warningArray[warningIndex] + outputReceiver[1];
                     warningArray[warningIndex] = outputReceiver[1];
@@ -1355,7 +1386,7 @@ function transposePTO(inputline) {
 
               //is the term a keyword with a TW tag?
               else if (notArray[k].search(/\[tw/i) >= 0 || notArray[k].search(/\[text word/i) >= 0){
-                    outputReceiver = formatKeywordPTO(notArray[k]);
+                    outputReceiver = formatKeywordPTO(notArray[k], uPref);
                     notArray[k] = outputReceiver[0];
                     //warningArray[warningIndex] = warningArray[warningIndex] + outputReceiver[1];
                     warningArray[warningIndex] = outputReceiver[1];
@@ -2003,7 +2034,7 @@ function formatDatePTO(dtString) {
 
 //****************************************************************************************************Keywords*******************************************************************
 
-function formatKeywordPTO(kwString) {
+function formatKeywordPTO(kwString, uPref) {
 
     //make a variable to hold any warnings
     var fkwWarning = "null";
@@ -2017,21 +2048,26 @@ function formatKeywordPTO(kwString) {
 	kwString = kwString.replace(/\[ti\]/i,".ti,bt.");
 	kwString = removeQuotesPTO(kwString);
     }
-    //reformat keywords being searched in the title and abstract
+    //reformat keywords being searched in the title and abstract (with accuracy/efficiency options)
     else if (kwString.search(/\[tiab\]/i) >= 0 || kwString.search(/\[title/i) >= 0){
-        kwString = kwString.replace(/\[tiab\]/i,".ti,ab,cl,oa,kw,kf.");
-	kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,cl,oa,kw,kf.");
-	fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates the most accurate translation in Ovid Medline syntax. We plan to add an option here for a less accurate, more efficient translation, in the near future. In the meantime, you could use a word processor's find and replace option to adjust the search fields.";
-	fkwWarning = fkwWarning.fontcolor("blue");
-
-	kwString = removeQuotesPTO(kwString);
+        if (uPref == 0){
+	    kwString = kwString.replace(/\[tiab\]/i,".ti,ab,cl,oa,kw,kf.");
+	    kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,cl,oa,kw,kf.");
+	    fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates the most accurate translation in Ovid Medline syntax. This conversion creates the most accurate translation in Ovid Medline syntax - if you prefer something simpler, please choose the Efficiency option.";
+	}
+	else{
+	    kwString = kwString.replace(/\[tiab\]/i,".ti,ab.");
+	    kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab.");
+	    fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates an efficient translation for daily use - if you prefer something more accurate, please choose the Accuracy option.";
+	    fkwWarning = fkwWarning.fontcolor("blue");
+	    kwString = removeQuotesPTO(kwString);
+	}
     }
     //reformat keywords being searched in the other title or translated title
     else if (kwString.search(/\[ot\]/i) >= 0 || kwString.search(/\[tt/i) >= 0){
         kwString = kwString.replace(/\[ot\]/i,".kw.");
         kwString = kwString.replace(/\[tt\]/i,".ot.");
         kwString = removeQuotesPTO(kwString);
-
     }
     //reformat keywords being searched in all fields
     else if (kwString.search(/\[All/i) >= 0){
@@ -2040,20 +2076,34 @@ function formatKeywordPTO(kwString) {
 	kwString = removeQuotesPTO(kwString);
     }
 
-    //reformat keywords being searched in Text Words (this is precise according to PubMed documentation) Add a suggestion: .mp. as an alternate.
+    //reformat keywords being searched in Text Words (with accuracy/efficiency options)
     else if (kwString.search(/\[tw/i) >= 0){
-        kwString = kwString.replace(/\[tw\]/i,".ti,ab,sh,hw,kw,rn,pn,sa,si.");
-        kwString = kwString.fontcolor("blue");
-        fkwWarning = "This is a literal translation of the Text Word tag in PubMed. If you do not require an exact replication, you may wish to use .mp. instead.";
-        fkwWarning = fkwWarning.fontcolor("blue");
+	if (uPref == 0){
+		kwString = kwString.replace(/\[tw\]/i,".ti,ab,sh,hw,kw,rn,pn,sa,si.");
+		//kwString = kwString.fontcolor("blue");
+		fkwWarning = "This is a literal translation of the [tw] tag in PubMed. If you prefer something simpler, please choose the Efficiency option.";
+	}
+	else {
+		kwString = kwString.replace(/\[tw\]/i,".mp.");
+		//kwString = kwString.fontcolor("blue");
+		fkwWarning = "This is an efficient but inexact translation of the [tw] tag. A literal translation of [tw] is .ti,ab,sh,hw,kw,rn,pn,sa,si. If you prefer a more accurate conversion, please choose the Accuracy option.";
+	}
+	fkwWarning = fkwWarning.fontcolor("blue");
 	kwString = removeQuotesPTO(kwString);
     }
-    //reformat keywords being searched in Text Words (this is precise according to PubMed documentation) Add a suggestion: .mp. as an alternate.
+    //reformat keywords being searched in Text Words (with accuracy/efficiency options)
     else if (kwString.search(/\[text word/i) >= 0){
-        kwString = kwString.replace(/\[text word\]/i,".ti,ab,sh,hw,kw,rn,pn,sa,si.");
-        kwString = kwString.fontcolor("blue");
-        fkwWarning = "This is a literal translation of the Text Word tag in PubMed. If you do not require an exact replication, you may wish to use .mp. instead.";
-        fkwWarning = fkwWarning.fontcolor("blue");
+        if (uPref == 0){
+		kwString = kwString.replace(/\[text word\]/i,".ti,ab,sh,hw,kw,rn,pn,sa,si.");
+		kwString = kwString.fontcolor("blue");
+		fkwWarning = "This is a literal translation of the [text word] tag in PubMed. If you prefer something simpler, please choose the Efficiency option.";
+	}
+	else {
+		kwString = kwString.replace(/\[text word\]/i,".mp.");
+		kwString = kwString.fontcolor("blue");
+		fkwWarning = "This is an efficient but inexact translation of the [text word] tag. A literal translation of [tw] is .ti,ab,sh,hw,kw,rn,pn,sa,si. If you prefer a more accurate conversion, please choose the Accuracy option.";
+	}
+	fkwWarning = fkwWarning.fontcolor("blue");
 	kwString = removeQuotesPTO(kwString);
     }
 
@@ -2519,7 +2569,7 @@ function formatSubheadingsPTO (fshString){
         case "statistics and numerical data":
             fshString = "sn,ep,sd,ut,eh,mo";
             break;
-        case "strandards":
+        case "standards":
             fshString = "st";
             break;
         case "surgery":
