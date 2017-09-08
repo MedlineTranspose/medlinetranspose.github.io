@@ -808,9 +808,15 @@ function formatKeyword(kwString) {
       kwWarningArray.push("In Ovid, the .tw or .ti,ab command searches both title and abstract. However, in PubMed, [tiab] searches for title, collection title, abstract, other abstract, and author-supplied keywords. Therefore, this pubmed search may return more results than the original ovid one. Please note also that while both Ovid MEDLINE and PubMed have a textword (tw) search, they search different fields in each database.");
 		}
 		else if (kwFieldArray[b].search(/mp/i) >= 0){ // multipurpose
-			kwFieldArray[b] = kwFieldArray[b].replace(/mp/i,"[tiab]");
-			kwWarningArray.push("The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). Many of these field codes cannot be searched in PubMed. Search has been translated as [tiab] OR [nm] OR [mh] OR [tt] OR [pmid]. For an inexact, but simpler translation, you may wish to search this term as a text word [tw] search instead.");
-			kwFieldArray.push("nm","mh","ot","ui");
+			if (uPref == 0){
+				kwFieldArray[b] = kwFieldArray[b].replace(/mp/i,"[tiab]");
+				kwWarningArray.push("The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). Many of these field codes cannot be searched in PubMed. Search has been translated as [tiab] OR [nm] OR [mh] OR [tt] OR [pmid]. For an inexact, but simpler translation  to [tw], choose the Efficiency option.");
+				kwFieldArray.push("nm","mh","ot","ui");
+			}
+			else{
+				kwFieldArray[b] = kwFieldArray[b].replace(/mp/i,"[tw]");
+				kwWarningArray.push("The multipurpose (mp) field tag searches the following fields in ovid: abstract (ab), keyword heading word (kf), name of substance word (nm), original title (ot), protocol supplementary concept word (px), rare disease supplementary concept word (rx), subject heading word (hw), synonyms (sy), title (ti), unique identifier (ui). For simplicity, this search has been translated as [tw]. For a more exact translation, choose the Accuracy option.");
+			}
 		}
     // field codes are listed alphabetically after this point
 		else if (kwFieldArray[b].search(/ab/i) >= 0){ // abstract
@@ -838,7 +844,14 @@ function formatKeyword(kwString) {
 			kwArray[0] = "all";
 		}
 		else if (kwFieldArray[b].search(/pt/i) >= 0){ // publication type
+			if (uPref == 0){
 			kwFieldArray[b] = kwFieldArray[b].replace(/pt/i,"[pt:noexp]");
+			kwWarningArray.push("The publication type (pt) field tag does not automatically explode in Ovid, and so this translation duplicates that in PubMed. For an inexact, but simpler translation  to [pt], choose the Efficiency option.");
+		}
+		else {
+			kwFieldArray[b] = kwFieldArray[b].replace(/pt/i,"[pt]");
+			kwWarningArray.push("The publication type (pt) field tag does not automatically explode in Ovid, and automatically explodes in PubMed. To search this term without exploding in PubMed, choose the Accuracy option.");
+		}
 		}
     else if (kwFieldArray[b].search(/da/i) >= 0){ // Date, Mesh
       kwFieldArray[b] = kwFieldArray[b].replace(/da/i,"[mhda]");
