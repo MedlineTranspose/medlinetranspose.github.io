@@ -207,7 +207,7 @@ function myFunction() {
   	warnPTO = warnPTO.fontcolor("maroon");
 	warnNoChoice = warnNoChoice.fontcolor("maroon");
 	var prefRB1 = document.getElementById("accuracy");
-	var prefRB1 = document.getElementById("efficiency");
+	var prefRB2 = document.getElementById("efficiency");
 	var userPref = 0;
 
 	if (prefRB1.checked){
@@ -2067,12 +2067,12 @@ function formatKeywordPTO(kwString, uPref) {
     else if (kwString.search(/\[tw/i) >= 0){
 	if (uPref == 0){
 		kwString = kwString.replace(/\[tw\]/i,".ti,ab,sh,hw,kw,rn,pn,sa,si.");
-		kwString = kwString.fontcolor("blue");
+		//kwString = kwString.fontcolor("blue");
 		fkwWarning = "This is a literal translation of the [tw] tag in PubMed. If you prefer something simpler, please choose the Efficiency option.";
 	}
 	else {
 		kwString = kwString.replace(/\[tw\]/i,".mp.");
-		kwString = kwString.fontcolor("blue");
+		//kwString = kwString.fontcolor("blue");
 		fkwWarning = "This is an efficient but inexact translation of the [tw] tag. A literal translation of [tw] is .ti,ab,sh,hw,kw,rn,pn,sa,si. If you prefer a more accurate conversion, please choose the Accuracy option.";
 	}
 	fkwWarning = fkwWarning.fontcolor("blue");
