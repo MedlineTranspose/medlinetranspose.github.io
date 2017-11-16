@@ -113,7 +113,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     	<label class="w3-validate">PubMed to Ovid</label>
     	<br><br>
   	</div>
-	    
+
 	<div class="w3-layout-cell w3-layout-middle">
     	<input id="accuracy" class="w3-radio" type="radio" name="preference" value="accuracy">
     	<label class="w3-validate">Accuracy</label>
@@ -144,6 +144,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 			<b><p class="w3-xlarge">Results</p></b>
 				<!-- results -->
 			<div class="w3-large">
+				<p id="output2"></p>
 				<p id="output3"></p>
 				<!-- warnings -->
 				<p id="output4"></p>
@@ -273,8 +274,8 @@ function transposeOTP(inputline, uPref){
 	var p = null;
 
 	// testing array
-	// var testingArray = [null, null];
-	// var testingIndex = 0;
+	var testingArray = [null, null];
+	var testingIndex = 0;
 
     //make an array to receive the output of other functions and split it into output and warnings
     var outputReceiver = [null, null];
@@ -306,14 +307,13 @@ var lineBreakCounter = lineBreakArray.length - 1;
 var lineBreakLength = lineBreakArray.length;
 for (s = lineBreakCounter; s >= 0; s--) {
 
-	// format limits
-	if (lineBreakArray[s].search(/limit [\d]+ to/i) >= 0) {
-		lineBreakArray[s] = lineBreakArray[s].replace(/\.*/g, ""); //remove any existing periods
-		lineBreakArray[s] = lineBreakArray[s] + ".limit" // temporary field code
-		lineBreakArray[s] = lineBreakArray[s].replace(/(and|or|not)/g,".limit $1"); // temporary field code
-		lineBreakArray[s] = lineBreakArray[s].replace(/[()]*/g,""); // remove any parenthesis
-		lineBreakArray[s] = formatLimitOTP(lineBreakArray[s]);
-	}
+// placeholer
+//look for limits containing boolean operators
+if (lineBreakArray[s].search(/limit [\d]+ to/i) >= 0){
+	lineBreakArray[s] = lineBreakArray[s].replace(/ and /ig, " GRRRAND ");
+	lineBreakArray[s] = lineBreakArray[s].replace(/ or /ig, " ARRGHOR ");
+	lineBreakArray[s] = lineBreakArray[s].replace(/ not /ig, " SERENOTY ");
+}
 
 	// look for or/1-3 syntax construction
 	if (lineBreakArray[s].search(/(or|and|not)\/([\d]+)-([\d]+)/i) >= 0){
@@ -339,7 +339,7 @@ for (s = lineBreakCounter; s >= 0; s--) {
   var orLength = orArray.length;
 	var mostRecentTag = "";
 
-		// nested parenthasis
+		// or loop
 		for (i = orLengthCounter; i >= 0; i--){
 
             //split the string by any AND operators and put the pieces into an array
@@ -347,7 +347,7 @@ for (s = lineBreakCounter; s >= 0; s--) {
 						var andLengthCounter = andArray.length - 1; // for nested parenthasis
             var andLength = andArray.length;
 
-				// nested parenthasis
+				// and loop
 				for (j = andLengthCounter; j >= 0; j--){
 
                 	//split the string by any NOT operators and put the pieces into an array
@@ -355,17 +355,25 @@ for (s = lineBreakCounter; s >= 0; s--) {
 										var notLengthCounter = notArray.length - 1; // for nested parenthasis
                     var notLength = notArray.length;
 
-					// nested parenthasis
+					// not loop
 					for (k = notLengthCounter; k >= 0; k--){
 
-                    // is it a MeSH term?
-            if (notArray[k].search(/\//) >= 0){
+						// is it a limit?
+						if (notArray[k].search(/limit [\d]+ to/i) >= 0) {
+							outputReceiver = formatLimitOTP(notArray[k]);
+							notArray[k] = outputReceiver[0];
+							// testingArray[testingIndex] = notArray[k]
+							warningArray[warningIndex] = outputReceiver[1];
+						} // end limits
+
+            // is it a MeSH term?
+            else if (notArray[k].search(/\//) >= 0){
 							outputReceiver = formatMesh(notArray[k]);
 							notArray[k] = outputReceiver[0];
 							warningArray[warningIndex] = outputReceiver[1];
-          	}
+          	} // end mesh
 
-            // is the term a keyword?
+            // is it a keyword?
             else {
 							// if a regular keyword
 							if (notArray[k].search(/\./) >= 0) { //
@@ -424,10 +432,10 @@ for (s = lineBreakCounter; s >= 0; s--) {
 						outputReceiver = formatKeyword(notArray[k], uPref);
 						notArray[k] = outputReceiver[0];
 						warningArray[warningIndex] = outputReceiver[1];
-            }
+					} // end keywords
 
             warningIndex++;
-					// testingIndex++;
+					testingIndex++;
 
 				} // notLengthCounter
                 andArray[j] = notArray.join(" NOT ");
@@ -441,9 +449,6 @@ for (s = lineBreakCounter; s >= 0; s--) {
 				}
 	} // lineBreakCounter
 			outputline = lineBreakArray.join("<br />");
-
-	// filter underdefined, null from warning array
-	// warningArray = warningArray.filter(String);
 
   // split values in warningArray based on |, put into one total array
   var m = null;
@@ -468,18 +473,18 @@ for (s = lineBreakCounter; s >= 0; s--) {
 	var warningString = uniqWarningArray.join("<p>");
 
 	  if (outputline.search(/GRRRAND/i) >= 0){
-    outputline = outputline.replace(/GRRRAND/ig, " and ");
+    outputline = outputline.replace(/GRRRAND/ig, " AND ");
   }
   if (outputline.search(/ARRGHOR/i) >= 0){
-    outputline = outputline.replace(/ARRGHOR/ig, " or ");
+    outputline = outputline.replace(/ARRGHOR/ig, " OR ");
   }
   if (outputline.search(/SERENOTY/i) >= 0){
-    outputline = outputline.replace(/SERENOTY/ig, " not ");
+    outputline = outputline.replace(/SERENOTY/ig, " NOT ");
   }
 
 	document.getElementById("output3").innerHTML = outputline;
   document.getElementById("output4").innerHTML = warningString;
-	//document.getElementById("output5").innerHTML = testingArray;
+	// document.getElementById("output5").innerHTML = testingArray;
 
 }  // this corresponds to the function declaration
 
@@ -1070,10 +1075,6 @@ function formatKeyword(kwString, uPref) {
 			kwFieldArray[b] = kwFieldArray[b].replace("[number]","");
 			kwArray[0] = "#" + kwArray[0];
 		}
-		// if it's a limit
-		else if (kwFieldArray[b].search("limit") >= 0) {
-			kwFieldArray[b] = "";
-		}
 
 		// if it's a floating/exploded subheading
 		else if (kwFieldArray[b].search(/sh/i) >= 0) {
@@ -1140,21 +1141,97 @@ function addQuotes(aqString) {
 
 function formatLimitOTP(flString) {
 
-	flString = flString.replace(/limit (\d+) to/i,"$1 and ");
+	var flWarningString = "";
+	var flOutputArray = [];
 
-	flString = flString.replace(/aids/i,"aids[sb]");
-	flString = flString.replace(/bioethics/i,"bioethics[sb]");
-	flString = flString.replace(/cancer/i,"cancer[sb]");
-	flString = flString.replace(/Complementary Medicine/i,"cam[sb]");
-	flString = flString.replace(/Dietary Supplements/i,"dietsuppl[sb]");
-	flString = flString.replace(/History of Medicine/i,"history[sb]");
-	flString = flString.replace(/Space Life Sciences/i,"space[sb]");
-	flString = flString.replace(/Systematic Reviews/i,"systematic[sb]");
-	flString = flString.replace(/Toxicology/i,"tox[sb]");
-	flString = flString.replace(/Veterinary Science/i,"veterinary[sb]");
-	flString = flString.replace(/communication disorders journals/i,"jsubsetc[text]");
+	flString = flString.replace(/limit (\d+) to /i,"#$1 AND ");
 
-	return flString;
+// journal subsets
+	flString = flString.replace(/"*history of medicine journals non index medicus"*/ig,"jsubsetqis").replace(/"*core clinical journals \(aim\)"*/ig,"jsubsetaim").replace(/bioethics journals/ig,"jsubsete").replace(/biotechnology journals/ig,"jsubsetb").replace(/communication disorders journals/ig,"jsubsetc").replace(/consumer health journals/ig,"jsubsetk").replace(/dentistry journals/ig,"jsubsetd").replace(/foreign journals/ig,"jsubsetf").replace(/health administration journals/ig,"jsubseth").replace(/health technology assessment journals/ig,"jsubsett").replace(/"*history of medicine journals"*/ig,"jsubsetq").replace(/index medicus/ig,"jsubsetim").replace(/"*national aeronautics GRRRAND space administration \(nasa\) journals"*/ig,"jsubsets").replace(/nursing journals/ig,"jsubsetn").replace(/population information citations/ig,"jsubsetj").replace(/reproduction journals/ig,"jsubsetr").replace(/aids\/hiv journals/ig,"jsubsetx");
+
+// subject subsets
+	flString = flString.replace(/aids/ig,"aids[sb]").replace(/bioethics/ig,"bioethics[sb]").replace(/cancer/ig,"cancer[sb]").replace(/Complementary Medicine/gi,"cam[sb]").replace(/Dietary Supplements/gi,"dietsuppl[sb]").replace(/History of Medicine/gi,"history[sb]").replace(/Space Life Sciences/ig,"space[sb]").replace(/Systematic Reviews/gi,"systematic[sb]").replace(/Toxicology/gi,"tox[sb]").replace(/Veterinary Science/ig,"veterinary[sb]").replace(/communication disorders journals/ig,"jsubsetc[text]");
+
+// text availability
+	flString = flString.replace(/structured abstracts/ig,"hasstructuredabstract").replace(/abstracts/ig,"hasabstract").replace(/(ovid full text available|full text)/gi,"your-institution-code[sb]");
+
+// age groups
+	flString = flString.replace(/\"aged \(80 GRRRAND over\)\"/i,"\"aged, 80 and over\"[mesh]").replace(/\"all aged \(65 GRRRAND over\)\"/i,"\"aged\"[mesh]").replace(/\"middle aged \(45 plus years\)\"/i, "\(\"middle aged\"[mesh] OR \"aged\"[mesh]\)").replace(/\"middle age \(45 to 64 years\)\"/i,"\"middle aged\"[mesh]").replace(/(\"young adult GRRRAND adult \(19-24 GRRRAND 19-44\)\"|\"adult \(19 to 44 years\)\")/ig,"\"adult\"[mesh:noexp]").replace(/\"young adult \(19 to 24 years\)\"/i, "\"young adult\"[mesh]").replace(/\"adolescent \(13 to 18 years\)\"/i,"\"adolescent\"[mesh]").replace(/\"child \(6 to 12 years\)\"/i,"\"child\"[mesh:noexp]").replace(/\"preschool child \(2 to 5 years\)\"/i,"\"child, preschool\"[mesh]").replace(/\"infant \(1 to 23 months\)\"/i,"\"infant\"[mesh:noexp]").replace(/\"newborn infant \(birth to 1 month\)\"/i, "\"infant, newborn\"[mesh]").replace(/\"all adult \(19 plus years\)\"/i, "\"adult\"[mesh]").replace(/\"all child \(0 to 18 years\)\"/i, "\(\"infant\"[mesh] OR \"child\"[mesh] OR \"adolescent\"[mesh]\)").replace(/\"all infant \(birth to 23 months\)\"/i, "\"infant\"[mesh]");
+
+// check tags
+	flString = flString.replace(/(humans|male|female)/ig,"\"$1\"[mesh]").replace(/(pregnancy|animals)/ig,"\"$1\"[mesh:noexp]");
+
+// species
+	flString = flString.replace(/(cats|cattle|chick embryo|dogs|goats|guinea pigs|horses|mice|rabbits|rats|sheep|swine)/ig,"\"$1\"[mesh]").replace(/hamsters/i,"\"cricetinae\"[mesh]");
+
+// status
+	flString = flString.replace(/"*in data review"*/ig,"indatareview[sb]").replace(/"*in process"*/ig,"inprocess[sb]").replace(/"*pubmed SERENOTY medline"*/ig,"pubmednotmedline[sb]").replace(/medline(?!\[sb\])/ig,"medline[sb]").replace(/"*publisher"*/,"publisher[sb]");
+
+// publication type
+	flString = flString.replace(/"*(addresses|autobiography|bibliography|biography|case reports|classical article|clinical conference|clinical study|clinical trial, all|clinical trial, phase iii|clinical trial, phase ii|clinical trial, phase iv|clinical trial, phase i|clinical trial|comment|comparative study|congresses|consensus development conference, nih|consensus development conference|controlled clinical trial|corrected GRRRAND republished article|dataset|dictionary|directory|duplicate publication|editorial|english abstract|evaluation studies|festschrift|government publications|guideline|historical article|interactive tutorial|interview|introductory journal article|journal article|lectures|legal cases|legislation|letter|meta analysis|multicenter study|newspaper article|news|observational study|overall|patient education handout|periodical index|personal narratives|portraits|practice guideline|pragmatic clinical trial|published erratum|randomized controlled trial|research support, american recovery GRRRAND reinvestment act|research support, nih, extramural|research support, nih, intramural|research support, non us gov't|research support, us gov't, non phs|research support, us gov't, phs|retracted publication|retraction of publication|(scientific integrity )*review( articles)*(?!s)|technical report|twin study|validation studies|video-audio media|webcasts)"*/ig,"\"$1\"[pt:noexp]").replace(/review articles/ig,"review");
+
+// language
+	flString = flString.replace(/(afrikaans|albanian|arabic|armenian|azerbaijani|belorussian|bengali|bosnian|bulgarian|burmese|catalan|chinese|croatian|czech|danish|dutch|english( language)*(?! abstract)|esperanto|estonian|finnish|flemish|french|gaelic, scots|georgian|german|greek|hausa|hebrew|hindi|hungarian|icelandic|indonesian|interlingua|italian|japanese|kirghiz|korean|latin|latvian|lithuanian|macedonian|malay|marathi|masai|multilingual|norwegian|persian|polish|portuguese|pushto|rumanian|russian|serbian|slovak|slovene|spanish|swahili|swedish|tagalog|tamil|telugu|thai|turkish|ukrainian|urdu|vietnamese|welsh)/ig,"\"$1\"[lang]").replace(/english language/ig,"english");
+
+//  clinical queries that are already in PubMed
+	if (flString.search(/(causation-etiology|therapy|diagnosis|prognosis|clinical prediction guides) \(maximizes (sensitivity|specificity)\)/ig) >= 0) {
+		flString = flString.replace(/"*([a-zA-Z-]+|clinical prediction guides) \(maximizes sensitivity\)"*/ig,"$1\/broad[filter]").replace(/"*([a-zA-Z-]+|clinical prediction guides) \(maximizes specificity\)"*/ig,"$1\/narrow[filter]").replace(/causation-etiology/ig,"etiology");
+	}
+
+// clinical queries that are in Ovid but not PubMed
+// "best balance of" queries
+// strategies from https://hiru.mcmaster.ca/hiru/HIRU_Hedges_MEDLINE_Strategies.aspx
+if (flString.search(/best balance of/ig) >= 0) {
+	flString = flString.replace(/\"reviews \(best balance of sensitivity GRRRAND specificity\)\"/ig,"\(meta analysis[ptyp] OR meta analysis[tiab] OR meta analysis[mesh] OR review[ptyp] OR search\*[tiab]\)").replace(/\"therapy \(best balance of sensitivity GRRRAND specificity\)\"/ig,"\(randomized controlled trial[ptyp] OR randomized[tiab] OR placebo[tiab]\)").replace(/\"diagnosis \(best balance of sensitivity GRRRAND specificity\)\"/ig,"\(sensitive\*[tiab] OR sensitivity and specificity[mesh] OR \(predictive[tiab] AND value\*[tiab]\) OR predictive value of tests[mesh] OR accuracy\*[tiab]\)").replace(/\"prognosis \(best balance of sensitivity GRRRAND specificity\)\"/ig,"\(prognosis[mesh:noexp] OR diagnosed[tiab] OR cohort\*[tiab] OR cohort effect[mesh] OR cohort studies[mesh:noexp] OR predictor\*[tiab] OR death[tiab] OR \"models, statistical\"[mesh]\)").replace(/\"causation-etiology \(best balance of sensitivity GRRRAND specificity\)\"/ig,"\(risk[tiab] OR risk[mesh:noexp] OR mortality[tiab] OR mortality[mesh:noexp] OR cohort[tiab]\)").replace(/\"clinical prediction guides \(best balance of sensitivity GRRRAND specificity\)\"/ig,"\(predict\*[tiab] OR validat\*[tiab] OR develop[tiab]\)").replace(/\"costs \(best balance of sensitivity GRRRAND specificity\)\"/ig,"\(\"costs and cost analysis\"[mesh] OR costs[tiab] OR cost effective\*[tiab]\)").replace(/\"qualitative \(best balance of sensitivity GRRRAND specificity\)\"/ig,"\(interview\*[tiab] OR interviews[mesh:noexp] OR experience\*[tw] OR qualitative[tiab]\)").replace(/\"economics \(best balance of sensitivity GRRRAND specificity\)\"/ig,"\(cost\*[tiab] OR \"costs and cost analysis\"[mesh:noexp] OR cost benefit analys\*[tiab] OR cost-benefit analysis[mesh] OR health care costs[mesh:noexp]\)");
+}
+
+// clinical queries in ovid but not pubmed
+// sensitivity/specificity queries
+// strategies from https://hiru.mcmaster.ca/hiru/HIRU_Hedges_MEDLINE_Strategies.aspx
+if (flString.search(/(reviews|costs|qualitative|economics) \(maximizes (sensitivity|specificity)\)/ig) >= 0) {
+	flString = flString.replace(/\"reviews \(maximizes sensitivity\)\"/ig,"\(search\*[tiab] OR meta analysis[ptyp] OR meta analysis[tiab] OR meta analysis[mesh] OR review[ptyp] OR diagnosis[subheading] OR associated[tiab]\)").replace(/\"reviews \(maximizes specificity\)\"/ig,"\(MEDLINE[tiab] OR \(systematic[tiab] AND review[tiab]\) OR meta analysis[ptyp]\)").replace(/\"costs \(maximizes sensitivity\)\"/ig,"\(economics[subheading:noexp] OR cost[tiab] OR health care costs[mesh:noexp]\)").replace(/\"costs \(maximizes specificity\)\"/ig,"\(cost effectiveness[tiab] OR health care costs[mesh:noexp]\)").replace(/\"qualitative \(maximizes sensitivity\)\"/ig,"\(interview\*[tiab] OR psychology[subheading:noexp] OR health services administration[mesh]\)").replace(/\"qualitative \(maximizes specificity\)\"/ig,"\(qualitative[tiab] OR themes[tiab]\)").replace(/\"economics \(maximizes sensitivity\)\"/ig,"\(randomized controlled trial[ptyp] OR cost effectiveness[tiab] OR cost effective[tiab]\)").replace(/\"economics \(maximizes specificity\)\"/ig,"\(cost effective[tiab] OR sensitivity analys\*[tiab]\)");
+}
+
+// years ago published (e.g. "last 5 years")
+	var d = new Date();
+	d = d.getDate();
+
+	var y = new Date();
+	y = y.getFullYear();
+
+	var m = new Date();
+	m = m.getMonth();
+
+	var inputDate = [];
+	var yearStart = 0;
+	var lastYear = 0;
+
+// last x years
+if (flString.search(/Last [\d]+ years/ig) >= 0) {
+	inputDate = flString.match(/[\d]+/g);
+	yearStart = parseInt(y) - parseInt(inputDate[1]);
+	flString = flString.replace(/last [\d]+ years/ig,"\(\"" + yearStart + "\/" + m + "\/" + d + "\"[PDat] : \"" + y + "\/" + m + "\/" + d + "\"[PDat]\)");
+}
+
+// last year
+if (flString.search(/last year/) >= 0){
+	lastYear = parseInt(y) - 1;
+	flString = flString.replace(/last year/,"\(\"" + lastYear + "\/" + m + "\/" + d + "\"[PDat] : \"" + y + "\/" + m + "\/" + d + "\"[PDat]\)");
+}
+
+// year published
+	flString = flString.replace(/yr=\"([\d]{4})[ ]*-[ ]*([\d]{4}|current)\"/i," \(\"$1\"[PDAT] : \"$2\"[PDAT]\)").replace(/current/ig,y);
+// date of completion/entry
+	flString = flString.replace(/ed=\"([\d]{8})[ ]*-[ ]*([\d]{8})\"/i," \(\"$1\"[dcom] : \"$2\"[dcom]\)");
+// date of modification/revision
+	flString = flString.replace(/rd=\"([\d]{8})[ ]*-[ ]*([\d]{8})\"/i," \(\"$1\"[lr] : \"$2\"[lr]\)");
+
+//replace any accidental double quotes with single quotes
+	flString = flString.replace(/\"\"/ig,"\"")
+
+	flOutputArray[0] = flString;
+	flOutputArray[1] = flWarningString;
+	return flOutputArray;
 
 } // function end
 
@@ -1256,7 +1333,7 @@ function transposePTO(inputline, uPref) {
 
               //is the term is a MeSH term?
               if (notArray[k].search(/\[Me/i) >= 0 || notArray[k].search(/\[Ma/i) >= 0 || notArray[k].search(/\[MH\]/i) >= 0 || notArray[k].search(/\[MH\:Noexp\]/i) >= 0){
-                    testingArray[testingIndex] = "mesh";
+                    //testingArray[testingIndex] = "mesh";
                     outputReceiver = formatMeshPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
                     //warningArray[warningIndex] = warningArray[warningIndex] + outputReceiver[1];
@@ -1396,14 +1473,14 @@ function transposePTO(inputline, uPref) {
               else if (notArray[k].search(/\[la/i) >= 0){
                     outputReceiver = formatLimitPTO(notArray[k]);
                     notArray[k] = outputReceiver[0];
-                    warningArray[warningIndex] = outputReceiver[1]; 
+                    warningArray[warningIndex] = outputReceiver[1];
               }
 
 	      //is the term a citation number?
               else if (notArray[k].search(/\[ip\]/i) >= 0 || notArray[k].search(/\[issue\]/i) >= 0 || notArray[k].search(/\[pg\]/i) >= 0 || notArray[k].search(/\[pagination\]/i) >= 0 || notArray[k].search(/\[vi\]/i) >= 0){
                     notArray[k] = formatCitationPTO(notArray[k]);
               }
-		    
+
               //is the term an ID number?
               else if (notArray[k].search(/\[pmid/i) >= 0 || notArray[k].search(/\[uid/i) >= 0 || notArray[k].search(/\[auid/i) >= 0 || notArray[k].search(/\[jid/i) >= 0){
                     notArray[k] = formatIdNumbersPTO(notArray[k]);
@@ -1516,7 +1593,7 @@ function transposePTO(inputline, uPref) {
     //outputline = filterArray.join("<br />");
 
     //document.getElementById("output1").innerHTML = inputline;
-    //document.getElementById("output2").innerHTML = testingArray;
+  	//document.getElementById("output2").innerHTML = testingArray;
     document.getElementById("output3").innerHTML = outputline;
 
     var warningString = "<table border=\"1\"><tr><td>Item in strategy</td><td>Warnings are in red and suggestions are in blue</td></tr>";
