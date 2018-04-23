@@ -561,8 +561,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      <tr>
 		      <td>Date, Completion/Entry</td>
 		      <td>.ed.</td>
-		      <td>[dcom]</td>
-		      <td>Format: YYYYMMDD in both databases. In Ovid, truncate with *. In PubMed, truncation is assumed (no symbol needed).</td>
+		      <td>[dcom] or [Date - Completion]</td>
+		      <td>In Ovid, format = YYYYMMDD, truncate with * if needed. In PubMed, format = YYYY/MM/DD, truncation is assumed (no symbol needed).</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
@@ -574,9 +574,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      </tr>
 	      <tr>
 		      <td>Date, Create</td>
-		      <td>.dt.?</td>
-		      <td>[crdt]</td>
-		      <td>The Ovid field called Create Date appears to correspond to the value of Entrez Date in PubMed - have contacted Ovid for clarification.</td>
+		      <td>.ez.</td>
+		      <td>[crdt] OR [Date - Create]</td>
+		      <td>In Ovid, format = YYYY MM DD*, mandatory truncation with *. In PubMed, format = YYYY/MM/DD, truncation is assumed (no symbol needed).The Ovid field called Create Date appears to correspond to the value of Entrez Date in PubMed - have contacted Ovid for clarification.</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
@@ -588,30 +588,30 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	      </tr>
 	      <tr>
 		      <td>Date, Entrez</td>
-		      <td>.ez.?</td>
-		      <td>[edat]</td>
-		      <td>The Ovid field called Entrez Date appears to correspond to the value of Create Date in PubMed - have contacted Ovid for clarification.</td>
+		      <td>.dt.</td>
+		      <td>[edat] or </td>
+		      <td>In Ovid, format = YYYY MM DD, mandatory truncation with *. In PubMed, format = YYYY/MM/DD, truncation is assumed (no symbol needed). The Ovid field called Entrez Date appears to correspond to the value of Create Date in PubMed - have contacted Ovid for clarification.</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Date, Mesh</td>
 		      <td>.da.</td>
-		      <td>[mhda]</td>
-		      <td>Format: YYYY/MM/DD HH:MM in both databases. In Ovid, use a space where there would be a slash, and truncate with *. In PubMed, use a slash, and truncation is assumed (no symbol needed).</td>
+		      <td>[mhda] or [Date - Mesh]</td>
+		      <td>In Ovid, format = YYYY MM DD, truncate with * if needed. In PubMed, format = YYYY/MM/DD, truncation is assumed (no symbol needed).</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Date, Modification/Revision</td>
 		      <td>.rd.</td>
-		      <td>[lr]</td>
-		      <td>Format: YYYYMMDD in both databases. In Ovid, truncate with *. In PubMed, truncation is assumed (no symbol needed).</td>
+		      <td>[lr] OR [Date - Modification]</td>
+		      <td>In Ovid, format = YYYYMMDD, truncate with * if needed. In PubMed, format = YYYY/MM/DD, truncation is assumed (no symbol needed).</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
 		      <td>Date of Publication</td>
 		      <td>.dp.</td>
-		      <td>[dp]</td>
-		      <td>Format: YYYY Mmm DD in both databases. In addition to regular date format, pubmed allows the following format: &ldquo;last X days&rdquo;[dp]; &ldquo;last X months&rdquo;[dp]; &ldquo;last X year&rdquo;[dp] and also records date exactly as published in some cases (e.g. winter 2007).</td>
+		      <td>[dp] OR [pdat] OR [DAte - Publication]</td>
+		      <td>In Ovid, format = YYYY MM DD, truncate with * if needed. In PubMed, format = YYYY/MM/DD, truncation is assumed (no symbol needed). In addition to regular date format, pubmed allows the following format: &ldquo;last X days&rdquo;[dp]; &ldquo;last X months&rdquo;[dp]; &ldquo;last X year&rdquo;[dp] and also records date exactly as published in some cases (e.g. winter 2007).</td>
 		      <td>Yes</td>
 	      </tr>
 	      <tr>
