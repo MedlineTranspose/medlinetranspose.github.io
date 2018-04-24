@@ -2151,8 +2151,9 @@ if (dtString.search(/\]\s?:\s?/i) >= 0){
 		dtWarning = "The date range which you entered is backwards. The range has been flipped so that the earlier date is first. This should not affect the accuracy of the search, but you may wish to check your original search strategy."
 		dtWarning = dtWarning.fontcolor("blue");
 	}
+
 	if (day1 == 0 || day1 == 1){
-		//this means day is irrelevant.
+		//do nothing
 	}
 	else {
 		if (year1 == year2 && month1 == month2){
@@ -2186,25 +2187,57 @@ if (dtString.search(/\]\s?:\s?/i) >= 0){
 					assembleDates = assembleDates + year1.toString() + " " + monthLead + " " + dayLead + "* or ";
 				}
 				day1++;
-			}
-		}
+			} //this corresponds to the while loop
+		} //this corresponds to the if day1 less than endDay
 		else{
 			dtWarning = "Warning! Date range error. This can occur with an erroneous date entry, such as Feb 30th. Please check your date ranges carefully."
 			dtWarning = dtWarning.fontcolor("red");
 		}
-		}
-		if (month1 == 0 || (month1 == 1 && day1 == 1 && year1 < year2) || (month1 == 1 && day1 == 0)){
+	} //this corresponds to the else which meant day1 was not 1 or 0
+	if (month1 == 0 || (month1 == 1 && day1 == 1 && year1 < year2) || (month1 == 1 && day1 == 0)){
 			//this means month is irrelevant - do nothing
-		}
+			//assembleDates = assembleDates + year1.toString() + "* or ";
+	}
+	else{
+		if (day1 == 1){
+			//this means that no days were added to the string, and therefore the month must be included.
+			//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
+			//it also checks to see if spacing is needed within the date value and adds it if necessary
+			monthLead = month1.toString();
+			if (monthLead.length < 2){
+				monthLead = "0" + monthLead;
+			}
+			if (spacingVar == 0){
+				assembleDates = assembleDates + year1.toString() + monthLead + "* or ";
+			}
+			else{
+				assembleDates = assembleDates + year1.toString() + " " + monthLead + "* or ";
+			}
+			month1++;
+		} //this corresponds to if day1 equal 1
 		else{
-			if (day1 == 1){
-				//this means that no days were added to the string, and therefore the month must be included.
+			//this means that the days were added to the string already, so the month should not be included.
+			if (month1 == endMonth){
+				//do nothing
+			}
+			else{
+				month1++;
+			}
+		}
+		//now we add any months to the string...
+		if (year1 == year2){
+			//this means that end month is determined by the second value in the range
+			endMonth = month2;
+		}
+		if (month1 <= endMonth){
+			while (month1 <= endMonth){
 				//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
-				//it also checks to see if spacing is needed within the date value and adds it if necessary
 				monthLead = month1.toString();
 				if (monthLead.length < 2){
 					monthLead = "0" + monthLead;
 				}
+				//this takes each month starting with the value in month1, and adds the date to the string, ending with December or the last month of the range.
+				//it also checks to see if spacing is needed within the date value and adds it if necessary
 				if (spacingVar == 0){
 					assembleDates = assembleDates + year1.toString() + monthLead + "* or ";
 				}
@@ -2212,135 +2245,103 @@ if (dtString.search(/\]\s?:\s?/i) >= 0){
 					assembleDates = assembleDates + year1.toString() + " " + monthLead + "* or ";
 				}
 				month1++;
-			}
-			else{
-				//this means that the days were added to the string already, so the month should not be included.
-				if (month1 == endMonth){
-					//do nothing
-				}
-				else{
-					month1++;
-				}
-			}
-			//now we add any months to the string...
-			if (year1 == year2){
-				//this means that end month is determined by the second value in the range
-				endMonth = month2;
-			}
-			if (month1 <= endMonth){
-				while (month1 <= endMonth){
+			} //this corresponds to while loop
+		} //this corresponds to if year1 == year2
+		else{
+			dtWarning = "Warning! Date range error. This can occur with an erroneous date entry, for example if a month value is higher than 12. Please check your date ranges carefully."
+			dtWarning = dtWarning.fontcolor("red");
+		}
+	}
+	if (month1 == 0 || (month1 == 1 && day1 == 0) || (month1 == 1 && day1 == 1)){
+		//do nothing
+	}
+	else {
+		year1++;
+	}
+	//replace the automatic "current year" from PubMed with the actual current year
+	if (year2 == 3000){
+		year2 = (new Date()).getFullYear();
+	}
+	if (month2 == 0 || (month2 == 12 && day2 == 0) || (month2 == 12 && day2 == 31)){
+		endYear = year2;
+	}
+	else {
+		endYear = year2;
+		endYear--;
+	}
+	//now we add any years to the string...
+	if (year1 <= endYear){
+		while (year1 <= endYear){
+			//this takes each year starting with the value in year1, and adds the date to the string, ending with the last year of the range
+			assembleDates = assembleDates + year1.toString() + "* or ";
+			year1++;
+		}
+	}
+	if (endYear < year2){
+		if (month2 == 12 && day2 == 31){
+			//do nothing
+		}
+		else{
+			if (month2 > 1 || (month2 == 1 && day2 == 31)){
+				var thisMonth = 1;
+				while (thisMonth < month2){
 					//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
-					monthLead = month1.toString();
+					monthLead = thisMonth.toString();
 					if (monthLead.length < 2){
 						monthLead = "0" + monthLead;
 					}
-					//this takes each month starting with the value in month1, and adds the date to the string, ending with December or the last month of the range.
-					//it also checks to see if spacing is needed within the date value and adds it if necessary
-					if (spacingVar == 0){
-						assembleDates = assembleDates + year1.toString() + monthLead + "* or ";
-					}
-					else{
-						assembleDates = assembleDates + year1.toString() + " " + monthLead + "* or ";
-					}
-					month1++;
+					assembleDates = assembleDates + year2.toString() + monthLead.toString() + "* or ";
+					thisMonth++;
+				}
+			}
+			var lastDay = 31;
+			if (month2 == 2){
+				lastDay = 29;
+			}
+			else if (month2 == 4 || month2 == 6 || month2 == 9 || month2 == 11){
+				lastDay = 30;
+			}
+			if (day2 == lastDay || (month2 == 2 && day2 == 28)){
+				//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
+				monthLead = thisMonth.toString();
+				if (monthLead.length < 2){
+					monthLead = "0" + monthLead;
+				}
+				if (spacingVar == 0){
+					assembleDates = assembleDates + year2.toString() + monthLead.toString() + "* or ";
+				}
+				else{
+					assembleDates = assembleDates + year2.toString() + " " + monthLead.toString() + "* or ";
 				}
 			}
 			else{
-				dtWarning = "Warning! Date range error. This can occur with an erroneous date entry, for example if a month value is higher than 12. Please check your date ranges carefully."
-				dtWarning = dtWarning.fontcolor("red");
-			}
-			if (month1 == 0 || (month1 == 1 && day1 == 0) || (month1 == 1 && day1 == 1)){
-				//do nothing
-			}
-			else {
-				year1++;
-			}
-			//replace the automatic "current year" from PubMed with the actual current year
-			if (year2 == 3000){
-				year2 = (new Date()).getFullYear();
-			}
-			if (month2 == 0 || (month2 == 12 && day2 == 0) || (month2 == 12 && day2 == 31)){
-				endYear = year2;
-			}
-			else {
-				endYear = year2;
-				endYear--;
-			}
-			//now we add any years to the string...
-			if (year1 <= endYear){
-				while (year1 <= endYear){
-					//this takes each year starting with the value in year1, and adds the date to the string, ending with the last year of the range
-					assembleDates = assembleDates + year1.toString() + "* or ";
-					year1++;
-				}
-			}
-			if (endYear < year2){
-				if (month2 == 12 && day2 == 31){
-					//do nothing
-				}
-				else{
-					if (month2 > 1 || (month2 == 1 && day2 == 31)){
-						var thisMonth = 1;
-						while (thisMonth < month2){
-							//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
-							monthLead = thisMonth.toString();
-							if (monthLead.length < 2){
-								monthLead = "0" + monthLead;
-							}
-							assembleDates = assembleDates + year2.toString() + monthLead.toString() + "* or ";
-							thisMonth++;
-						}
+				var thisDay = 1;
+				while (thisDay <= day2){
+					monthLead = month2.toString();
+					dayLead = thisDay.toString();
+					if (monthLead.length < 2){
+						monthLead = "0" + monthLead;
 					}
-					var lastDay = 31;
-					if (month2 == 2){
-						lastDay = 29;
+					if (dayLead.length < 2){
+						dayLead = "0" + dayLead;
 					}
-					else if (month2 == 4 || month2 == 6 || month2 == 9 || month2 == 11){
-						lastDay = 30;
-					}
-					if (day2 == lastDay || (month2 == 2 && day2 == 28)){
-						//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
-						monthLead = thisMonth.toString();
-						if (monthLead.length < 2){
-							monthLead = "0" + monthLead;
-						}
-						if (spacingVar == 0){
-							assembleDates = assembleDates + year2.toString() + monthLead.toString() + "* or ";
-						}
-						else{
-							assembleDates = assembleDates + year2.toString() + " " + monthLead.toString() + "* or ";
-						}
+					//this takes each day starting with the value in day1, and adds the date to the string, ending with the last day of the month or range
+					//it also checks to see if spacing is needed within the date value and adds it if necessary
+					if (spacingVar == 0){
+						assembleDates = assembleDates + year1.toString() + monthLead + dayLead + "* or ";
 					}
 					else{
-						var thisDay = 1;
-						while (thisDay <= day2){
-							monthLead = month2.toString();
-							dayLead = thisDay.toString();
-							if (monthLead.length < 2){
-								monthLead = "0" + monthLead;
-							}
-							if (dayLead.length < 2){
-								dayLead = "0" + dayLead;
-							}
-							//this takes each day starting with the value in day1, and adds the date to the string, ending with the last day of the month or range
-							//it also checks to see if spacing is needed within the date value and adds it if necessary
-							if (spacingVar == 0){
-								assembleDates = assembleDates + year1.toString() + monthLead + dayLead + "* or ";
-							}
-							else{
-								assembleDates = assembleDates + year1.toString() + " " + monthLead + " " + dayLead + "* or ";
-							}
-							thisDay++;
-						}
+						assembleDates = assembleDates + year1.toString() + " " + monthLead + " " + dayLead + "* or ";
 					}
+					thisDay++;
 				}
 			}
 		}
-//dtString = dtString.replace(/Date\W{1,3}Completion/ig,"dcom");
-assembleDates = assembleDates.replace(/ or $/i,"\)");
+	}
+	//dtString = dtString.replace(/Date\W{1,3}Completion/ig,"dcom");
+	assembleDates = assembleDates.replace(/ or $/i,"\)");
 	dtString = assembleDates + "[" + tagValue;
 	}
-
     //reformat date completed or revision date
     if (dtString.search(/\[dcom/i) >= 0 || dtString.search(/\[lr/i) >= 0){
         if (dtString.length < 16){
