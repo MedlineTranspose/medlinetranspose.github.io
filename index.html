@@ -462,8 +462,9 @@ if (lineBreakArray[s].search(/limit [\d]+ to/i) >= 0){
         warningArrayClean.push(arr[n]);
       }
     }
-    else // add value to warningArrayClean
+    else { // add value to warningArrayClean
       warningArrayClean.push(warningArray[m]);
+    }
   }
 
   // remove duplicates from warningArrayClean
