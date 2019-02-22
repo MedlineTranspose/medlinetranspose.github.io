@@ -1822,13 +1822,12 @@ function formatControlledPTO(cvString) {
         cvString = removeQuotesPTO(cvString);
         cvOutputArray = formatSubheadingsPTO(cvString);
         cvOutputArray[0] = cvOutputArray[0].replace(/\"/,"");
-        //this checks to see if there are narrower term subheadings and chops them off if there are. This is just for efficiency.
+        //adds the fs unless the subheading is no longer being used.
         if (cvOutputArray[0].length == 0){
             cvOutputArray[0] = "\[Please see warning below\]";
         }
         else{
-            cvOutputArray[0] = cvOutputArray[0].slice(0,2);
-            cvOutputArray[0] = cvOutputArray[0] + ".xs.";
+            cvOutputArray[0] = cvOutputArray[0] + ".fs.";
         }
     }
 
@@ -2788,7 +2787,7 @@ function formatSubheadingsPTO (fshString){
             fshString = "dh";
             break;
         case "diagnosis":
-            fshString = "di,pa,ra,ri,us";
+            fshString = "di,dg";
             break;
         case "drug therapy":
             fshString = "dt";
