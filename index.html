@@ -1126,8 +1126,8 @@ function formatKeyword(kwString, uPref) {
 // ****************************************** ADD QUOTES ******************************************
 function addQuotes(aqString) {
 
-	if (aqString.search(/\"/) >= 0) { // if string already has quotes
-		aqString = aqString.replace(/\"/g,"");
+	if (aqString.search(/[\"\'\“\”\‘\’]/g) >= 0) { // if string already has quotes
+		aqString = aqString.replace(/[\"\'\“\”\‘\’]/g,"");
 		aqString = aqString.replace(/[\(\)a-zA-Z\d \/,*-]+/,"\"$&\"");
 	}
 
