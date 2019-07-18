@@ -1819,7 +1819,7 @@ function formatControlledPTO(cvString) {
     else if (cvString.search(/\[sh\]/i) >= 0 || cvString.search(/\[subheading\]/i) >= 0){
         cvString = cvString.replace(/\[sh\]/i,"");
 	cvString = cvString.replace(/\[subheading\]/i,"");
-        cvString = cvString.replace(/"/g,"");
+        cvString = cvString.replace(/\"/g,"");
         cvOutputArray = formatSubheadingsPTO(cvString);
         cvOutputArray[0] = cvOutputArray[0].replace(/\"/,"");
         //adds the fs unless the subheading is no longer being used.
