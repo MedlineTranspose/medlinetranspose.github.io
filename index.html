@@ -619,6 +619,21 @@ function formatMesh (fmString) {
 					fmWarningArray.push("The subheading <b>ultrasonographye</b> has been absorbed by Diagnostic Imaging. Term has been changed in search strategy. For more information, please see <a href='https://www.nlm.nih.gov/mesh/2017/download/2017QualifierChanges.pdf' target='_blank'>this page</a>.");
 				}
 
+				// contraindications subheading
+				if (subHeadingArray[k].search("CT") >= 0) {
+					fmWarningArray.push("The subheading <b>Contraindications</b> is no longer used. Instead please use the MeSH \"contraindications\". For more information, please see <a href='https://www.nlm.nih.gov/pubs/techbull/nd17/nd17_medline_data_changes_2018.html#subhead_changes' target='_blank'>this page</a>.");
+				}
+
+				// manpower subheading
+				if (subHeadingArray[k].search("MA") >= 0) {
+					fmWarningArray.push("The subheading <b>Manpower</b> is no longer used. Instead please use the MeSH \"Workforce\" or \"Health Workforce\". For more information, please see <a href='https://www.nlm.nih.gov/pubs/techbull/nd18/nd18_medline_data_changes_2019.html#subhead_changes' target='_blank'>this page</a>.");
+				}
+
+				// utilization subheading
+				if (subHeadingArray[k].search("UT") >= 0) {
+					fmWarningArray.push("The subheading <b>Utilization</b> is no longer used. Instead please use the MeSH \"Drug Utilization\" or \"Equipment and Supplies Utilization\" or \"Procedures and Techniques Utilization\" or \"Facilities and Services Utilization\". For more information, please see <a href='https://www.nlm.nih.gov/pubs/techbull/nd18/nd18_medline_data_changes_2019.html#subhead_changes' target='_blank'>this page</a>.");
+				}
+
 				// if a match with exploded subheadings list
 				for (l = 0; l < subHeadingExplode.length; l++) {
 
