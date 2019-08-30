@@ -557,7 +557,12 @@ function formatMesh (fmString) {
 
 		// publication type processing
 		for (i = 0; i < pubType.length; i++) {
-			if (fmMesh[0].toLowerCase().search(pubType[i]) >= 0) {
+
+			if (fmString.search(/as topic|Health Planning Guidelines/gi) >= 0) {
+				// do nothing
+			}
+
+			else if (fmMesh[0].toLowerCase().search(pubType[i]) >= 0) {
 				if (fmString.search(/exp /i) >= 0) {
 					fmMeshType = "[pt]";
 				}
