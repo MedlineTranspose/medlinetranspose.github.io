@@ -1,0 +1,3410 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Medline Transpose</title>
+
+	<!--Google Analytics -->
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-100696199-1', 'auto');
+  ga('send', 'pageview');
+
+	</script>
+</head>
+
+<link rel="stylesheet" href="w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+.w3-navbar,h1,button {font-family: sans-serif}
+.fa-anchor,.fa-coffee {font-size:200px}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <ul class="w3-navbar w3-blue-grey w3-card-2 w3-left-align w3-large">
+    <li class="w3-hide-medium w3-hide-large w3-blue-grey w3-opennav w3-right">
+      <a class="w3-padding-large w3-hover-white w3-large w3-blue-grey" href="javascript:void(0);" onClick="mySmallNav()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    </li>
+    <li class="w3-hide-small"><a href="index.html" class="w3-padding-large w3-white">Home</a></li>
+    <li class="w3-hide-small"><a href="about.html" class="w3-padding-large w3-hover-white">About</a></li>
+    <li class="w3-hide-small"><a href="documentation.html" class="w3-padding-large w3-hover-white">Documentation</a></li>
+    <li class="w3-hide-small"><a href="transpose2.html" class="w3-padding-large w3-hover-white">EBSCO/PubMed</a></li>
+  </ul>
+
+  <!-- Navbar on small screens -->
+  <div id="small-nav" class="w3-hide w3-hide-large w3-hide-medium">
+    <ul class="w3-navbar w3-left-align w3-large w3-blue-grey">
+      <li><a class="w3-padding-large" href="index.html">Home</a></li>
+      <li><a class="w3-padding-large" href="about.html">About</a></li>
+      <li><a class="w3-padding-large" href="documentation.html">Documentation</a></li>
+      <li><a class="w3-padding-large" href="transpose2.html">EBSCO/PubMed</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="w3-container w3-blue-grey w3-center w3-padding-64">
+	<h1 class="w3-margin w3-jumbo">Medline Transpose</h1>
+	<p class="w3-xlarge">Translate a search query between EBSCO MEDLINE and PubMed syntax</p>
+</header>
+
+<!-- Beta testing link -->
+<div class="w3-container w3-yellow w3-topbar w3-bottombar w3-border-amber">
+  <span onclick="this.parentElement.style.display='none'" class="w3-closebtn">&times;</span>
+  <p><b>This version of MEDLINE Transpose is under construction. Please note that I do not currently have access to EBSCO Medline, so I cannot test the output and am doing some of the syntax from memory.</b></a></p>
+</div>
+</div>
+
+<!-- Body -->
+<div class="w3-row-padding w3-theme-l4 w3-container">
+  <div class="w3-content">
+
+	<!-- Search Input -->
+    <div class="w3-container">
+    	<b><p class="w3-xlarge">Enter your search strategy</p></b>
+
+		<!-- accordion -->
+		<div class="w3-accordion">
+			<button onClick="myAccordion('Ovid-Acc')" class="w3-btn w3-round-large w3-theme">
+			EBSCO Example
+			</button>
+			<div id="Ovid-Acc" class="w3-accordion-content w3-container">
+				<p><b>Try pasting the following into the box below, then select "EBSCO to PubMed":</b></p>
+				<p>MH "Anxiety, Separation/TH" OR MH "Attention Deficit and Disruptive Behavior Disorders+"<br>
+				TI (separation anxiety) OR AB (separation anxiety)<br>
+				TI (add OR adhd) OR AB (add OR adhd)<br>
+				MH "Cognitive Therapy" <br>
+				MH "Mind-Body Therapies+"<br>
+				S1 OR S2 OR S3<br>
+				S4 OR S5<br>
+				S6 AND S7</p>
+			</div>
+
+						  <div class="w3-padding-4">
+				</div>
+			<button onClick="myAccordion('PubMed-Acc')" class="w3-btn w3-round-large w3-theme">
+			PubMed Example
+			</button>
+			<div id="PubMed-Acc" class="w3-accordion-content w3-container">
+				<p><b>Try pasting the following into the box below, then select "PubMed to Ovid":</b></p>
+				<p>"Brain Concussion"[Mesh] OR "Brain Injuries"[Mesh:NoExp] <br>
+				"Depression"[Mesh] OR "Depressive Disorder"[Mesh] OR depress*[tiab]<br>
+				#1 AND #2<br>
+				#3 AND english[lang]</p>
+		</div>
+			  <div class="w3-padding-8">
+				</div>
+	</div>
+
+  <textarea class="w3-input w3-large w3-border w3-round-large" id="userEntry" value="Exercise Therapy/" required name="userInput" rows="7"></textarea>
+	<div class="w3-layout-cell w3-layout-middle">
+    	<input id="ovid" class="w3-radio" type="radio" name="database" value="ETP">
+    	<label class="w3-validate">EBSCO to PubMed</label>
+    	<br>
+    	<input id="pubmed" class="w3-radio" type="radio" name="database" value="PTE">
+    	<label class="w3-validate">PubMed to EBSCO</label>
+    	<br><br>
+  	</div>
+
+	<div class="w3-layout-cell w3-layout-middle">
+    	<input id="accuracy" class="w3-radio" type="radio" name="preference" value="accuracy">
+    	<label class="w3-validate">Accuracy</label>
+    	<br>
+    	<input id="efficiency" class="w3-radio" type="radio" name="preference" value="efficiency">
+    	<label class="w3-validate">Efficiency</label>
+    	<br><br>
+  	</div>
+
+	<div class="w3-container w3-layout-cell w3-layout-middle">
+		<button class="w3-btn w3-padding-large w3-round-large w3-theme" id="submit" onClick="myFunction()">Submit</button></p>
+	</div>
+
+	  <div class="w3-padding-8">
+  	</div>
+
+  </div>
+</div>
+</div>
+
+
+<!-- Search results -->
+<div class="w3-container w3-theme-l2 w3-padding-8">
+  <!-- anchor link to results -->
+  <a name = "results"></a>
+	<div class="w3-content">
+      <!-- Search Results -->
+			<b><p class="w3-xlarge">Results</p></b>
+				<!-- results -->
+			<div class="w3-large">
+				<p id="output2"></p>
+				<p id="output3"></p>
+				<!-- warnings -->
+				<p id="output4"></p>
+				<!-- testing -->
+				<p id="output5">For best results, please use Firefox, Chrome, or Safari.</p>
+				<br><br>
+			</div>
+	</div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-row-padding w3-container w3-padding-32 w3-center">
+	<div class="w3-xlarge w3-padding-32">
+		<h1 class="w3-margin w3-xlarge w3-opacity">This project was made possible by</h1>
+		<div class="w3-layout-container">
+		<div class="w3-container w3-layout-cell">
+		<p>Unemployment :P</p>
+		</div>
+ 	</div>
+		<p>Powered by <a href="http://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+<script>
+
+//**************************************************************Functions start***********************************
+
+function mySmallNav() {
+    var x = document.getElementById("small-nav");
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else {
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+
+function myAccordion(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else {
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+
+function myFunction() {
+
+	var rb1 = document.getElementById("ovid");
+	var rb2 = document.getElementById("pubmed");
+	var mfInputline = document.getElementById("userEntry").value;
+	var warnETP = "Are you sure that you meant EBSCO to PubMed? I see PubMed syntax in your entry.";
+  	var warnPTE = "Are you sure that you meant PubMed to EBSCO? I see EBSCO syntax in your entry";
+	var warnNoChoice = "Please make a selection: EBSCO to PubMed or EBSCO to Ovid";
+  	warnETP = warnETP.fontcolor("maroon");
+  	warnPTE = warnPTE.fontcolor("maroon");
+	warnNoChoice = warnNoChoice.fontcolor("maroon");
+	var prefRB1 = document.getElementById("accuracy");
+	var prefRB2 = document.getElementById("efficiency");
+	var userPref = 0;
+
+	if (prefRB1.checked){
+		userPref = 0;
+	}
+	else if (prefRB2.checked){
+		userPref = 1;
+	}
+
+    if (rb1.checked && rb2.checked == false){
+	if (mfInputline.search(/\[/i) >= 0 && mfInputline.search(/\]/i) >= 0){
+          document.getElementById("output5").innerHTML = warnETP;
+        }
+        else{
+          document.getElementById("output5").innerHTML = "";
+        }
+    	transposeETP(mfInputline, userPref);
+    }
+    else if (rb1.checked == false && rb2.checked){
+	if (mfInputline.search(/MH \"/i) >= 0 || mfInputline.search(/MM \"/i) >= 0){
+          document.getElementById("output5").innerHTML = warnPTE;
+        }
+        else{
+          document.getElementById("output5").innerHTML = "";
+        }
+      	transposePTE(mfInputline, userPref);
+    }
+	else if (rb1.checked == false && rb2.checked == false){
+	    document.getElementById("output5").innerHTML = warnNoChoice;
+	}
+
+  // anchor link to results section
+  window.location.hash = '';
+  window.location.hash = 'results';
+}
+
+// ****************************************** ADD QUOTES ******************************************
+function addQuotes(aqString) {
+
+
+	let openArray = aqString.split(/\(/);
+	for (i = 0; i < openArray.length; i++){
+		let closeArray = openArray[i].split(/\)/);
+			for (j = 0; j < closeArray.length; j++){
+				if (closeArray[j].search(/[\"\'\“\”\‘\’]/g) >= 0) { // if string already has quotes
+					closeArray[j] = closeArray[j].replace(/[\"\'\“\”\‘\’]/g,"");
+					closeArray[j] = closeArray[j].replace(/[\(\)a-zA-Z\d \/,*-]+/,"\"$&\"");
+				}
+				else {
+					closeArray[j] = closeArray[j].replace(/[\(\)a-zA-Z\d \/,*-]+/,"\"$&\""); // add quotes
+				}
+			}
+		openArray[i] = closeArray.join(")");
+	}
+	aqString = openArray.join("(");
+
+	return aqString;
+
+} // function end
+
+
+
+//*********************************************ETP functions start***********************************************
+
+function transposeETP(inputline, uPref) {
+
+
+    //document.getElementById("output4").innerHTML ="yikes";
+    //read in the user input (PubMed search strategy)
+    //var inputline = document.getElementById("userEntry").value;
+    //document.getElementById("output4").innerHTML = inputline;
+    var outputline = "blank";
+
+    //make an array for testing output
+    var testingArray = ["test","test","test"];
+    var testingIndex = 0;
+
+    //make an array for warnings
+    var warningArray = ["", ""];
+    var warningIndex = 0;
+    var wi = 0;
+    var wiPlus = 1;
+    var warningShortlist = ["",""];
+    var wsli = 0;
+    var warningShortlistItemNos = ["",""];
+    var wslini = 0;
+
+    //make an array to receive the output of other functions and split it into output and warnings
+    var outputReceiver = [null, null];
+
+    //make a variable to hold the current Tag
+    var tagValue = "";
+
+    //this finds boolean operators in lowercase, and, if they are preceded or followed by the right syntax, changes them to uppercase
+    inputline = inputline.replace(/\] or /g,"\] OR ");
+    inputline = inputline.replace(/\] and /g,"\] AND ");
+    inputline = inputline.replace(/\] not /g,"\] NOT ");
+    inputline = inputline.replace(/ or \"/g," OR \"");
+    inputline = inputline.replace(/ and \"/g," AND \"");
+    inputline = inputline.replace(/ not \"/g," NOT \"");
+    inputline = inputline.replace(/\) or /g,"\) OR ");
+    inputline = inputline.replace(/\) and /g,"\) AND ");
+    inputline = inputline.replace(/\) not /g,"\) NOT ");
+    inputline = inputline.replace(/ or \(/g," OR \(");
+    inputline = inputline.replace(/ and \(/g," AND \(");
+    inputline = inputline.replace(/ not \(/g," NOT \(");
+
+	//split by linebreaks
+	var lineArray = inputline.split(/[\n\r]/);
+
+	// now we check for split TIABs
+	for (t = 0; t < lineArray.length; t++){
+		//first, check for TIABS without parentheses
+		var tiabChecker = lineArray[t].match(/TI [A-z0-9\-\*\" ]+? OR [A-Z]{2}/);
+		if (tiabChecker != null){
+			for (tci = 0; tci < tiabChecker.length; tci++){
+				let somethingVar = tiabChecker[tci];
+				somethingVar = somethingVar.replace(/TI /,"");
+				somethingVar = somethingVar.replace(/ OR [A-Z]{2}/,"");
+				let replaceVar = "\\*";
+				somethingVar = somethingVar.replace(/\*/,replaceVar);
+				replaceVar = '\\"';
+				somethingVar = somethingVar.replace(/\"/g,replaceVar);
+				let fullVar = "TI " + somethingVar + " OR AB " + somethingVar + " OR CI " + somethingVar;
+				replaceVar = "TIAB " + somethingVar;
+				let somethingRE = new RegExp(`${fullVar}`, "g");
+				lineArray[t] = lineArray[t].replace(somethingRE,replaceVar);
+				fullVar = "TI " + somethingVar + " OR AB " + somethingVar;
+				somethingRE = new RegExp(`${fullVar}`, "g");
+				lineArray[t] = lineArray[t].replace(somethingRE,replaceVar);
+				lineArray[t] = lineArray[t].replace(/\\/g,"");
+			}
+		}
+		//then, check for TIABs with parentheses
+		var tiabChecker2 = lineArray[t].match(/TI \(.+?\) OR [A-Z]{2}/);
+		if (tiabChecker2 != null){
+			for (tci = 0; tci < tiabChecker2.length; tci++){
+				let somethingVar = tiabChecker2[tci];
+				somethingVar = somethingVar.replace(/TI \(/,"");
+				somethingVar = somethingVar.replace(/\) OR [A-Z]{2}/,"");
+				let replaceVar = "\\*";
+				somethingVar = somethingVar.replace(/\*/,replaceVar);
+				replaceVar = '\\"';
+				somethingVar = somethingVar.replace(/\"/g,replaceVar);
+				let fullVar = "TI \\(" + somethingVar + "\\) OR AB \\(" + somethingVar + "\\) OR CI \\(" + somethingVar + "\\)";
+				replaceVar = "TIAB (" + somethingVar + ")";
+				let somethingRE = new RegExp(`${fullVar}`, "g");
+				lineArray[t] = lineArray[t].replace(somethingRE,replaceVar);
+				fullVar = "TI \\(" + somethingVar + "\\) OR AB \\(" + somethingVar + "\\)";
+				somethingRE = new RegExp(`${fullVar}`, "g");
+				lineArray[t] = lineArray[t].replace(somethingRE,replaceVar);
+				lineArray[t] = lineArray[t].replace(/\\/g,"");
+			}
+		}
+	}
+
+	// go through each element in the array
+	var h;
+	for (h = 0; h < lineArray.length; h++) {
+
+		//split the string by the word "Filter" to find any limits
+		//var filterArray = lineArray[h].split(" Filters: ");
+		lineArray[h] = lineArray[h].replace(/ Filters:/,"<br />");
+
+    //split the string by any OR operators and put the pieces into an array
+    var orArray = lineArray[h].split(" OR ");
+    //document.getElementById("output1").innerHTML = orArray;
+    var orLength = orArray.length;
+    var i;
+
+    //go through each element in the array
+    for (i = 0; i < orLength; i++){
+
+        //split the string by any AND operators and put the pieces into an array
+        var andArray = orArray[i].split(" AND ");
+        var andLength = andArray.length;
+        var j;
+
+        // go through each element in the array
+        for (j = 0; j < andLength; j++){
+
+            //split the string by any NOT operators and put the pieces into an array
+            var notArray = andArray[j].split(" NOT ");
+            var notLength = notArray.length;
+            var k;
+
+            // go through each element in the array
+            for (k = 0; k < notLength; k++){
+
+              //check for a space at beginning of elements and remove
+              notArray[k] = notArray[k].replace(/^ +/,"");
+              //remove the parentheses
+              notArray[k] = notArray[k].replace(/^\(+/,'$&GRRARRGH');
+              notArray[k] = notArray[k].replace(/\)+$/,"GRRARRGH$&");
+              var parenArray = notArray[k].split("GRRARRGH");
+              if (parenArray.length > 1){
+                if (parenArray[0].search(/[A-z]+/) >= 0){
+                  notArray[k] = parenArray[0];
+                }
+                else if (parenArray[0].search(/\d/) >= 0){
+                  notArray[k] = parenArray[0];
+                }
+                else{
+                  notArray[k] = parenArray[1];
+                }
+              }
+
+              //this checks for the attributes of the search term.
+
+              //is the term is a MeSH term?
+              if (notArray[k].search(/^\(*MH /) >= 0 || notArray[k].search(/^\(*MM /) >= 0){
+                    outputReceiver = formatMeshETP(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    //warningArray[warningIndex] = warningArray[warningIndex] + outputReceiver[1];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              else if (notArray[k].search(/^\(*MW /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a controlled non-MesH?
+
+              //is the term a publication type?
+              else if (notArray[k].search(/^\(*PT /) >= 0 || notArray[k].search(/^\(*ZT /) >= 0){
+                    outputReceiver = formatControlledETP(notArray[k], uPref);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a subheading?
+              else if (notArray[k].search(/^\(*FS /) >= 0){
+                    outputReceiver = formatControlledETP(notArray[k], uPref);
+                    notArray[k] = outputReceiver[0];
+                    //warningArray[warningIndex] = warningArray[warningIndex] + outputReceiver[1];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a supplementary concept?
+              else if (notArray[k].search(/^\(*RN /) >= 0 || notArray[k].search(/^\(*ZH /) >= 0 || notArray[k].search(/^\(*PR /) >= 0 || notArray[k].search(/^\(*DS /) >= 0 || notArray[k].search(/^\(*OG /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a personal name as subject?
+              else if (notArray[k].search(/^\(*ZP /) >= 0 || notArray[k].search(/^\(*NP /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term an affiliation or institution?
+              else if (notArray[k].search(/^\(*AF /) >= 0 || notArray[k].search(/^\(*ZF /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term an EBSCO field but not a PubMed tag?
+              else if (notArray[k].search(/^\(*SO /) >= 0 || notArray[k].search(/^\(*GS /) >= 0 || notArray[k].search(/^\(*ZM /) >= 0){
+                    warningArray[warningIndex] = "Warning: I have not found an equivalent EBSCO field for this PubMed tag. If you know the equivalent EBSCO field, please let me know!";
+                    warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+              }
+
+              //is the term an ID number?
+              else if (notArray[k].search(/^\(*AN /) >= 0 || notArray[k].search(/^\(*PM /) >= 0 || notArray[k].search(/^\(*ZC /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+              else if (notArray[k].search(/^\(*DI /) >= 0 || notArray[k].search(/^\(*DO /) >= 0 || notArray[k].search(/^\(*IX /) >= 0 || notArray[k].search(/^\(*IS /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              else if (notArray[k].search(/^\(*ZI /) >= 0 || notArray[k].search(/^\(*RN /) >= 0 || notArray[k].search(/^\(*ZH /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              else if (notArray[k].search(/^\(*SI /) >= 0 || notArray[k].search(/^\(*GI /) >= 0 || notArray[k].search(/^\(*IB /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term an author?
+              else if (notArray[k].search(/^\(*AU /) >= 0 || notArray[k].search(/^\(*ZA /) >=0 || notArray[k].search(/^\(*CA /) >= 0 || notArray[k].search(/^\(*ZO /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term journal title or issn?
+              else if (notArray[k].search(/^\(*JN /) >= 0 || notArray[k].search(/^\(*TA /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term about the journal publisher?
+              else if (notArray[k].search(/^\(*CY /) >= 0 || notArray[k].search(/^\(*ZY /) >= 0 || notArray[k].search(/^\(*PB /) >= 0 || notArray[k].search(/^\(*ZB /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a date?
+              else if (notArray[k].search(/^\(*PI /) >= 0 || notArray[k].search(/^\(*EM /) >= 0 || notArray[k].search(/^\(*YR /) >= 0){
+                    outputReceiver = formatDateETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+              else if (notArray[k].search(/^\(*CD /) >= 0 || notArray[k].search(/^\(*RD /) >= 0 || notArray[k].search(/^DT /) >= 0 || notArray[k].search(/^PD /) >= 0){
+                    outputReceiver = formatDateETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+              else if ((notArray[k].search(/^19/) >= 0 || notArray[k].search(/^20/) >= 0) && (tagValue == "[dcom]" || tagValue == "[crdt]"|| tagValue == "[lr]" || tagValue == "[dp]" || tagValue == "[epdat]")){
+                    outputReceiver = formatDateETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a tiab?
+              else if (notArray[k].search(/^\(*TIAB /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a title?
+              else if (notArray[k].search(/^\(*TI /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a keyword?
+              else if (notArray[k].search(/^\(*XX /) >= 0 || notArray[k].search(/^\(*CI /i) >= 0 || notArray[k].search(/^\(*TT /) >= 0 || notArray[k].search(/^\(*AB /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a language limit?
+              else if (notArray[k].search(/^\(*LA /) >= 0 || notArray[k].search(/^\(*ZL /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+	      //is the term a citation number?
+              else if (notArray[k].search(/^\(*IP /) >= 0 || notArray[k].search(/^\(*PG /) >= 0 || notArray[k].search(/^\(*VI /) >= 0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //is the term a limit?
+              else if (notArray[k].search(/^\(*ZS /) >=0 || notArray[k].search(/^\(*SB /) >=0){
+                    outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    tagValue = outputReceiver[2];
+              }
+
+              //does the term have an unrecognised tag?
+              else if (notArray[k].search(/^\(*[A-Z]{2}/) >= 0){
+                  warningArray[warningIndex] = "This term did not have a recognised tag/syntax. If you know the corresponding PubMed tag for this field, please let me know.";
+                  warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+              }
+
+              else {
+		// check to see if it's a line number
+		if (notArray[k].search(/^\(*S\d/) >= 0) {
+console.log("Entered S instance, notArray[k] = " + notArray[k]);
+			notArray[k] = notArray[k].replace(/S/g,"#");
+console.log("notArray[k] = " + notArray[k]);
+		}
+
+		//otherwise, assume the term is a bare keyword, and use the preceding tag, or text search.
+		else if (notArray[k].search(/\w/) >= 0) { // if it contains any alphanumeric character (ie not empty)
+		    if (tagValue != "null") {
+                        outputReceiver = formatKeywordsETP(notArray[k], tagValue);
+                        notArray[k] = outputReceiver[0];
+                        warningArray[warningIndex] = outputReceiver[1];
+                        tagValue = outputReceiver[2];
+		    }
+		    else{
+                        notArray[k] = "AF (" + notArray[k] + ")";
+                        notArray[k] = notArray[k].fontcolor("red");
+                        warningArray[warningIndex] = "This term did not have a tag. For simplicity, it has been translated as an \"all fields\" search in EBSCO syntax. However, this may not be an accurate translation. For the most accurate translation, please enter this term into the PubMed interface, and look on the right-hand side of your results. Copy the text in the Search Details display and enter it into Transpose for an accurate translation into EBSCO syntax. ";
+                        warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+		    }
+                }
+
+		else {
+		     // do nothing
+		}
+	     }
+
+
+              //add the parentheses back in
+              if (parenArray.length > 1){
+                if (parenArray[0].search(/[A-z]+/) >= 0){
+                  parenArray[0] = notArray[k];
+                }
+                else if (parenArray[0].search(/\d/) >= 0){
+                  parenArray[0] = notArray[k];
+                }
+                else{
+                  parenArray[1] = notArray[k];
+
+                }
+                notArray[k] = parenArray.join("");
+
+              }
+
+              testingIndex++;
+              warningIndex++;
+              //document.getElementById("output1").innerHTML = parenArray.length;
+            } // this corresponds to the not for-loop
+            andArray[j] = notArray.join(" NOT ");
+        } //this corresponds to the and for-loop
+        orArray[i] = andArray.join(" AND ");
+    }//this corresponds to the or for-loop
+    lineArray[h] = orArray.join(" OR ");
+	}//this corresponds to the linebreak for-loop
+	outputline = lineArray.join("<br />");
+
+    document.getElementById("output3").innerHTML = outputline;
+
+    var warningString = "<table border=\"1\"><tr><td>Item in strategy</td><td>Warnings are in red and suggestions are in blue</td></tr>";
+    var warningFound = 0;
+
+    //goes through the warning array and reformats into an HTML table. Is warningIndex the correct end-loop?
+    for (wi = 0; wi < warningIndex; wi++){
+        wiPlus = wi + 1;
+        //if there were no warnings for this term
+        if (warningArray[wi] == "null" || warningArray[wi] == undefined){
+            //do nothing
+        }
+        //if there were warnings for this term, reformat them in HTML.
+        else{
+          for (wii = 0; wii < wsli; wii++){
+            if (warningArray[wi] == warningShortlist[wii]){
+              warningShortlistItemNos[wii] = warningShortlistItemNos[wii] + ", " + wiPlus;
+              warningFound = 1;
+            }
+          }
+          if (warningFound == 0){
+            warningShortlist[wsli] = warningArray[wi];
+            warningShortlistItemNos[wsli] = wiPlus;
+            wsli++;
+          }
+          else{
+            warningFound = 0;
+          }
+        }
+    } //this corresponds to the for-loop that reformats the warningArray into an HTML table.
+    for (wiii = 0; wiii < wsli; wiii++){
+      warningString = warningString + "<tr><td>" + warningShortlistItemNos[wiii] + "</td><td>" + warningShortlist[wiii] + "</td></tr>";
+    }
+
+    //if there were no warnings at all, we don't need a table.
+    if (warningString == "<table><tr><td>Item in strategy</td><td>Warning or suggestion</td></tr>"){
+	warningString = "No warnings for this strategy";
+    }
+    //if there were warnings, we need to close the table.
+    else{
+        warningString = warningString + "</table>";
+    }
+
+
+    document.getElementById("output4").innerHTML = warningString;
+
+}  //this corresponds to the function declaration
+
+//****************************************************************************************************MeSH*******************************************************************
+
+function formatMeshETP (fmString) {
+    //make an array to receive the output of the subheading function and split it into output and warnings
+    var fmOutputReceiver = [null, null];
+
+    //make a variable to hold any warnings
+    var fmWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    var fmOutputArray = [null, null];
+
+    //make an array to hold the subheadings, if any
+    var fmSubheadings = [null, null];
+    var parens = 0;
+
+    var meshTag = "null";
+    var quotesMark = '"';
+    var isExploded = 0;
+
+    if (fmString.search(/^\(*MH \(/) >= 0 || fmString.search(/^\(*MM \(/) >= 0){
+        parens = 1;
+    }
+
+    //read the two letter tag
+    if (fmString.search(/^\(*MH/) == 0 && fmString.search(/\+/i) >= 0){
+        meshTag = "[MeSH]";
+        fmString = fmString.replace(/MH \"/,quotesMark);
+        fmString = fmString.replace(/\+/i,"");
+        isExploded = 1;
+    }
+    else if (fmString.search(/^\(*MH/) == 0 && fmString.search(/\+/i) < 0){
+        meshTag = "[MeSH:NoExp]";
+        fmString = fmString.replace(/MH \"/,quotesMark);
+    }
+    if (fmString.search(/^\(*MM/) == 0 && fmString.search(/\+/i) >= 0){
+        meshTag = "[Majr]";
+        fmString = fmString.replace(/MM \"/,quotesMark);
+        fmString = fmString.replace(/\+/i,"");
+        isExploded = 1;
+    }
+    else if (fmString.search(/^\(*MM/) == 0 && fmString.search(/\+/i) < 0){
+        meshTag = "[Majr:NoExp]";
+        fmString = fmString.replace(/MM \"/,quotesMark);
+    }
+
+    //if there is a slash, we process the subheadings
+    if (fmString.search(/\//i) >= 0){
+
+        //create string to hold the pile of resulting mesh
+        let stringBuilder = "";
+
+        //split the Mesh term into its Mesh term and its subheading
+        fmSubheadings = fmString.split("\/");
+
+        for (let i = 1; i < fmSubheadings.length; i++){
+            let twoLetterCode = fmSubheadings[i].substring(0,2);
+            fmOutputReceiver = formatSubheadingsETP(twoLetterCode);
+            fmWarning = fmOutputReceiver[1];
+            if (isExploded == 0 && fmWarning.search(/automatically/) >= 0){
+                fmWarning = "null";
+            }
+            if (i == 1){
+                stringBuilder = fmSubheadings[0] + "/" + fmOutputReceiver[0] + '"' + meshTag;
+            }
+            else{
+                stringBuilder = stringBuilder + ' OR ' + fmSubheadings[0] + "/" + fmOutputReceiver[0] + '"' + meshTag;
+            }
+        }
+        if (stringBuilder.search(/ OR /) >= 0){
+            fmString = "(" + stringBuilder + ")";
+        }
+        else{
+            fmString = stringBuilder;
+        }
+
+    }
+    else{
+        fmString = fmString + meshTag;
+    }
+
+    //package up the results ready to be returned
+    fmOutputArray[0] = fmString;
+    fmOutputArray[1] = fmWarning;
+    if (parens == 1){
+        fmOutputArray[2] = meshTag;
+    }
+    else{
+        fmOutputArray[2] = "null";
+    }
+    return fmOutputArray;
+}
+
+//******************************************************************Controlled Non-Mesh**************************************************************
+
+function formatControlledETP(cvString, userPref) {
+
+    //make a variable to hold any warnings
+    var cvWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    var cvOutputArray = [null, null];
+
+    //make temporary variables for the supplementary concept word split
+    var tempCV = "null";
+
+    //make a temporary variable to hold the two-letter code
+    var codeTwo = "null";
+
+    //reformat publication types (three variants) - is unexploded in EBSCO.
+    if (cvString.search(/^\(*PT/) >= 0 || cvString.search(/^\(*ZT/) >= 0){
+	//if it is unexploded, you can use PT in EBSCO. Else, throw a warning.
+      	if (userPref == 0){
+		codeTwo = "[pt:noExp]";
+        	cvWarning = "In PubMed, Publication Types are exploded, but in EBSCO they are not. For accuracy, this search assumes you want the publication type not to be exploded; if you wish to explode, please remove the :noExp from the tag.";
+        	cvWarning = cvWarning.fontcolor("blue");
+      	}
+	else{
+        	codeTwo = "[pt]";
+        	cvWarning = "In PubMed, Publication Types are exploded, but in EBSCO they are not. For efficiency, this search assumes you want the publication type to be exploded; if not, please add :noExp to the tag.";
+        	cvWarning = cvWarning.fontcolor("blue");
+	}
+	cvString = cvString.substring(3,cvString.length);
+	if (cvString.search(/ /) >= 0){
+	    cvString = addQuotes(cvString);
+	}
+	else{
+	    cvString = removeQuotesETP(cvString);
+	}
+    }
+    //reformats subheading searches. EBSCO doesn't seem to have exploded subheading.
+    else if (cvString.search(/^\(*FS/) >= 0){
+      	if (userPref == 0){
+		codeTwo = "[sh:noExp]";
+        	cvWarning = "In PubMed, subheadings are exploded, but in EBSCO they are not. For accuracy, this search assumes you want the subheading not to be exploded; if you wish to explode, please remove the :noExp from the tag.";
+        	cvWarning = cvWarning.fontcolor("blue");
+      	}
+	else{
+        	codeTwo = "[sh]";
+        	cvWarning = "In PubMed, subheadings are exploded, but in EBSCO they are not. For efficiency, this search assumes you want the subheading to be exploded; if not, please add :noExp to the tag.";
+        	cvWarning = cvWarning.fontcolor("blue");
+	}
+	cvString = cvString.substring(3,cvString.length);
+	cvString = removeQuotesETP(cvString);
+	cvOutputArray = formatSubheadingsETP(cvString);
+	cvString = cvOutputArray[0];
+	cvWarning = cvOutputArray[1];
+    }
+
+    cvString = cvString + codeTwo;
+
+    cvOutputArray[0] = cvString;
+    cvOutputArray[1] = cvWarning;
+    cvOutputArray[2] = codeTwo;
+
+    return cvOutputArray;
+}
+
+//*****************************************************************************************Citation*******************************************************************
+ function formatKeywordsETP(keyString, keyTwoLetter){
+
+     //make a variable to hold any warnings
+    var keyWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    var keyOutputArray = [null, null];
+
+    //keyString = removeQuotesETP(keyString);
+    let twoLetterCode = keyTwoLetter;
+
+
+    //check for tiabs
+    if (keyString.search(/^TIAB /) >= 0){
+        twoLetterCode = keyString.substring(0,4);
+        keyString = keyString.substring(5,keyString.length);
+    }
+    //else, grab the two-letter code at the beginning
+    else if (keyString.search(/^[A-Z]{2} /) >= 0){
+        twoLetterCode = keyString.substring(0,2);
+        keyString = keyString.substring(3,keyString.length);
+    }
+    else{
+        twoLetterCode = keyTwoLetter;
+    }
+
+    keyTwoLetter = twoLetterCode;
+
+    switch (twoLetterCode){
+             case "TIAB":
+                 twoLetterCode = "[tiab]";
+                 break;
+             case "XX":
+                 twoLetterCode = "[All]";
+                 keyWarning = "Use of [All] for XX is uncertain. Please test before use.";
+                 keyWarning = keyWarning.fontcolor("red");
+                 break;
+             case "CI":
+                 twoLetterCode = "[ot]";
+                 keyWarning = "Use of [ot] for CI is uncertain. Please test before use.";
+                 keyWarning = keyWarning.fontcolor("red");
+                 break;
+             case "ZP":
+                 twoLetterCode = "[ps]";
+                 break;
+             case "NP":
+                 twoLetterCode = "[ps]";
+                 break;
+             case "TI":
+                 twoLetterCode = "[ti]";
+                 break;
+             case "AF":
+                 twoLetterCode = "[ad]";
+                 break;
+             case "ZF":
+                 twoLetterCode = "[ad]";
+                 break;
+             case "RN":
+                 twoLetterCode = "[rn]";
+                 break;
+             case "ZH":
+                 twoLetterCode = "[rn]";
+                 break;
+             case "TT":
+                 twoLetterCode = "[tt]";
+                 break;
+             case "IP":
+                 twoLetterCode = "[ip]";
+                 break;
+             case "JN":
+                 twoLetterCode = "[journal]";
+                 break;
+             case "PG":
+                 twoLetterCode = "[pg]";
+                 break;
+             case "AN":
+                 twoLetterCode = "[pmid]";
+                 break;
+             case "PM":
+                 twoLetterCode = "[pmid]";
+                 break;
+             case "ZC":
+                 twoLetterCode = "[pmid]";
+                 break;
+             case "VI":
+                 twoLetterCode = "[vi]";
+                 break;
+             case "CY":
+                 twoLetterCode = "[pl]";
+                 break;
+             case "ZY":
+                 twoLetterCode = "[pl]";
+                 break;
+             case "IX":
+                 twoLetterCode = "[ta]";
+                 break;
+             case "IS":
+                 twoLetterCode = "[ta]";
+                 break;
+             case "ZI":
+                 twoLetterCode = "[ta]";
+                 break;
+             case "TA":
+                 twoLetterCode = "[ta]";
+                 break;
+             case "ZS":
+                 twoLetterCode = "[sb]";
+                 break;
+             case "SB":
+                 twoLetterCode = "[sb]";
+                 break;
+             case "SI":
+                 twoLetterCode = "[jid]";
+                 break;
+             case "LA":
+                 twoLetterCode = "[la]";
+                 break;
+             case "ZL":
+                 twoLetterCode = "[la]";
+                 break;
+             case "DI":
+                 twoLetterCode = "[lid]";
+                 break;
+             case "DO":
+                 twoLetterCode = "[lid]";
+                 break;
+             case "GI":
+                 twoLetterCode = "[gr]";
+                 break;
+             case "PB":
+                 twoLetterCode = "[pubn]";
+                 break;
+             case "ZB":
+                 twoLetterCode = "[pubn]";
+             case "PR":
+                 twoLetterCode = "[supplementary concept]";
+                 break;
+             case "DS":
+                 twoLetterCode = "[supplementary concept]";
+                 break;
+             case "OG":
+                 twoLetterCode = "[supplementary concept]";
+                 break;
+             case "IB":
+                 twoLetterCode = "[is]";
+                 break;
+             case "AB":
+                 twoLetterCode = "[tiab]";
+                 keyWarning = "There is no equivalent of AB in PubMed. Have substituted [tiab]";
+                 keyWarning = keyWarning.fontcolor("red");
+                 break;
+             case "AU":
+                 twoLetterCode = "[fau]";
+                 break;
+             case "ZA":
+                 twoLetterCode = "[fau]";
+                 break;
+             case "CA":
+                 twoLetterCode = "[cn]";
+                 break;
+             case "ZO":
+                 twoLetterCode = "[cn]";
+                 break;
+             case "MW":
+                 twoLetterCode = "[mh:noexp]";
+                 keyString = removeQuotesETP(keyString);
+                 break;
+    }
+
+    //test for proximity
+    if (keyString.search(/ N\d{1,3} /) >= 0){
+        if (twoLetterCode == "[ti]" || twoLetterCode == "[tiab]" || twoLetterCode == "[ad]" >= 0){
+            let proxLength = keyString.match(/ N\d{1,3} /);
+            proxLength[0] = proxLength[0].replace(/N/,"");
+            proxLength[0] = proxLength[0].replace(/ /g,"");
+            keyString = keyString.replace(/ N\d{1,3} /g," ");
+            keyString = addQuotes(keyString);
+            twoLetterCode = twoLetterCode.replace(/\]/,":~" + proxLength[0] + "]");
+        }
+        else{
+            keyString = keyString.replace(/ N\d{1,3} /," AND ");
+            keyWarning = "Please note: PubMed does not allow proximity searching with this tag. AND has been substituted for the adjacency term.";
+            keyWarning = keyWarning.fontcolor("red");
+        }
+    }
+    else if (keyString.search(/ W\d{1,3} /) >= 0){
+        if (twoLetterCode == "[ti]" || twoLetterCode == "[tiab]" || twoLetterCode == "[ad]" >= 0){
+            let proxLength = keyString.match(/ W\d{1,3} /);
+            proxLength[0] = proxLength[0].replace(/W/,"");
+            proxLength[0] = proxLength[0].replace(/ /g,"");
+            keyString = keyString.replace(/ W\d{1,3} /g," ");
+            keyString = addQuotes(keyString);
+            twoLetterCode = twoLetterCode.replace(/\]/,":~" + proxLength[0] + "]");
+            keyWarning = "Please note: PubMed does not provide an exact match of this adjacency search. Results will find the words regardless of order.";
+            keyWarning = keyWarning.fontcolor("red");
+        }
+        else{
+            keyString = keyString.replace(/ W\d{1,3} /," AND ");
+            keyWarning = "Please note: PubMed does not allow proximity searching with this tag. AND has been substituted for the adjacency term.";
+            keyWarning = keyWarning.fontcolor("red");
+        }
+    }
+
+    //test for internal truncation
+    if (keyString.search(/[A-z]\*[A-z]/) >= 0){
+        keyWarning = "Please note: PubMed does not allow internal truncation. Recommend typing out all spelling variants (e.g. hemorrhag*[tiab] OR haemorrhag*[tiab])";
+        keyWarning = keyWarning.fontcolor("red");
+    }
+
+    //test for phrases
+    if (keyString.search(/[A-z] [A-z]/) >= 0){
+        if (keyString.search(/\*/) >= 0){
+            keyString = removeQuotesETP(keyString);
+            keyWarning = "Please note: PubMed is inconsistent when using phrase searching and truncation together. Please look at Advanced Search to check exactly how PubMed has interpreted this search.";
+            keyWarning = keyWarning.fontcolor("red");
+        }
+        else{
+            keyString = addQuotes(keyString);
+        }
+    }
+    else{
+        keyString = removeQuotesETP(keyString);
+    }
+
+    keyString = keyString + twoLetterCode;
+
+    keyOutputArray[0] = keyString;
+    keyOutputArray[1] = keyWarning;
+    keyOutputArray[2] = keyTwoLetter;
+    return keyOutputArray;
+
+}
+
+//****************************************************************************************************Dates*******************************************************************
+
+function formatDateETP(dtString, tagVal) {
+
+  //make a variable to hold any warnings
+ var dtWarning = "";
+
+ //make an array to hold the outputs (string and warnings)
+ var dtOutputArray = [null, null];
+
+ //make variables to hold the parts of the date
+ var dtYear = "YYYY";
+ var dtMonth = "MM";
+ var dtDay = "DD";
+ var monthWord = "Mmm";
+ var dtRange = "null";
+
+ var codeTwo = "null";
+ var wasParen = 0;
+
+ //remove quotes, truncation marks, and parentheses
+ dtString = dtString.replace(/\"/g,"");
+ dtString = dtString.replace(/\*/g,"");
+ if (dtString.search(/\(/) >= 0){
+    dtString = dtString.replace(/\(/g,"");
+    wasParen = 1;
+ }
+
+ if (dtString.search(/^[A-Z]{2} /) >= 0){
+    codeTwo = dtString.substring(0,2);
+    dtString = dtString.substring(3,dtString.length);
+    switch (codeTwo){
+             case "CD":
+                 codeTwo = "[dcom]";
+                 break;
+             case "EM":
+                 codeTwo = "[crdt]";
+                 break;
+             case "RD":
+                 codeTwo = "[lr]";
+                 break;
+             case "DT":
+                 codeTwo = "[edat]";
+                 break;
+             case "PI":
+                 codeTwo = "[epdat]";
+                 break;
+             case "YR":
+                 codeTwo = "[dp]";
+                 break;
+             case "PD":
+                 codeTwo = "[dp]";
+                 break;
+             case "ZD":
+                 codeTwo = "[dp]";
+                 break;
+    }
+ }
+ else{
+    codeTwo = tagVal;
+ }
+
+ if (dtString.search(/[A-z]/) >= 0){
+    let dateChomp = dtString.split(/ /);
+    dtYear = dateChomp[0];
+    if (dateChomp.length > 1){
+        monthWord = dateChomp[1];
+        switch (monthWord){
+             case "Jan":
+                 dtMonth = "1";
+                 break;
+             case "Feb":
+                 dtMonth = "2";
+                 break;
+             case "Mar":
+                 dtMonth = "3";
+                 break;
+             case "Apr":
+                 dtMonth = "4";
+                 break;
+             case "May":
+                 dtMonth = "5";
+                 break;
+             case "Jun":
+                 dtMonth = "6";
+                 break;
+             case "Jul":
+                 dtMonth = "7";
+                 break;
+             case "Aug":
+                 dtMonth = "8";
+                 break;
+             case "Sep":
+                 dtMonth = "9";
+                 break;
+             case "Oct":
+                 dtMonth = "10";
+                 break;
+             case "Nov":
+                 dtMonth = "11";
+                 break;
+             case "Dec":
+                 dtMonth = "12";
+                 break;
+             case "spring":
+                 dtMonth = "3";
+                 dtRange = "5";
+                 dtWarning = "No direct way of searching Spring in PubMed. Have substituted date range: months Mar-May. ";
+                 dtWarning = dtWarning.fontcolor("red");
+                 break;
+             case "summer":
+                 dtMonth = "6";
+                 dtRange = "8";
+                 dtWarning = "No direct way of searching Summer in PubMed. Have substituted date range: months Jun-Aug. ";
+                 dtWarning = dtWarning.fontcolor("red");
+                 break;
+             case "fall":
+                 dtMonth = "9";
+                 dtRange = "11";
+                 dtWarning = "No direct way of searching Fall in PubMed. Have substituted date range: months Sep-Nov. ";
+                 dtWarning = dtWarning.fontcolor("red");
+                 break;
+             case "autumn":
+                 dtMonth = "9";
+                 dtRange = "11";
+                 dtWarning = "No direct way of searching Autumn in PubMed. Have substituted date range: months Sep-Nov. ";
+                 dtWarning = dtWarning.fontcolor("red");
+                 break;
+             case "winter":
+                 dtMonth = "12";
+                 dtRange = "2";
+                 dtWarning = "No direct way of searching Winter in PubMed. Have substituted date range: Dec - Feb of following year. ";
+                 dtWarning = dtWarning.fontcolor("red");
+                 break;
+        }
+    }
+    if (dateChomp.length > 2){
+        dtDay = dateChomp[2];
+    }
+    if (dtDay == "null" && dtMonth == "null"){
+        dtString = dtYear + codeTwo;
+    }
+    else if (dtDay == "null" && dtRange == "null"){
+        dtString = dtYear + "/" + dtMonth + codeTwo;
+    }
+    else if (dtRange == "null"){
+        dtString = dtYear + "/" +dtMonth + "/" + dtDay + codeTwo;
+    }
+    else if (dtRange == "2"){
+        let numYear = Number(dtYear);
+        numYear++;
+        dtString = dtYear + "/" + dtMonth + codeTwo + ":" + numYear.toString() + "/" + dtRange + codeTwo;
+    }
+    else{
+        dtString = dtYear + "/" + dtMonth + codeTwo + ":" + dtYear + "/" + dtRange + codeTwo;
+    }
+ }
+else{
+    if (dtString.length > 6){
+        dtYear = dtString.substring(0,4);
+        dtMonth = dtString.substring(4,6);
+        dtDay = dtString.substring(6,8);
+        dtString = dtYear + "/" + dtMonth + "/" + dtDay;
+    }
+    else if (dtString.length > 4){
+        dtYear = dtString.substring(0,4);
+        dtMonth = dtString.substring(4,6);
+        dtString = dtYear + "/" + dtMonth;
+    }
+    else{
+        dtYear = dtString.substring(0,4);
+        dtString = dtYear;
+    }
+    dtString = dtString + codeTwo;
+ }
+ if (wasParen == 1){
+    dtString = "(" + dtString;
+ }
+
+ dtWarning = dtWarning + "I have made my best guess about corresponding date fields in PubMed and EBSCO. I have not been able to do extensive testing. Please check that your results are as expected."
+ dtWarning = dtWarning.fontcolor("red");
+
+ dtOutputArray[0] = dtString;
+ dtOutputArray[1] = dtWarning;
+ dtOutputArray[2] = codeTwo;
+
+ return dtOutputArray;
+}
+
+//****************************************************************************************************  Remove Quotes******************************************************************
+
+function removeQuotesETP (rqString){
+
+    //check whether the term contains a space, if not, remove quotes
+    if (rqString.search(/ /) >= 0){
+        if (rqString.search(/\*/) >= 0){
+            rqString = rqString.replace(/"/g,"");
+        }
+    }
+    else{
+        rqString = rqString.replace(/"/g,"");
+    }
+    return rqString;
+}
+
+//****************************************************************************************************  Subheadings*******************************************************************
+
+function formatSubheadingsETP (fshString){
+    //make a variable to hold any warnings
+    var fshWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    var fshOutputArray = [null, null];
+
+   //compare the subheading to a list of all subheadings and convert to PubMed syntax, preserving explosions
+    switch (fshString){
+        case "AA":
+            fshString = "analogs and derivatives";
+            break;
+        case "AB":
+            fshString = "abnormalities";
+            break;
+        case "AD":
+            fshString = "administration and dosage";
+            break;
+        case "AE":
+            fshString = "adverse effects";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "AG":
+            fshString = "agonists";
+            break;
+        case "AH":
+            fshString = "anatomy and histology";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "AI":
+            fshString = "antagonists and inhibitors";
+            break;
+        case "AN":
+            fshString = "analysis";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "BI":
+            fshString = "biosynthesis";
+            break;
+        case "BL":
+            fshString = "blood";
+            break;
+        case "BS":
+            fshString = "blood supply";
+            break;
+        case "CF":
+            fshString = "cerebrospinal fluid";
+            break;
+        case "CH":
+            fshString = "chemistry";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "CI":
+            fshString = "chemically induced";
+            break;
+        case "CL":
+            fshString = "classification";
+            break;
+        case "CN":
+            fshString = "congenital";
+            break;
+        case "CO":
+            fshString = "complications";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "CS":
+            fshString = "chemical synthesis";
+            break;
+        case "CY":
+            fshString = "cytology";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "DE":
+            fshString = "drug effects";
+            break;
+        case "DF":
+            fshString = "deficiency";
+            break;
+        case "DH":
+            fshString = "diet therapy";
+            break;
+        case "DI":
+            fshString = "diagnosis";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "DT":
+            fshString = "drug therapy";
+            break;
+        case "DG":
+            fshString = "diagnostic imaging";
+            break;
+        case "DU":
+            fshString = "";
+            fshWarning = " Diagnostic use is no longer available as a subheading. Subheading removed.";
+            fshWarning = fshWarning.fontcolor("red");
+            break;
+        case "EC":
+            fshString = "economics";
+            break;
+        case "ED":
+            fshString = "education";
+            break;
+        case "EH":
+            fshString = "ethnology";
+            break;
+        case "EM":
+            fshString = "embryology";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "EN":
+            fshString = "enzymology";
+            break;
+        case "EP":
+            fshString = "epidemiology";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "ES":
+            fshString = "ethics";
+            break;
+        case "ET":
+            fshString = "etiology";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "GD":
+            fshString = "growth and development";
+            break;
+        case "GE":
+            fshString = "genetics";
+            break;
+        case "HI":
+            fshString = "history";
+            break;
+        case "IM":
+            fshString = "immunology";
+            break;
+        case "IN":
+            fshString = "injuries";
+            break;
+        case "IP":
+            fshString = "isolation and purification";
+            break;
+        case "IR":
+            fshString = "innervation";
+            break;
+        case "IS":
+            fshString = "instrumentation";
+            break;
+        case "LJ":
+            fshString = "legislation and jurisprudence";
+            break;
+        case "MA":
+            fshString = "";
+            fshWarning = "Manpower is no longer available as a subheading. Subheading removed. Try MeSH term Workforce instead.";
+            fshWarning = fshWarning.fontcolor("red");
+            break;
+        case "ME":
+            fshString = "metabolism";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "MI":
+            fshString = "microbiology";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "MO":
+            fshString = "mortality";
+            break;
+        case "MT":
+            fshString = "methods";
+            break;
+        case "NU":
+            fshString = "nursing";
+            break;
+        case "OG":
+            fshString = "organization and administration";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+//what line dis
+            break;
+        case "PA":
+            fshString = "pathology";
+            break;
+        case "PC":
+            fshString = "prevention and control";
+            break;
+        case "PD":
+            fshString = "pharmacology";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "PH":
+            fshString = "physiology";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "PK":
+            fshString = "pharmacokinetics";
+            break;
+        case "PO":
+            fshString = "poisoning";
+            break;
+        case "PP":
+            fshString = "physiopathology";
+            break;
+        case "PS":
+            fshString = "parasitology";
+            break;
+        case "PX":
+            fshString = "psychology";
+            break;
+        case "PY":
+            fshString = "pathogenicity";
+            break;
+        case "RE":
+            fshString = "radiation effects";
+            break;
+        case "RH":
+            fshString = "rehabilitation";
+            break;
+        case "RI":
+            fshString = "diagnostic imaging";
+            break;
+        case "RT":
+            fshString = "radiotherapy";
+            break;
+        case "SC":
+            fshString = "secondary";
+            break;
+        case "SD":
+            fshString = "supply and distribution";
+            break;
+        case "SN":
+            fshString = "statistics and numerical data";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "ST":
+            fshString = "standards";
+            break;
+        case "SU":
+            fshString = "surgery";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "TD":
+            fshString = "trends";
+            break;
+        case "TH":
+            fshString = "therapy";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "TM":
+            fshString = "transmission";
+            break;
+        case "TO":
+            fshString = "toxicity";
+            break;
+        case "TR":
+            fshString = "transplantation";
+            break;
+        case "TU":
+            fshString = "therapeutic use";
+            fshWarning = "PubMed automatically explodes subheadings (EBSCO does not).";
+            fshWarning = fshWarning.fontcolor("blue");
+            break;
+        case "UL":
+            fshString = "ultrastructure";
+            break;
+        case "UR":
+            fshString = "urine";
+            break;
+        case "US":
+            fshString = "diagnostic imaging";
+            break;
+        case "UT":
+            fshString = "";
+            fshWarning = "Utilization is no longer available as a subheading. Subheading removed. Try MeSH terms Drug Utilization, Equipment and Supplies Utilization, Procedures and Techniques Utilization, or Facilities and Services Utilization, instead.";
+            fshWarning = fshWarning.fontcolor("red");
+            break;
+        case "VE":
+            fshString = "veterinary";
+            break;
+        case "VI":
+            fshString = "virology";
+            break;
+    }
+
+    //package up the results ready to be returned
+    fshOutputArray[0] = fshString;
+    fshOutputArray[1] = fshWarning;
+    return fshOutputArray;
+}
+
+//*********************************************PTE functions start***********************************************
+
+//*********************************************PTE functions start***********************************************
+
+function transposePTE(inputline, uPref) {
+
+
+    //document.getElementById("output4").innerHTML ="yikes";
+    //read in the user input (PubMed search strategy)
+    //var inputline = document.getElementById("userEntry").value;
+    //document.getElementById("output4").innerHTML = inputline;
+    var outputline = "blank";
+
+    //make an array for testing output
+    var testingArray = ["test","test","test"];
+    var testingIndex = 0;
+
+    //make an array for warnings
+    var warningArray = ["", ""];
+    var warningIndex = 0;
+    var wi = 0;
+    var wiPlus = 1;
+    var warningShortlist = ["",""];
+    var wsli = 0;
+    var warningShortlistItemNos = ["",""];
+    var wslini = 0;
+
+    //make an array to receive the output of other functions and split it into output and warnings
+    var outputReceiver = [null, null];
+
+    //this finds boolean operators in lowercase, and, if they are preceded or followed by the right syntax, changes them to uppercase
+    inputline = inputline.replace(/\] or /g,"\] OR ");
+    inputline = inputline.replace(/\] and /g,"\] AND ");
+    inputline = inputline.replace(/\] not /g,"\] NOT ");
+    inputline = inputline.replace(/ or \"/g," OR \"");
+    inputline = inputline.replace(/ and \"/g," AND \"");
+    inputline = inputline.replace(/ not \"/g," NOT \"");
+    inputline = inputline.replace(/\) or /g,"\) OR ");
+    inputline = inputline.replace(/\) and /g,"\) AND ");
+    inputline = inputline.replace(/\) not /g,"\) NOT ");
+    inputline = inputline.replace(/ or \(/g," OR \(");
+    inputline = inputline.replace(/ and \(/g," AND \(");
+    inputline = inputline.replace(/ not \(/g," NOT \(");
+
+	//split by linebreaks
+	var lineArray = inputline.split(/[\n\r]/);
+
+		// go through each element in the array
+		var h;
+		for (h = 0; h < lineArray.length; h++) {
+
+		//split the string by the word "Filter" to find any limits
+    //var filterArray = lineArray[h].split(" Filters: ");
+		lineArray[h] = lineArray[h].replace(/ Filters:/,"<br />");
+
+    //split the string by any OR operators and put the pieces into an array
+    var orArray = lineArray[h].split(" OR ");
+    //document.getElementById("output1").innerHTML = orArray;
+    var orLength = orArray.length;
+    var i;
+
+    //go through each element in the array
+    for (i = 0; i < orLength; i++){
+
+        //split the string by any AND operators and put the pieces into an array
+        var andArray = orArray[i].split(" AND ");
+        var andLength = andArray.length;
+        var j;
+
+        // go through each element in the array
+        for (j = 0; j < andLength; j++){
+
+            //split the string by any NOT operators and put the pieces into an array
+            var notArray = andArray[j].split(" NOT ");
+            var notLength = notArray.length;
+            var k;
+
+            // go through each element in the array
+            for (k = 0; k < notLength; k++){
+
+              //check for a space between end quote and tag, and remove
+              notArray[k] = notArray[k].replace(/\" \[/,"\"\[");
+
+              //remove the parentheses
+              notArray[k] = notArray[k].replace(/^\(+/,'$&GRRARRGH');
+              notArray[k] = notArray[k].replace(/\)+$/,"GRRARRGH$&");
+              var parenArray = notArray[k].split("GRRARRGH");
+              if (parenArray.length > 1){
+                if (parenArray[0].search(/\(/) >=0){
+                  notArray[k] = parenArray[1];
+                }
+                else{
+                  notArray[k] = parenArray[0];
+                }
+              }
+
+              //this checks for the attributes of the search term.
+
+              //is the term is a MeSH term?
+              if (notArray[k].search(/\[Me/i) >= 0 || notArray[k].search(/\[Ma/i) >= 0 || notArray[k].search(/\[MH\]/i) >= 0){
+                    //testingArray[testingIndex] = "mesh";
+                    outputReceiver = formatMeshPTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    //warningArray[warningIndex] = warningArray[warningIndex] + outputReceiver[1];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              else if (notArray[k].search(/\[MH:NoExp/i) >= 0){
+                    notArray[k] = notArray[k].replace(/:/,'');
+                    notArray[k] = formatSinglePTE(notArray[k]);
+                    warningArray[warningIndex] = "Please note: the [MH:NoExp] tag occasionally makes changes to the term entered. For most accurate results, consult the Advanced Search page in PubMed and click on the Query to verify what was searched.";
+              }
+
+              //is the term a controlled non-MesH?
+
+              //is the term a Pharmacologic Action?
+              else if (notArray[k].search(/\[pa\]/i) >= 0 || notArray[k].search(/\[pharm/i) >= 0){
+                    notArray[k] = notArray[k].replace(/\[p[\w| ]+\]/i,"[Mesh]");
+                    outputReceiver = formatMeshPTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+                    if (warningArray[warningIndex] == "null"){
+                          warningArray[warningIndex] = "Please note there is not an exact equivalent of Pharmacological Action in EBSCO. This transposition will find the narrower MeSH terms but not the narrower supplementary concepts.";
+                          warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+                    }
+                    else{
+                          warningArray[warningIndex] = warningArray[warningIndex] + "Please note there is not an exact equivalent of Pharmacological Action in EBSCO. This transposition will find the narrower MeSH terms but not the narrower supplementary concepts.";
+                    }
+              }
+
+              //is the term a publication type?
+              else if (notArray[k].search(/\[pt/i) >= 0 || notArray[k].search(/\[publication/i) >= 0){
+                    outputReceiver = formatControlledPTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term a subheading?
+              else if (notArray[k].search(/\[subheading/i) >= 0 || notArray[k].search(/\[sh/i) >= 0){
+                    outputReceiver = formatControlledPTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    //warningArray[warningIndex] = warningArray[warningIndex] + outputReceiver[1];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term a supplementary concept?
+              else if (notArray[k].search(/\[supplementary/i) >= 0){
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term a personal name as subject?
+              else if (notArray[k].search(/\[subject/i) >= 0 || notArray[k].search(/\[ps/i) >= 0){
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term an affiliation or institution?
+              else if (notArray[k].search(/\[Affiliation/i) >= 0 || notArray[k].search(/\[ad/i) >= 0){
+                    notArray[k] = testProximityPTE(notArray[k]);
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term a PubMed tag but not an EBSCO field?
+              //note: these are appearing here so that auid will be checked before au
+              else if (notArray[k].search(/\[nm/i) >= 0 || notArray[k].search(/\[si/i) >= 0 || notArray[k].search(/\[se/i) >= 0 || notArray[k].search(/\[aid/i) >= 0 || notArray[k].search(/\[auid/i) >= 0){
+                    warningArray[warningIndex] = "Warning: I have not found an equivalent EBSCO field for this PubMed tag. If you know the equivalent EBSCO field, please let me know!";
+                    warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+              }
+
+              else if (notArray[k].search(/\[ir/i) >= 0 || notArray[k].search(/\[investigator/i) >=0 || notArray[k].search(/\[fir/i) >=0 || notArray[k].search(/\[ed\]/i) >= 0 || notArray[k].search(/\[editor/i) >= 0 || notArray[k].search(/\[coi/i) >= 0){
+                    warningArray[warningIndex] = "Warning: I have not found an equivalent EBSCO field for this PubMed tag. If you know the equivalent EBSCO field, please let me know!";
+                    warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+              }
+
+              //is the term an ID number?
+              else if (notArray[k].search(/\[pmid/i) >= 0 || notArray[k].search(/\[uid/i) >= 0){
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+              else if (notArray[k].search(/\[lid/i) >= 0 || notArray[k].search(/\[ta/i) >= 0 || notArray[k].search(/\[rn/i) >= 0 || notArray[k].search(/\[ec\/rn/i) >= 0){
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+              else if (notArray[k].search(/\[jid/i) >= 0 || notArray[k].search(/\[gr/i) >= 0 || notArray[k].search(/\[is/i) >= 0){
+                    notArray[k] = formatSinglePTE(notArray[k]);
+                    warningArray[warningIndex] = "null";
+              }
+
+              //is the term an author?
+              else if (notArray[k].search(/\[Au/i) >= 0 || notArray[k].search(/\[cn/i) >=0 || notArray[k].search(/\[1au/i) >= 0 || notArray[k].search(/\[fau/i) >= 0 || notArray[k].search(/\[lastau/i) >= 0){
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term journal title or issn?
+              else if (notArray[k].search(/\[jour/i) >= 0 || notArray[k].search(/\[ta/i) >= 0){
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term about the journal publisher?
+              else if (notArray[k].search(/\[pl/i) >= 0 || notArray[k].search(/\[pubn/i) >= 0){
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term a date?
+              else if (notArray[k].search(/\[Date/i) >= 0 || notArray[k].search(/\[mhda/i) >= 0 || notArray[k].search(/\[crdt/i) >= 0 || notArray[k].search(/\[edat/i) >= 0){
+                    outputReceiver = formatDatePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+		else if (notArray[k].search(/\[dcom/i) >= 0 || notArray[k].search(/\[lr/i) >= 0 || notArray[k].search(/\[dp/i) >= 0 || notArray[k].search(/\[pdat/i) >= 0){
+                    outputReceiver = formatDatePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term a tiab?
+              else if (notArray[k].search(/\[tiab/i) >= 0){
+                    notArray[k] = testProximityPTE(notArray[k]);
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term a title?
+              else if (notArray[k].search(/\[ti/i) >= 0){
+                    notArray[k] = testProximityPTE(notArray[k]);
+                    notArray[k] = formatSinglePTE(notArray[k]);
+              }
+
+              //is the term a keyword?
+              else if (notArray[k].search(/\[All/i) >= 0 || notArray[k].search(/\[ot/i) >= 0 || notArray[k].search(/\[tt/i) >= 0 || notArray[k].search(/\[MH\:Noexp\]/i) >= 0){
+                    //testingArray[testingIndex] = "kw";
+                    notArray[k] = formatSinglePTE(notArray[k]);
+                    //notArray[k] = outputReceiver[0];
+                    //warningArray[warningIndex] = warningArray[warningIndex] + outputReceiver[1];
+                    //warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term a keyword with a TW tag?
+              else if (notArray[k].search(/\[tw/i) >= 0 || notArray[k].search(/\[text word/i) >= 0){
+                    outputReceiver = formatMultiplePTE(notArray[k], uPref);
+                    notArray[k] = outputReceiver[0];
+                    //warningArray[warningIndex] = warningArray[warningIndex] + outputReceiver[1];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+              //is the term a language limit?
+              else if (notArray[k].search(/\[la/i) >= 0){
+                    outputReceiver = formatMultiplePTE(notArray[k]);
+                    notArray[k] = outputReceiver[0];
+                    warningArray[warningIndex] = outputReceiver[1];
+              }
+
+	      //is the term a citation number?
+              else if (notArray[k].search(/\[ip\]/i) >= 0 || notArray[k].search(/\[issue\]/i) >= 0 || notArray[k].search(/\[pg\]/i) >= 0 || notArray[k].search(/\[pagination\]/i) >= 0 || notArray[k].search(/\[vi\]/i) >= 0){
+                    notArray[k] = formatSinglePTE(notArray[k]);
+              }
+
+              //is the term a limit?
+              else if (notArray[k].search(/\[filter/i) >= 0 || notArray[k].search(/\[sb/i) >=0 || notArray[k].search(/\[text/i) >=0){
+                    warningArray[warningIndex] = "Warning: EBSCO expresses limits differently than PubMed. If you know of an EBSCO field for this limit, please let me know!";
+                    warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+              }
+
+              //does the term have an unrecognised tag?
+              else if (notArray[k].search(/\[/) >= 0){
+                  warningArray[warningIndex] = "This term did not have a recognised tag/syntax. If it is a term related to the year or date, my apologies - this will be coming soon.";
+                  warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+              }
+
+              else {
+                    //testingArray[testingIndex] = "nosyntax";
+                    //check to see if it is a jsubset without a tag
+                    if (notArray[k].search(/jsubset/i) >= 0){
+                      notArray[k] = notArray[k] + "[text]";
+                      outputReceiver = formatLimitPTE(notArray[k]);
+                      notArray[k] = outputReceiver[0];
+                      warningArray[warningIndex] = outputReceiver[1];
+                    }
+
+
+		//check to see if it is a pmc ID term, which do not require tags
+		else if (notArray[k].search(/PMC/i) >=0){
+                      warningArray[warningIndex] = "I don't know whether EBSCO allows a search for PMC numbers. If you know of a field which contains them, please let me know.";
+                  warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+		}
+
+		// check to see if it's a line number
+		else if (notArray[k].search("#") >= 0) {
+			notArray[k] = notArray[k].replace(/#/g,"S");
+		}
+
+		//otherwise, assume the term is a bare keyword, and make it an all fields search, but throw a warning.
+              else if (notArray[k].search(/\w/) >= 0) { // if it contains any alphanumeric character (ie not empty)
+                      notArray[k] = "AF (" + notArray[k] + ")";
+                      notArray[k] = notArray[k].fontcolor("red");
+                      warningArray[warningIndex] = "This term did not have a tag. For simplicity, it has been translated as an \"all fields\" search in EBSCO syntax. However, this may not be an accurate translation. For the most accurate translation, please enter this term into the PubMed interface, and look on the right-hand side of your results. Copy the text in the Search Details display and enter it into Transpose for an accurate translation into EBSCO syntax. ";
+                      warningArray[warningIndex] = warningArray[warningIndex].fontcolor("red");
+                  }
+
+								else {
+									// do nothing
+								}
+						}
+
+						// deal with any lingering line numbers
+						if (notArray[k].search("#") >= 0) {
+								notArray[k] = notArray[k].replace(/#/g,"");
+						}
+
+
+              //add the parentheses back in
+              if (parenArray.length > 1){
+                if (parenArray[0].search(/\(/) >= 0){
+                  parenArray[1] = notArray[k];
+                }
+                else{
+                  parenArray[0] = notArray[k];
+                }
+                notArray[k] = parenArray.join("");
+
+              }
+
+              testingIndex++;
+              warningIndex++;
+              //document.getElementById("output1").innerHTML = parenArray.length;
+            } // this corresponds to the not for-loop
+            andArray[j] = notArray.join(" NOT ");
+        } //this corresponds to the and for-loop
+        orArray[i] = andArray.join(" AND ");
+    }//this corresponds to the or for-loop
+    lineArray[h] = orArray.join(" OR ");
+	}//this corresponds to the linebreak for-loop
+	outputline = lineArray.join("<br />");
+
+    //if (filterArray.length > 1){
+     //split the string by any semicolons and put the pieces into an array
+            //var limitArray = filterArray[1].split("; ");
+            //var limitLength = limitArray.length;
+            //var l;
+
+            // go through each element in the array
+            //for (l = 0; l < limitLength; l++){
+
+                //this checks for the attributes of the search term.
+
+            //} // this corresponds to the limit for-loop
+    //} // filter for-loop
+
+    //outputline = filterArray.join("<br />");
+
+    //document.getElementById("output1").innerHTML = inputline;
+  	//document.getElementById("output2").innerHTML = testingArray;
+    document.getElementById("output3").innerHTML = outputline;
+
+    var warningString = "<table border=\"1\"><tr><td>Item in strategy</td><td>Warnings are in red and suggestions are in blue</td></tr>";
+    var warningFound = 0;
+
+    //goes through the warning array and reformats into an HTML table. Is warningIndex the correct end-loop?
+    for (wi = 0; wi < warningIndex; wi++){
+        wiPlus = wi + 1;
+        //if there were no warnings for this term
+        if (warningArray[wi] == "null" || warningArray[wi] == undefined){
+            //do nothing
+        }
+        //if there were warnings for this term, reformat them in HTML.
+        else{
+          for (wii = 0; wii < wsli; wii++){
+            if (warningArray[wi] == warningShortlist[wii]){
+              warningShortlistItemNos[wii] = warningShortlistItemNos[wii] + ", " + wiPlus;
+              warningFound = 1;
+            }
+          }
+          if (warningFound == 0){
+            warningShortlist[wsli] = warningArray[wi];
+            warningShortlistItemNos[wsli] = wiPlus;
+            wsli++;
+          }
+          else{
+            warningFound = 0;
+          }
+        }
+    } //this corresponds to the for-loop that reformats the warningArray into an HTML table.
+    for (wiii = 0; wiii < wsli; wiii++){
+      warningString = warningString + "<tr><td>" + warningShortlistItemNos[wiii] + "</td><td>" + warningShortlist[wiii] + "</td></tr>";
+    }
+
+    //if there were no warnings at all, we don't need a table.
+    if (warningString == "<table><tr><td>Item in strategy</td><td>Warning or suggestion</td></tr>"){
+	warningString = "No warnings for this strategy";
+    }
+    //if there were warnings, we need to close the table.
+    else{
+        warningString = warningString + "</table>";
+    }
+
+
+    document.getElementById("output4").innerHTML = warningString;
+
+}  //this corresponds to the function declaration
+
+//****************************************************************************************************MeSH*******************************************************************
+
+function formatMeshPTE (fmString) {
+    //make an array to receive the output of the subheading function and split it into output and warnings
+    var fmOutputReceiver = [null, null];
+
+    //make a variable to hold any warnings
+    var fmWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    var fmOutputArray = [null, null];
+
+    //make an array to hold the subheadings, if any
+    var fmSubheadings = [null, null];
+    var fmParens = [null, null];
+    var parens = 0;
+
+    //make a variable to hold the explode status
+    var doWeExplode = (fmString.search(/:NoExp/i) < 0);
+    fmString = fmString.replace(/:NoExp/i,"");
+
+    //if there aren't any quotes - the less than sign means "not found"
+    if (fmString.search(/"/) < 0){
+      fmString = fmString.replace(/\[M/i,'"\[M');
+      //check for leading parentheses the double equals means only in the first position
+      if (fmString.search(/\(/) == 0){
+        fmString = fmString.replace(/^\(+/,'$&"');
+      }
+      else{
+        fmString = '"' + fmString;
+      }
+    }
+
+    //tag conversion
+    // check if the string has a leading parenthesis - the double equals means only in the first position
+    if (fmString.search(/\(/) == 0){
+
+        //if the term is focussed, convert to EBSCO syntax
+        if (fmString.search(/\[Majr/i) >= 0){
+            fmString = fmString.replace(/^\(+/,'$&MM ');
+        }
+        //if the term is not focussed, convert to EBSCO syntax
+        else if (fmString.search(/\[Mesh/i) >= 0){
+            fmString = fmString.replace(/^\(+/,'$&MH ');
+        }
+        //if the term is not focussed, convert to EBSCO syntax
+        else if (fmString.search(/\[MH/i) >= 0){
+            fmString = fmString.replace(/^\(+/,'$&MH ');
+        }
+    }
+
+    //if there is no leading parenthesis
+    else{
+
+        //if the term is focussed, convert to EBSCO syntax
+        if (fmString.search(/\[Majr/i) >= 0){
+            fmString = "MM " + fmString;
+        }
+
+        //if the term is not focussed, convert to EBSCO syntax
+        if (fmString.search(/\[Mesh/i) >= 0){
+            fmString = "MH " + fmString;
+        }
+
+        //if the term is not focussed, convert to EBSCO syntax
+        if (fmString.search(/\[MH/i) >= 0){
+            fmString = "MH " + fmString;
+            fmWarning = "PubMed's MH field sometimes accepts partial MeSH terms, and does a translation. Consult the Advanced Search page and click on the query to see any translations. Enter the translated search above to receive a more accurate transposition. Alternatively, the MW field in EBSCO may be of use, but will produce different results."
+            fmWarning = fmWarning.fontcolor("red");
+        }
+    }
+
+    //if there is a slash, we process the subheadings
+    if (fmString.search(/\//i) >= 0){
+
+        //take off the end tag
+        fmString = fmString.replace(/\[M[\w| ]+\]/i,"");
+
+        //split the Mesh term into its Mesh term and its subheading
+        fmSubheadings = fmString.split("\/");
+
+        //remove any quotes from the subheading
+        fmSubheadings[1] = fmSubheadings[1].replace(/"/g,"");
+
+        //if the subheading is a full word, not a 2-letter code
+        if (fmSubheadings[1].length > 2){
+            //hand the subheading to the formatSubheading function for processing
+            fmOutputReceiver = formatSubheadingsPTE(fmSubheadings[1]);
+            fmSubheadings[1] = fmOutputReceiver[0];
+            fmWarning = fmOutputReceiver[1];
+        }
+
+        //join the processed subheading back onto the MeSH term
+        fmString = fmSubheadings.join("\/");
+
+        if (doWeExplode){
+          fmString = fmString + '+"';
+        }
+        else{
+          fmString = fmString + '"';
+        }
+
+    }
+
+    //if there isn't a subheading
+    else{
+        //check for NoExp, then take off the end tag
+        if (doWeExplode){
+          fmString = fmString.replace(/"\[M[\w| ]+\]/i,'+"');
+        }
+        else{
+          fmString = fmString.replace(/\[M[\w| ]+\]/i,'"');
+        }
+
+    }
+    //package up the results ready to be returned
+    fmOutputArray[0] = fmString;
+    fmOutputArray[1] = fmWarning;
+    return fmOutputArray;
+}
+
+//******************************************************************Controlled Non-Mesh**************************************************************
+
+function formatControlledPTE(cvString) {
+
+    //make a variable to hold any warnings
+    var cvWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    var cvOutputArray = [null, null];
+
+    //make temporary variables for the supplementary concept word split
+    var tempCV = "null";
+
+    //make a temporary variable to hold the two-letter code
+    var codeTwo = "null";
+
+    //reformat publication types (three variants) - is unexploded in EBSCO.
+    if (cvString.search(/\[pt/i) >= 0 || cvString.search(/\[publication/i) >= 0){
+	//if it is unexploded, you can use PT in EBSCO. Else, throw a warning.
+      	if (cvString.search(/:NoExp/i) >= 0){
+		codeTwo = "PT ";
+      	}
+	else{
+        	codeTwo = "PT ";
+        	cvWarning = "In PubMed, Publication Types are exploded, but in EBSCO they are not. Please check for narrower terms of this publication type and decide whether you wish to add them to your search.";
+        	cvWarning = cvWarning.fontcolor("blue");
+	}
+    }
+    //reformats subheading searches. EBSCO doesn't seem to have exploded subheading.
+    else if (cvString.search(/\[sh/i) >= 0 || cvString.search(/\[subheading/i) >= 0){
+      	if (cvString.search(/:NoExp/i) >= 0){
+		codeTwo = "FS ";
+      	}
+	else{
+        	codeTwo = "FS ";
+        	cvWarning = "In PubMed, subheadings are exploded, but in EBSCO they are not. Please check for narrower terms of this subheading and decide whether you wish to add them to your search.";
+        	cvWarning = cvWarning.fontcolor("blue");
+	}
+    }
+
+    //tag conversion
+    //convert from PubMed tag to EBSCO two-letter code
+    var splitTagArray = cvString.split("[");
+    cvString = splitTagArray[0];
+    cvString = codeTwo + cvString;
+
+    cvOutputArray[0] = cvString;
+    cvOutputArray[1] = cvWarning;
+
+    return cvOutputArray;
+}
+
+//*****************************************************************************************Authors*******************************************************************
+ function formatAuthorPTE(auString){
+
+//(EBSCOImplement)
+
+     //make a variable to hold any warnings
+    var auWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    var auOutputArray = [null, null];
+
+	//check for a full name search for author
+	if (auString.search(/\[Author\W{1,3}Full/i) >= 0){
+		auString = auString.replace(/\[Author\W{1,3}Full\]/i,".fa.");
+		auString = removeQuotesPTE(auString);
+	}
+	else if (auString.search(/\[fau/i) >= 0){
+    		auString = auString.replace(/\[fau\]/i,".fa.");
+		auString = removeQuotesPTE(auString);
+	}
+	else if (auString.search(/\[Author\W{1,3}First/i) >= 0){
+    		if (auString.search(/ /) >= 0){
+      			auString = auString.replace(/\[Author\W{1,3}First\]/i,".pa.");
+    		}
+    		else{
+      			auString = auString.replace(/\[Author\W{1,3}First\]/i," $.pa.");
+    		}
+		auString = removeQuotesPTE(auString);
+	}
+	else if (auString.search(/\[1au/i) >= 0){
+    		if (auString.search(/ /) >= 0){
+      			auString = auString.replace(/\[1au\]/i,".pa.");
+   		}
+    		else{
+      			auString = auString.replace(/\[1au\]/i," $.pa.");
+    		}
+		auString = removeQuotesPTE(auString);
+	}
+	else if (auString.search(/\[Author\W{1,3}Identifier/i) >= 0){
+		auString = auString.replace(/\[Author\W{1,3}Identifier\]/i,".ai.");
+		auString = removeQuotesPTE(auString);
+	}
+	else if (auString.search(/\[Author\W{1,3}Corporate/i) >= 0 || auString.search(/\[cn/i) >= 0){
+		auString = auString.replace(/\[Author\W{1,3}Corporate\]/i,".fa,au.");
+		auString = auString.replace(/\[cn\]/i,".fa,au.");
+		auString = removeQuotesPTE(auString);
+	}
+	else if (auString.search(/\[Author\W{1,3}Last/i) >= 0 || auString.search(/\[lastau/i) >= 0){
+		auString = auString.replace(/\[Author\W{1,3}Last\]/i,".fa,au.");
+		auString = auString.replace(/\[lastau\]/i,".fa,au.");
+		auString = removeQuotesPTE(auString);
+		auWarning = "Last Author search not available in EBSCO. The closest approximation is to search in the author or full author.";
+		auWarning = auWarning.fontcolor("blue");
+	}
+	else if (auString.search(/\[ir/i) >= 0 || auString.search(/\[investigator/i) >= 0){
+		auString = auString.replace(/\[investigator\]/i,".ir.");
+		auString = auString.replace(/\[ir\]/i,".ir.");
+		auString = removeQuotesPTE(auString);
+	}
+	else{
+    if (auString.search(/ /) >= 0){
+      auString = auString.replace(/\[Author\]/i,".au.");
+      auString = auString.replace(/\[Au\]/i,".au.");
+    }
+    else{
+      auString = auString.replace(/\[Author\]/i," $.au.");
+      auString = auString.replace(/\[Au\]/i," $.au.");
+    }
+
+		auString = removeQuotesPTE(auString);
+	}
+	auOutputArray[0] = auString;
+	auOutputArray[1] = auWarning;
+	return auOutputArray;
+
+}
+
+//*****************************************************************************************Citation*******************************************************************
+ function formatSinglePTE(citString){
+
+     //make a variable to hold any warnings
+    //var citWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    //var citOutputArray = [null, null];
+
+    //citString = removeQuotesPTE(citString);
+    var splitTagArray = citString.split("[");
+    var twoLetterCode = "null";
+
+    splitTagArray[1] = splitTagArray[1].toLowerCase();
+
+    switch (splitTagArray[1]){
+             case "volume]":
+                 twoLetterCode = "VI";
+                 break;
+             case "vi]":
+                 twoLetterCode = "VI";
+                 break;
+             case "ip]":
+                 twoLetterCode = "IP";
+                 break;
+             case "issue]":
+                 twoLetterCode = "IP";
+                 break;
+             case "pg]":
+                 twoLetterCode = "PG";
+                 break;
+             case "pagination]":
+                 twoLetterCode = "PG";
+                 break;
+             case "all]":
+                 twoLetterCode = "XX";
+                 mtWarning = "Use of XX for [All] is uncertain. Please test before use.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "all fields]":
+                 twoLetterCode = "XX";
+                 mtWarning = "Use of XX for [All Fields] is uncertain. Please test before use.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "ot]":
+                 twoLetterCode = "CI";
+                 mtWarning = "Use of CI for [ot] is uncertain. Please test before use.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "tt]":
+                 twoLetterCode = "TT";
+                 break;
+             case "jid]":
+                 twoLetterCode = "SI";
+                 break;
+             case "gr]":
+                 twoLetterCode = "GI";
+                 break;
+             case "grant number]":
+                 twoLetterCode = "GI";
+                 break;
+             case "is]":
+                 twoLetterCode = "IB";
+                 break;
+             case "isbn]":
+                 twoLetterCode = "IB";
+                 break;
+             case "mhnoexp]":
+                 twoLetterCode = "MW";
+                 break;
+             case "ti]":
+                 twoLetterCode = "TI";
+                 break;
+             case "title]":
+                 twoLetterCode = "TI";
+                 break;
+    }
+
+    citString = twoLetterCode + " " + splitTagArray[0];
+
+    //citOutputArray[0] = citString;
+    //citOutputArray[1] = citWarning;
+    return citString;
+
+}
+
+//**************************************************************************************Multiple Codes****************************************************************
+
+function formatMultiplePTE(mtString) {
+//(EBSCO Implement)
+
+
+     //make a variable to hold any warnings
+    var mtWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    var mtOutputArray = [null, null];
+
+    //citString = removeQuotesPTE(citString);
+    var splitTagArray = mtString.split("[");
+    var twoLetterCodeArray = [null,null];
+    var howManyCodes = 0;
+
+    splitTagArray[1] = splitTagArray[1].toLowerCase();
+
+    switch (splitTagArray[1]){
+             case "supplementary concept]":
+                 twoLetterCodeArray[0] = "RN";
+                 twoLetterCodeArray[1] = "ZH";
+                 twoLetterCodeArray[2] = "PR";
+                 twoLetterCodeArray[3] = "DS";
+                 twoLetterCodeArray[4] = "OG";
+                 howManyCodes = 5;
+                 mtWarning = "This is an approximate translation of the supplementary concept tag in PubMed. EBSCO uses several fields for this concept, which have been listed here.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "subject - personal name]":
+                 twoLetterCodeArray[0] = "ZP";
+                 twoLetterCodeArray[1] = "NP";
+                 howManyCodes = 2;
+                 break;
+             case "ps]":
+                 twoLetterCodeArray[0] = "ZP";
+                 twoLetterCodeArray[1] = "NP";
+                 howManyCodes = 2;
+                 mtWarning = "Use of NP is uncertain. Please test before use.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "tw]":
+                 twoLetterCodeArray[0] = "TI";
+                 twoLetterCodeArray[1] = "AB";
+                 twoLetterCodeArray[2] = "MW";
+                 twoLetterCodeArray[3] = "FS";
+                 twoLetterCodeArray[4] = "PT";
+                 twoLetterCodeArray[5] = "RN";
+                 twoLetterCodeArray[6] = "NP";
+                 twoLetterCodeArray[7] = "CA";
+                 twoLetterCodeArray[8] = "CI";
+                 howManyCodes = 9;
+                 mtWarning = "EBSCO does not seem to have an equivalent for other abstract, secondary source, nor comment/correction notes. If you know of an index code for these, please let me know.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "rn]":
+                 twoLetterCodeArray[0] = "RN";
+                 twoLetterCodeArray[1] = "ZH";
+                 howManyCodes = 2;
+                 break;
+             case "ec/rn number]":
+                 twoLetterCodeArray[0] = "RN";
+                 twoLetterCodeArray[1] = "ZH";
+                 howManyCodes = 2;
+                 break;
+             case "au]":
+                 twoLetterCodeArray[0] = "AU";
+                 twoLetterCodeArray[1] = "ZA";
+                 howManyCodes = 2;
+                 mtWarning = "EBSCO format may be Surname GivenName. If otherwise, please let me know.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "author]":
+                 twoLetterCodeArray[0] = "AU";
+                 twoLetterCodeArray[1] = "ZA";
+                 howManyCodes = 2;
+                 mtWarning = "EBSCO format may be Surname GivenName. If otherwise, please let me know.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "1au]":
+                 twoLetterCodeArray[0] = "AU";
+                 twoLetterCodeArray[1] = "ZA";
+                 howManyCodes = 2;
+                 mtWarning = "EBSCO does not seem to have an equivalent for [1au]. Using AU instead, but it won't restrict to first author. This might be possible using limits, if I remember correctly, but you'd have to do it by hand. EBSCO format may be Surname GivenName. If otherwise, please let me know.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "author - first]":
+                 twoLetterCodeArray[0] = "AU";
+                 twoLetterCodeArray[1] = "ZA";
+                 howManyCodes = 2;
+                 mtWarning = "EBSCO does not seem to have an equivalent for [author - first]. Using AU instead, but it won't restrict to first author. This might be possible using limits, if I remember correctly, but you'd have to do it by hand. EBSCO format may be Surname GivenName. If otherwise, please let me know.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "fau]":
+                 twoLetterCodeArray[0] = "AU";
+                 twoLetterCodeArray[1] = "ZA";
+                 howManyCodes = 2;
+                 mtWarning = "EBSCO format may be Surname GivenName. If otherwise, please let me know.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "author - full]":
+                 twoLetterCodeArray[0] = "AU";
+                 twoLetterCodeArray[1] = "ZA";
+                 howManyCodes = 2;
+                 mtWarning = "EBSCO format may be Surname GivenName. If otherwise, please let me know.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "lastau]":
+                 twoLetterCodeArray[0] = "AU";
+                 twoLetterCodeArray[1] = "ZA";
+                 howManyCodes = 2;
+                 mtWarning = "EBSCO does not seem to have an equivalent for [author - last]. Using AU instead, but it won't restrict to last author EBSCO format may be Surname GivenName. If otherwise, please let me know.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "author - last]":
+                 twoLetterCodeArray[0] = "AU";
+                 twoLetterCodeArray[1] = "ZA";
+                 howManyCodes = 2;
+                 mtWarning = "EBSCO does not seem to have an equivalent for [author - last]. Using AU instead, but it won't restrict to last author EBSCO format may be Surname GivenName. If otherwise, please let me know.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+             case "cn]":
+                 twoLetterCodeArray[0] = "CA";
+                 twoLetterCodeArray[1] = "ZO";
+                 howManyCodes = 2;
+                 break;
+             case "author - last]":
+                 twoLetterCodeArray[0] = "CA";
+                 twoLetterCodeArray[1] = "ZO";
+                 howManyCodes = 2;
+                 break;
+             case "pmid]":
+                 twoLetterCodeArray[0] = "AN";
+                 twoLetterCodeArray[1] = "PM";
+                 twoLetterCodeArray[2] = "ZC";
+                 howManyCodes = 3;
+                 break;
+             case "uid]":
+                 twoLetterCodeArray[0] = "AN";
+                 twoLetterCodeArray[1] = "PM";
+                 twoLetterCodeArray[2] = "ZC";
+                 howManyCodes = 3;
+                 break;
+             case "pl]":
+                 twoLetterCodeArray[0] = "CY";
+                 twoLetterCodeArray[1] = "ZY";
+                 howManyCodes = 2;
+                 break;
+             case "ta]":
+                 twoLetterCodeArray[0] = "IX";
+                 twoLetterCodeArray[1] = "IS";
+                 twoLetterCodeArray[2] = "ZI";
+                 twoLetterCodeArray[3] = "TA";
+                 howManyCodes = 4;
+                 break;
+             case "sb]":
+                 twoLetterCodeArray[0] = "ZS";
+                 twoLetterCodeArray[1] = "SB";
+                 howManyCodes = 2;
+                 break;
+             case "la]":
+                 twoLetterCodeArray[0] = "LA";
+                 twoLetterCodeArray[1] = "ZL";
+                 howManyCodes = 2;
+                 break;
+             case "lang]":
+                 twoLetterCodeArray[0] = "LA";
+                 twoLetterCodeArray[1] = "ZL";
+                 howManyCodes = 2;
+                 break;
+             case "lid]":
+                 twoLetterCodeArray[0] = "DI";
+                 twoLetterCodeArray[1] = "DO";
+                 howManyCodes = 2;
+                 break;
+             case "pubn]":
+                 twoLetterCodeArray[0] = "PB";
+                 twoLetterCodeArray[1] = "ZB";
+                 howManyCodes = 2;
+                 break;
+             case "ad]":
+                 twoLetterCodeArray[0] = "AF";
+                 twoLetterCodeArray[1] = "ZF";
+                 howManyCodes = 2;
+                 break;
+             case "affiliation]":
+                 twoLetterCodeArray[0] = "AF";
+                 twoLetterCodeArray[1] = "ZF";
+                 howManyCodes = 2;
+                 break;
+             case "tiab]":
+                 twoLetterCodeArray[0] = "TI";
+                 twoLetterCodeArray[1] = "AB";
+                 twoLetterCodeArray[2] = "CI";
+                 howManyCodes = 3;
+                 break;
+             case "journal]":
+                 twoLetterCodeArray[0] = "JN";
+                 twoLetterCodeArray[1] = "SO";
+                 twoLetterCodeArray[2] = "IX";
+                 twoLetterCodeArray[3] = "IS";
+                 twoLetterCodeArray[4] = "ZI";
+                 howManyCodes = 5;
+                 mtWarning = "[Journal] is used to search journal names and ISSNs in PubMed. In EBSCO, JN field requires exact match of journal name; SO field is more flexible. IX, IS, and ZI are used for ISSNs in EBSCO.";
+                 mtWarning = mtWarning.fontcolor("red");
+                 break;
+    }
+
+
+
+    mtString = twoLetterCodeArray[0] + " " + splitTagArray[0];
+    var i = 1;
+    for (i = 1; i < twoLetterCodeArray.length; i++) {
+        mtString = mtString + " OR " + twoLetterCodeArray[i] + " " + splitTagArray[0];
+    }
+
+    mtOutputArray[0] = mtString;
+    mtOutputArray[1] = mtWarning;
+    return mtOutputArray;
+}
+
+//******************************************************************************************Journal*******************************************************************
+
+function formatJournalPTE(jnString) {
+
+//(EBSCOImplement)
+
+    //reformat journal title
+    if (jnString.search(/\[jour/i) >= 0){
+	jnString = jnString.replace(/\[jour\]/i,".jn,ja,es,il,is.");
+        jnString = jnString.replace(/\[journal\]/i,".jn,ja,es,il,is.");
+    }
+    //reformat title abbreviation
+    else if (jnString.search(/\[ta/i) >= 0){
+        jnString = jnString.replace(/\[ta\]/i,".ja,es,il,is.");
+    }
+    //reformat place of publication
+    if (jnString.search(/\[pl/i) >= 0){
+        jnString = jnString.replace(/\[pl\]/i,".cp.");
+    }
+    //reformat publisher
+    else if (jnString.search(/\[pubn/i) >= 0){
+        jnString = jnString.replace(/\[pubn\]/i,".pb.");
+    }
+    //reformat editor
+    else if (jnString.search(/\[ed/i) >= 0){
+        jnString = jnString.replace(/\[ed\]/i,".ee.");
+        jnString = jnString.replace(/\[editor\]/i,".ee.");
+    }
+    //reformat conflict of interest information
+    else if (jnString.search(/\[coi/i) >= 0){
+        jnString = jnString.replace(/\[coi\]/i,".ci.");
+        jnString = jnString.replace(/\[cois\]/i,".ci.");
+    }
+
+    return jnString;
+}
+
+//****************************************************************************************************Dates*******************************************************************
+
+function formatDatePTE(dtString) {
+
+  //make a variable to hold any warnings
+ var dtWarning = "null";
+
+ //make an array to hold the outputs (string and warnings)
+ var dtOutputArray = [null, null];
+
+ var year1 = 0;
+ var month1 = 0;
+ var day1 = 0;
+ var year2 = 0;
+ var month2 = 0;
+ var day2 = 0;
+ var string1 = 0;
+ var string2 = 0;
+ var tagValue = "";
+ var assembleDates = "(";
+ var endDay = 31;
+ var endMonth = 12;
+ var endYear = 3000;
+ var startMonth = 1;
+ var startDay = 1;
+ var yearFlip = 0;
+ var monthFlip = 0;
+ var dayFlip = 0;
+ var monthLead = "";
+ var dayLead = "";
+ var spacingVar = 1;
+
+ //change the long form tags to short form tags
+ if (dtString.search(/\[Date/i) >= 0){
+	 dtString = dtString.replace(/Date\W{1,3}Completion/ig,"dcom");
+	 dtString = dtString.replace(/Date\W{1,3}Create/ig,"crdt");
+	 dtString = dtString.replace(/Date\W{1,3}Entrez/ig,"edat");
+	 dtString = dtString.replace(/Date\W{1,3}Mesh/ig,"mhda");
+	 dtString = dtString.replace(/Date\W{1,3}Modification/ig,"lr");
+	 dtString = dtString.replace(/Date\W{1,3}Publication/ig,"dp");
+ }
+//remove quotes
+dtString = dtString.replace(/\"/g,"");
+//check for date ranges
+if (dtString.search(/\]\s?:\s?/i) >= 0){
+	//this takes the range and chops it into two values, start and end
+	var dateArray = dtString.split(":");
+	string1 = dateArray[0];
+	string2 = dateArray[1];
+	//this chops the tag off the end of the dates and stores it in a variable
+	dateArray = string1.split("\[");
+	string1 = dateArray[0];
+	dateArray = string2.split("\[");
+	string2 = dateArray[0];
+	tagValue = dateArray[1];
+
+	//this checks for month and day values in the dates
+	var stringArray = string1.split("/");
+	year1 = Number(stringArray[0]);
+	if (stringArray.length > 1){
+		month1 = Number(stringArray[1]);
+	}
+	if (stringArray.length > 2){
+		day1 = Number(stringArray[2]);
+	}
+	stringArray = string2.split("/");
+	year2 = Number(stringArray[0]);
+	if (stringArray.length > 1){
+		month2 = Number(stringArray[1]);
+	}
+	if (stringArray.length > 2){
+		day2 = Number(stringArray[2]);
+	}
+//error checking - mismatched dates
+	if (year1 == year2 && month1 == 1 && day1 == 1 && month2 == 12 && day2 == 31){
+		month1 = 0;
+		month2 = 0;
+		day1 = 0;
+		day2 = 0;
+	}
+	if (year1 == year2 && month1 == 1 && day1 == 0 && month2 == 12 && day2 == 0){
+		month1 = 0;
+		month2 = 0;
+	}
+	if (year1 == year2 && month1 == month2 && day1 == 1){
+		if (day2 == 31){
+				day1 = 0;
+				day2 = 0;
+		}
+		if (day2 == 30){
+			if (month2 == 4 || month2 == 6 || month2 == 9 || month2 == 11){
+				day1 = 0;
+				day2 = 0;
+			}
+		}
+		if (day2 == 28 || day2 == 29){
+			if (month2 == 2){
+				day1 = 0;
+				day2 = 0;
+			}
+		}
+	}
+	if (month1 == 0 && month2 != 0){
+		month1 = 1;
+	}
+	if (month1 != 0 && month2 == 0){
+		month2 = 12;
+	}
+	if (day1 == 0 && day2 != 0){
+		day1 = 1;
+	}
+	if (day1 != 0 && day2 == 0){
+		if (month2 == 1 || month2 == 3 || month2 == 5 || month2 == 7 || month2 == 8 || month2 == 10 || month2 ==12){
+			day2 = 31;
+		}
+		else if (month2 == 4 || month2 == 6 || month2 == 9 || month2 == 11){
+			day2 = 30;
+		}
+		else if (month2 == 2){
+			day2 = 29;
+		}
+	}
+	//this double checks that the date range is in the right order
+	if (year1 > year2){
+		//flip the two dates so that the earlier one is first
+		yearFlip = year2;
+		monthFlip = month2;
+		dayFlip = day2;
+		year2 = year1;
+		month2 = month1;
+		day2 = day1;
+		year1 = yearFlip;
+		month1 = monthFlip;
+		day1 = dayFlip;
+		dtWarning = "The date range which you entered is backwards. The range has been flipped so that the earlier date is first. This should not affect the accuracy of the search, but you may wish to check your original search strategy."
+		dtWarning = dtWarning.fontcolor("blue");
+	}
+	else if (year1 == year2 && month1 > month2){
+		//flip the months so that the earlier one is first.
+		monthFlip = month2;
+		dayFlip = day2;
+		month2 = month1;
+		day2 = day1;
+		month1 = monthFlip;
+		day1 = dayFlip;
+		dtWarning = "The date range which you entered is backwards. The range has been flipped so that the earlier date is first. This should not affect the accuracy of the search, but you may wish to check your original search strategy."
+		dtWarning = dtWarning.fontcolor("blue");
+	}
+	else if (year1 == year2 && month1 == month2 && day1 > day2){
+		//flip the days so that the earlier one is first.
+		dayFlip = day2;
+		day2 = day1;
+		day1 = dayFlip;
+		dtWarning = "The date range which you entered is backwards. The range has been flipped so that the earlier date is first. This should not affect the accuracy of the search, but you may wish to check your original search strategy."
+		dtWarning = dtWarning.fontcolor("blue");
+	}
+//now we process the dates - starting with the first one.
+	if (day1 == 0){
+		if (month1 == 0){
+			if (month2 == 0){
+				assembleDates = assembleDates + generateYears(year1, year2);
+			}
+			else{
+				assembleDates = assembleDates + generateYears(year1, year2-1);
+			}
+		}
+		else {
+			if (year1 == year2){
+				assembleDates = assembleDates + generateMonths(year1, month1, month2);
+			}
+			else{
+				if (month2 == 0){
+					assembleDates = assembleDates + generateMonths(year1, month1, 12);
+					assembleDates = assembleDates + generateYears(year1, year2);
+				}
+				else{
+					assembleDates = assembleDates + generateMonths(year1, month1, 12);
+					assembleDates = assembleDates + generateYears(year1+1, year2-1);
+				}
+			}
+		}
+	}
+	else{
+	//day1 is not zero
+		if (year1 == year2 && month1 == month2){
+			assembleDates = assembleDates + generateDays(year1, month1, day1, day2);
+		}
+		else if (year1 == year2 && month1 < month2){
+			if (month1 == 2){
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 29);
+			}
+			else if (month1 == 4 || month1 == 6 || month1 == 9 || month1 == 11){
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 30);
+			}
+			else{
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 31);
+			}
+			if ((month1+1) < month2){
+				assembleDates = assembleDates + generateMonths(year1, month1+1, month2-1);
+			}
+		}
+		else if (year1 < year2){
+			if (month1 == 2){
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 29);
+			}
+			else if (month1 == 4 || month1 == 6 || month1 == 9 || month1 == 11){
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 30);
+			}
+			else{
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 31);
+			}
+			assembleDates = assembleDates + generateMonths(year1, month1+1, 12);
+			if ((year1+1) < year2){
+				assembleDates = assembleDates + generateYears(year1+1, year2-1);
+			}
+		}
+	}
+//and now we process the second half of the dates.
+	if (year1 == year2 && month1 == month2){
+		//do nothing; the string is already assembled.
+	}
+	else if (day2 == 0){
+		if (month2 == 0){
+			//do nothing; the string is already assembled.
+		}
+		else if (year1 == year2){
+			//do nothing; the string is already assembled;
+		}
+		else{
+			assembleDates = assembleDates + generateMonths(year2, 1, month2);
+		}
+	}
+	else {
+		if (year1 == year2){
+			assembleDates = assembleDates + generateDays(year2, month2, 1, day2);
+		}
+		else{
+			assembleDates = assembleDates + generateMonths(year2, 1, month2-1);
+			assembleDates = assembleDates + generateDays(year2, month2, 1, day2);
+		}
+	}
+	assembleDates = assembleDates.replace(/ OR $/i,"\)");
+	if (tagValue == "pdat]" | tagValue == "dp]"){
+		let adArray = assembleDates.split(" OR ");
+		let wasParen = 0;
+		if (adArray[0].search(/\(/) <= 0){
+			adArray[0] = adArray[0].replace(/\(/,"");
+			wasParen = 1;
+		}
+		for (adi = 0; adi < adArray.length; adi++){
+			let adiYear = "YYYY";
+			let adiMonth = "MM";
+			let adiDay = "DD";
+			if (adArray[adi].length > 6){
+				adiDay = adArray[adi].substring(6,8);
+				adiMonth = adArray[adi].substring(4,6);
+				adiYear = adArray[adi].substring(0,4);
+				adiMonth = monthConvert(adiMonth);
+				adArray[adi] = adiYear + adiMonth + adiDay;
+			}
+			else if (adArray[adi].length > 4){
+				adiMonth = adArray[adi].substring(4,6);
+				adiYear = adArray[adi].substring(0,4);
+				adiMonth = monthConvert(adiMonth);
+				adArray[adi] = adiYear + adiMonth;
+			}
+			
+		}
+		if (wasParen == 1){
+			adArray[0] = "(" + adArray[0];
+			wasParen = 0;
+		}
+		assembleDates = adArray.join(" OR ");
+		assembleDates = assembleDates + ")";
+	}
+    }
+    else {
+        var dateArray = dtString.split("\[");
+	string1 = dateArray[0];
+	tagValue = dateArray[1];
+	if (tagValue == "dp]" || tagValue == "pdat]"){
+		dateArray = string1.split("\/");
+		year1 = dateArray[0];
+		if (dateArray.length > 1){
+			month1 = dateArray[1];
+			if (month1.length < 2){
+				month1 = "0" + month1;
+			}
+			month1 = monthConvert(month1);
+		}
+		if (dateArray.length > 2){
+			day1 = dateArray[2];
+			if (day1.length < 2){
+				day1 = "0" + day1;
+			}
+		}
+		assembleDates = year1 + month1 + day1;
+		
+	}
+	else{
+		string1 = string1.replace(/\//g, "");
+		assembleDates = string1;
+	}
+    }
+    //Add the two letter code
+    switch (tagValue){
+             case "dp]":
+                 tagValue = "PD";
+                 break;
+             case "pdat]":
+                 tagValue = "PD";
+                 break;
+             case "dcom]":
+                 tagValue = "CD";
+                 break;
+             case "crdt]":
+                 tagValue = "EM";
+                 break;
+             case "edat]":
+                 tagValue = "DT";
+                 break;
+             case "lr]":
+                 tagValue = "RD";
+                 break;
+             case "dep]":
+                 tagValue = "PI";
+                 break;
+             case "epdat]":
+                 tagValue = "PI";
+                 break;
+    }
+    //add the two-letter code to the assembled list of dates
+    dtString = tagValue + " " +  assembleDates;
+    dtWarning = "I have made my best guess about corresponding date fields in PubMed and EBSCO. I have not been able to do extensive testing. Please check that your results are as expected."
+    dtWarning = dtWarning.fontcolor("red");
+    dtOutputArray[0] = dtString;
+    dtOutputArray[1] = dtWarning;
+
+    return dtOutputArray;
+}
+
+
+//****************************************************************************************************Keywords*******************************************************************
+
+function testProximityPTE(kwString) {
+
+var proxStringArray = [null, null];
+
+//the string that comes in will look like "something something"[TAG:~N] or "something something"[TAG]
+
+if (kwString.search(/:~\d+]/i) >= 0){
+    proxStringArray = kwString.split(":~");
+    proxStringArray[0] = proxStringArray[0] + "]";
+    proxStringArray[1] = proxStringArray[1].slice(0,-1);
+    proxStringArray[1] = " N" + proxStringArray[1] + " ";
+    proxStringArray[0] = proxStringArray[0].replace(/ /g,proxStringArray[1]);
+    return proxStringArray[0];
+}
+else{
+    return kwString;
+}
+
+}
+
+//****************************************************************************************************Convert month from number to abbrev*******************************************************************
+
+function monthConvert(mmString) {
+
+	switch (mmString){
+		case "01":
+			mmString = " Jan ";
+			break;
+		case "02":
+			mmString = " Feb ";
+			break;
+		case "03":
+			mmString = " Mar ";
+			break;
+		case "04":
+			mmString = " Apr ";
+			break;
+		case "05":
+			mmString = " May ";
+			break;
+		case "06":
+			mmString = " Jun ";
+			break;
+		case "07":
+			mmString = " Jul ";
+			break;
+		case "08":
+			mmString = " Aug ";
+			break;
+		case "09":
+			mmString = " Sep ";
+			break;
+		case "10":
+			mmString = " Oct ";
+			break;
+		case "11":
+			mmString = " Nov ";
+			break;
+		case "12":
+			mmString = " Dec ";
+			break;
+	}
+	return mmString;
+
+}
+
+//****************************************************************************************************  Remove Quotes******************************************************************
+
+function removeQuotesPTE (rqString){
+
+    //check whether the MeSH term contains stop words, remove quotes accordingly
+    if (rqString.search(/ and /i) >= 0){
+        //do nothing
+    }
+    else if (rqString.search(/ or /i) >= 0){
+        //do nothing
+    }
+    else if (rqString.search(/ use /i) >= 0){
+        //do nothing
+    }
+    else{
+        rqString = rqString.replace(/"/g,"");
+    }
+    return rqString;
+}
+
+//****************************************************************************************************  Subheadings*******************************************************************
+
+function formatSubheadingsPTE (fshString){
+    //make a variable to hold any warnings
+    var fshWarning = "null";
+
+    //make an array to hold the outputs (string and warnings)
+    var fshOutputArray = [null, null];
+
+   //compare the subheading to a list of all subheadings and convert to EBSCO syntax, preserving explosions
+    switch (fshString){
+        case "analogs and derivatives":
+            fshString = "AA";
+            break;
+        case "abnormalities":
+            fshString = "AB";
+            break;
+        case "administration and dosage":
+            fshString = "AD";
+            break;
+        case "adverse effects":
+            fshString = "AE/PO/TO";
+            break;
+        case "agonists":
+            fshString = "AG";
+            break;
+        case "anatomy and histology":
+            fshString = "AH/BS/CY/EM/IR/PA/UL/AB";
+            break;
+        case "antagonists and inhibitors":
+            fshString = "AI";
+            break;
+        case "analysis":
+            fshString = "AN/BL/CF/IP/UR";
+            break;
+        case "biosynthesis":
+            fshString = "BI";
+            break;
+        case "blood":
+            fshString = "BL";
+            break;
+        case "blood supply":
+            fshString = "BS";
+            break;
+        case "cerebrospinal fluid":
+            fshString = "CF";
+            break;
+        case "chemistry":
+            fshString = "CH/AG/AA/AI/CS";
+            break;
+        case "chemically induced":
+            fshString = "CI";
+            break;
+        case "classification":
+            fshString = "CL";
+            break;
+        case "congenital":
+            fshString = "CN";
+            break;
+        case "complications":
+            fshString = "CO/SC";
+            break;
+        case "chemical synthesis":
+            fshString = "CS";
+            break;
+        case "contraindications":
+            fshString = "";
+            fshWarning = "Contraindications is no longer available as a subheading. Subheading removed. Try MeSH term Contraindications instead.";
+            break;
+        case "cytology":
+            fshString = "CY/UL";
+            break;
+        case "drug effects":
+            fshString = "DE";
+            break;
+        case "deficiency":
+            fshString = "DF";
+            break;
+        case "diet therapy":
+            fshString = "DH";
+            break;
+        case "diagnosis":
+            fshString = "DI/DG";
+            break;
+        case "drug therapy":
+            fshString = "DT";
+            break;
+        case "diagnostic imaging":
+            fshString = "DG";
+            break;
+        case "diagnostic use":
+            fshString = "";
+            fshWarning = " Diagnostic use is no longer available as a subheading. Subheading removed.";
+            break;
+        case "economics":
+            fshString = "EC";
+            break;
+        case "education":
+            fshString = "ED";
+            break;
+        case "ethnology":
+            fshString = "EH";
+            break;
+        case "embryology":
+            fshString = "EM/AB";
+            break;
+        case "enzymology":
+            fshString = "EN";
+            break;
+        case "epidemiology":
+            fshString = "EP/EH/MP";
+            break;
+        case "ethics":
+            fshString = "ES";
+            break;
+        case "etiology":
+            fshString = "ET/CI/CO/CN/EM/GE/IM/MI/PA/TM/SC/VI";
+            break;
+        case "growth and development":
+            fshString = "GD";
+            break;
+        case "genetics":
+            fshString = "GE";
+            break;
+        case "history":
+            fshString = "HI";
+            break;
+        case "immunology":
+            fshString = "IM";
+            break;
+        case "injuries":
+            fshString = "IN";
+            break;
+        case "isolation and purification":
+            fshString = "IP";
+            break;
+        case "innervation":
+            fshString = "IR";
+            break;
+        case "instrumentation":
+            fshString = "IS";
+            break;
+        case "legislation and jurisprudence":
+            fshString = "LJ";
+            break;
+        case "manpower":
+            fshString = "";
+            fshWarning = "Manpower is no longer available as a subheading. Subheading removed. Try MeSH term Workforce instead.";
+            break;
+        case "metabolism":
+            fshString = "ME/BI/BL/CF/DF/EN/PK/UR";
+            break;
+        case "microbiology":
+            fshString = "MI/VI";
+            break;
+        case "mortality":
+            fshString = "MO";
+            break;
+        case "methods":
+            fshString = "MT";
+            break;
+        case "nursing":
+            fshString = "NU";
+            break;
+        case "organization and administration":
+            fshString = "OG/EC/LJ/ST/SD/TD";
+            break;
+        case "pathology":
+            fshString = "PA";
+            break;
+        case "prevention and control":
+            fshString = "PC";
+            break;
+        case "pharmacology":
+            fshString = "PD/AD/AE/AG/AI/PK/PO/TO";
+            break;
+        case "physiology":
+            fshString = "PH/GE/GD/IM/ME/PP/BI/BL/CF/DF/EN/PK/UR";
+            break;
+        case "pharmacokinetics":
+            fshString = "PK";
+            break;
+        case "poisoning":
+            fshString = "PO";
+            break;
+        case "physiopathology":
+            fshString = "PP";
+            break;
+        case "parasitology":
+            fshString = "PS";
+            break;
+        case "psychology":
+            fshString = "PX";
+            break;
+        case "pathogenicity":
+            fshString = "PY";
+            break;
+        case "radiography":
+            fshString = "DG";
+            break;
+        case "radiation effects":
+            fshString = "RE";
+            break;
+        case "rehabilitation":
+            fshString = "RH";
+            break;
+        case "radionuclide imaging":
+            fshString = "DG";
+            break;
+        case "radiotherapy":
+            fshString = "RT";
+            break;
+        case "secondary":
+            fshString = "SC";
+            break;
+        case "supply and distribution":
+            fshString = "SD";
+            break;
+        case "secretion":
+            fshString = "";
+            break;
+        case "statistics and numerical data":
+            fshString = "SN/EP/SD/EH/MO";
+            break;
+        case "standards":
+            fshString = "ST";
+            break;
+        case "surgery":
+            fshString = "SU/TR";
+            break;
+        case "trends":
+            fshString = "TD";
+            break;
+        case "therapy":
+            fshString = "TH/DH/DT/NU/PC/RT/RH/SU/TR";
+            break;
+        case "transmission":
+            fshString = "TM";
+            break;
+        case "toxicity":
+            fshString = "TO";
+            break;
+        case "transplantation":
+            fshString = "TR";
+            break;
+        case "therapeutic use":
+            fshString = "TU/AD/AE/PO";
+            break;
+        case "ultrastructure":
+            fshString = "UL";
+            break;
+        case "urine":
+            fshString = "UR";
+            break;
+        case "ultrasonography":
+            fshString = "DG";
+            break;
+        case "utilization":
+            fshString = "";
+            fshWarning = "Utilization is no longer available as a subheading. Subheading removed. Try MeSH terms Drug Utilization, Equipment and Supplies Utilization, Procedures and Techniques Utilization, or Facilities and Services Utilization, instead.";
+            break;
+        case "veterinary":
+            fshString = "VE";
+            break;
+        case "virology":
+            fshString = "VI";
+            break;
+    }
+
+
+    //package up the results ready to be returned
+    fshOutputArray[0] = fshString;
+    fshOutputArray[1] = fshWarning;
+    return fshOutputArray;
+}
+
+//****************************************************************************************************  Functions for the dates*******************************************************************
+
+function generateDays (year1, month1, day1, day2){
+    var dayMaker = "";
+    var monthLead = "";
+    var dayLead = "";
+    while (day1 <= day2){
+        monthLead = month1.toString();
+        if (monthLead.length < 2){
+            monthLead = "0" + monthLead;
+        }
+        dayLead = day1.toString();
+        if (dayLead.length < 2){
+            dayLead = "0" + dayLead;
+        }
+        dayMaker = dayMaker + year1.toString() + monthLead + dayLead + " OR ";
+        day1++;
+        if (day1 == 32){
+            break;
+        }
+    }
+    return dayMaker;
+}
+
+function generateMonths (year1, month1, month2){
+    var monthMaker = "";
+    var monthLead = "";
+    while (month1 <= month2){
+        monthLead = month1.toString();
+        if (monthLead.length < 2){
+            monthLead = "0" + monthLead;
+        }
+        monthMaker = monthMaker + year1.toString() + monthLead + " OR ";
+        month1++;
+        if (month1 == 13){
+            break;
+        }
+    }
+    return monthMaker;
+}
+
+function generateYears (year1, year2){
+    var yearMaker = "";
+    const todaysDate = new Date();
+    var breakYear = todaysDate.getFullYear();
+    breakYear++;
+    while (year1 <= year2){
+        yearMaker = yearMaker + year1.toString() + " OR ";
+        year1++;
+        if (year1 == breakYear){
+            break;
+        }
+    }
+    return yearMaker;
+}
+
+
+</script>
+
+<!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+var sc_project=11377022;
+var sc_invisible=1;
+var sc_security="ba30c3ae";
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost+
+"statcounter.com/counter/counter.js'></"+"script>");
+</script>
+<noscript><div class="statcounter"><a title="web stats"
+href="http://statcounter.com/" target="_blank"><img
+class="statcounter"
+src="//c.statcounter.com/11377022/0/ba30c3ae/1/" alt="web
+stats"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+
+</body>
+</html>
