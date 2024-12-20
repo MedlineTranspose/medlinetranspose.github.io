@@ -38,6 +38,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     <li class="w3-hide-small"><a href="index.html" class="w3-padding-large w3-white">Home</a></li>
     <li class="w3-hide-small"><a href="about.html" class="w3-padding-large w3-hover-white">About</a></li>
     <li class="w3-hide-small"><a href="documentation.html" class="w3-padding-large w3-hover-white">Documentation</a></li>
+    <li class="w3-hide-small"><a href="transpose2EP.html" class="w3-padding-large w3-hover-white">EBSCO/PubMed</a></li>
   </ul>
 
   <!-- Navbar on small screens -->
@@ -46,6 +47,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
       <li><a class="w3-padding-large" href="index.html">Home</a></li>
       <li><a class="w3-padding-large" href="about.html">About</a></li>
       <li><a class="w3-padding-large" href="documentation.html">Documentation</a></li>
+      <li><a class="w3-padding-large" href="transpose2EP.html">EBSCO/PubMed</a></li>
     </ul>
   </div>
 </div>
@@ -161,13 +163,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 		<h1 class="w3-margin w3-xlarge w3-opacity">This project was made possible by</h1>
 		<div class="w3-layout-container">
 		<div class="w3-container w3-layout-cell">
-		<img src="CLAHRC-logo-1.jpg" alt="Plymouth University Peninsula Schools of Medicine & Dentistry" class="w3-image">
-		</div>
-		<div class="w3-container w3-layout-cell">
-		<img src="CLAHRC-logo-2.jpg" alt="NIHR CLAHRC South West Peninsula" class="w3-image">
-		</div>
-		<div class="w3-container w3-layout-cell">
-		<img src="CPSBC-logo_colour_RGB.png" alt="College of Physicians and Surgeons of British Columbia" class="w3-image">
+		<p>This project was originally developed with support from Plymouth University Peninsula Schools of Medicine & Dentistry, NIHR CLARC South West Peninsula, NHS National Insitute for Health Ressearch, and College of Physicians and Surgeons of BC. Continued maintenance is being done entirely on the authors' own time.</p>
 		</div>
 		</div>
  	</div>
@@ -1895,9 +1891,22 @@ function formatControlledPTO(cvString) {
 
 	//reformats Affiliation, address, or institution strategies
 	else if (cvString.search(/\[Affiliation/i) >= 0 || cvString.search(/\[ad/i) >= 0){
-		cvString = cvString.replace(/\[Affiliation]/i,".in.");
-		cvString = cvString.replace(/\[ad]/i,".in.");
-		cvString = removeQuotesPTO(cvString);
+		if (cvString.search(/\:~/) >= 0){
+		  var proxNum = cvString.slice(-3);
+		  proxNum = proxNum.replace(/\]/,"");
+		  proxNum = proxNum.replace(/\~/,"");
+		  cvString = cvString.replace(/\[Affiliation:~\d+]/i,".in.");
+		  cvString = cvString.replace(/\[ad:~\d+]/i,".in.");
+		  cvString = removeQuotesPTO(cvString);
+		  cvString = cvString.replace(/\s/ig," adj"+proxNum+" ");
+		  cvWarning = "If your proximity number is three or more digits, please adjust it manually.";
+		  cvWarning = cvWarning.fontcolor("blue");
+		}
+		else{
+		  cvString = cvString.replace(/\[Affiliation]/i,".in.");
+		  cvString = cvString.replace(/\[ad]/i,".in.");
+		  cvString = removeQuotesPTO(cvString);
+		}
 		cvOutputArray[0] = cvString;
 		cvOutputArray[1] = cvWarning;
 	}
@@ -2173,241 +2182,159 @@ if (dtString.search(/\]\s?:\s?/i) >= 0){
 		dtWarning = dtWarning.fontcolor("blue");
 	}
 
-	if (day1 == 0 || day1 == 1){
-		//do nothing
-	}
-	else {
-		if (year1 == year2 && month1 == month2){
-			endDay = day2;
-		}
-		else{
-			if (month1 == 4 || month1 == 6 || month1 == 9 || month1 == 11){
-				endDay = 30;
+	//now we process the dates - starting with the first one.
+	if (day1 == 0){
+		if (month1 == 0){
+			if (month2 == 0){
+				assembleDates = assembleDates + generateYears(year1, year2);
 			}
-			else if (month1 == 2){
-				endDay = 29;
+			else{
+				assembleDates = assembleDates + generateYears(year1, year2-1);
 			}
 		}
-		if (day1 <= endDay){
-			while (day1 <= endDay){
-				//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
-				monthLead = month1.toString();
-				dayLead = day1.toString();
-				if (monthLead.length < 2){
-					monthLead = "0" + monthLead;
-				}
-				if (dayLead.length < 2){
-					dayLead = "0" + dayLead;
-				}
-				//this takes each day starting with the value in day1, and adds the date to the string, ending with the last day of the month or range
-				//it also checks to see if spacing is needed within the date value and adds it if necessary
-				if (spacingVar == 0){
-					assembleDates = assembleDates + year1.toString() + monthLead + dayLead + "* or ";
+		else {
+			if (year1 == year2){
+				assembleDates = assembleDates + generateMonths(year1, month1, month2, spacingVar);
+			}
+			else{
+				if (month2 == 0){
+					assembleDates = assembleDates + generateMonths(year1, month1, 12, spacingVar);
+					assembleDates = assembleDates + generateYears(year1, year2);
 				}
 				else{
-					assembleDates = assembleDates + year1.toString() + " " + monthLead + " " + dayLead + "* or ";
+					assembleDates = assembleDates + generateMonths(year1, month1, 12, spacingVar);
+					assembleDates = assembleDates + generateYears(year1+1, year2-1);
 				}
-				day1++;
-			} //this corresponds to the while loop
-		} //this corresponds to the if day1 less than endDay
-		else{
-			dtWarning = "Warning! Date range error. This can occur with an erroneous date entry, such as Feb 30th. Please check your date ranges carefully."
-			dtWarning = dtWarning.fontcolor("red");
+			}
 		}
-	} //this corresponds to the else which meant day1 was not 1 or 0
-	if (month1 == 0 || (month1 == 1 && day1 == 1 && year1 < year2) || (month1 == 1 && day1 == 0)){
-			//this means month is irrelevant - do nothing
-			//assembleDates = assembleDates + year1.toString() + "* or ";
 	}
 	else{
-		if (day1 == 1){
-			//this means that no days were added to the string, and therefore the month must be included.
-			//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
-			//it also checks to see if spacing is needed within the date value and adds it if necessary
-			monthLead = month1.toString();
-			if (monthLead.length < 2){
-				monthLead = "0" + monthLead;
+	//day1 is not zero
+		if (year1 == year2 && month1 == month2){
+			assembleDates = assembleDates + generateDays(year1, month1, day1, day2, spacingVar);
+		}
+		else if (year1 == year2 && month1 < month2){
+			if (month1 == 2){
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 29, spacingVar);
 			}
-			if (spacingVar == 0){
-				assembleDates = assembleDates + year1.toString() + monthLead + "* or ";
-			}
-			else{
-				assembleDates = assembleDates + year1.toString() + " " + monthLead + "* or ";
-			}
-			month1++;
-		} //this corresponds to if day1 equal 1
-		else{
-			//this means that the days were added to the string already, so the month should not be included.
-			if (month1 == endMonth){
-				//do nothing
+			else if (month1 == 4 || month1 == 6 || month1 == 9 || month1 == 11){
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 30, spacingVar);
 			}
 			else{
-				month1++;
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 31, spacingVar);
+			}
+			if ((month1+1) < month2){
+				assembleDates = assembleDates + generateMonths(year1, month1+1, month2-1, spacingVar);
 			}
 		}
-		//now we add any months to the string...
+		else if (year1 < year2){
+			if (month1 == 2){
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 29, spacingVar);
+			}
+			else if (month1 == 4 || month1 == 6 || month1 == 9 || month1 == 11){
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 30, spacingVar);
+			}
+			else{
+				assembleDates = assembleDates + generateDays(year1, month1, day1, 31, spacingVar);
+			}
+			assembleDates = assembleDates + generateMonths(year1, month1+1, 12, spacingVar);
+			if ((year1+1) < year2){
+				assembleDates = assembleDates + generateYears(year1+1, year2-1);
+			}
+		}
+	}
+//and now we process the second half of the dates.
+	if (year1 == year2 && month1 == month2){
+		//do nothing; the string is already assembled.
+	}
+	else if (day2 == 0){
+		if (month2 == 0){
+			//do nothing; the string is already assembled.
+		}
+		else if (year1 == year2){
+			//do nothing; the string is already assembled;
+		}
+		else{
+			assembleDates = assembleDates + generateMonths(year2, 1, month2, spacingVar);
+		}
+	}
+	else {
 		if (year1 == year2){
-			//this means that end month is determined by the second value in the range
-			endMonth = month2;
-		}
-		if (month1 <= endMonth){
-			while (month1 <= endMonth){
-				//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
-				monthLead = month1.toString();
-				if (monthLead.length < 2){
-					monthLead = "0" + monthLead;
-				}
-				//this takes each month starting with the value in month1, and adds the date to the string, ending with December or the last month of the range.
-				//it also checks to see if spacing is needed within the date value and adds it if necessary
-				if (spacingVar == 0){
-					assembleDates = assembleDates + year1.toString() + monthLead + "* or ";
-				}
-				else{
-					assembleDates = assembleDates + year1.toString() + " " + monthLead + "* or ";
-				}
-				month1++;
-			} //this corresponds to while loop
-		} //this corresponds to if year1 == year2
-		else{
-			dtWarning = "Warning! Date range error. This can occur with an erroneous date entry, for example if a month value is higher than 12. Please check your date ranges carefully."
-			dtWarning = dtWarning.fontcolor("red");
-		}
-	}
-	if (month1 == 0 || (month1 == 1 && day1 == 0) || (month1 == 1 && day1 == 1)){
-		//do nothing
-	}
-	else {
-		year1++;
-	}
-	//replace the automatic "current year" from PubMed with the actual current year
-	if (year2 == 3000){
-		year2 = (new Date()).getFullYear();
-	}
-	if (month2 == 0 || (month2 == 12 && day2 == 0) || (month2 == 12 && day2 == 31)){
-		endYear = year2;
-	}
-	else {
-		endYear = year2;
-		endYear--;
-	}
-	//now we add any years to the string...
-	if (year1 <= endYear){
-		while (year1 <= endYear){
-			//this takes each year starting with the value in year1, and adds the date to the string, ending with the last year of the range
-			assembleDates = assembleDates + year1.toString() + "* or ";
-			year1++;
-		}
-	}
-	if (endYear < year2){
-		if (month2 == 12 && day2 == 31){
-			//do nothing
+			assembleDates = assembleDates + generateDays(year2, month2, 1, day2, spacingVar);
 		}
 		else{
-			if (month2 > 1 || (month2 == 1 && day2 == 31)){
-				var thisMonth = 1;
-				while (thisMonth < month2){
-					//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
-					monthLead = thisMonth.toString();
-					if (monthLead.length < 2){
-						monthLead = "0" + monthLead;
-					}
-					assembleDates = assembleDates + year2.toString() + monthLead.toString() + "* or ";
-					thisMonth++;
-				}
-			}
-			var lastDay = 31;
-			if (month2 == 2){
-				lastDay = 29;
-			}
-			else if (month2 == 4 || month2 == 6 || month2 == 9 || month2 == 11){
-				lastDay = 30;
-			}
-			if (day2 == lastDay || (month2 == 2 && day2 == 28)){
-				//Ovid requires a two-digit number for months and days. Check for single-digit numbers and add a leading zero if needed
-				monthLead = thisMonth.toString();
-				if (monthLead.length < 2){
-					monthLead = "0" + monthLead;
-				}
-				if (spacingVar == 0){
-					assembleDates = assembleDates + year2.toString() + monthLead.toString() + "* or ";
-				}
-				else{
-					assembleDates = assembleDates + year2.toString() + " " + monthLead.toString() + "* or ";
-				}
-			}
-			else{
-				var thisDay = 1;
-				while (thisDay <= day2){
-					monthLead = month2.toString();
-					dayLead = thisDay.toString();
-					if (monthLead.length < 2){
-						monthLead = "0" + monthLead;
-					}
-					if (dayLead.length < 2){
-						dayLead = "0" + dayLead;
-					}
-					//this takes each day starting with the value in day1, and adds the date to the string, ending with the last day of the month or range
-					//it also checks to see if spacing is needed within the date value and adds it if necessary
-					if (spacingVar == 0){
-						assembleDates = assembleDates + year1.toString() + monthLead + dayLead + "* or ";
-					}
-					else{
-						assembleDates = assembleDates + year1.toString() + " " + monthLead + " " + dayLead + "* or ";
-					}
-					thisDay++;
-				}
-			}
+			assembleDates = assembleDates + generateMonths(year2, 1, month2-1, spacingVar);
+			assembleDates = assembleDates + generateDays(year2, month2, 1, day2, spacingVar);
 		}
 	}
-	//dtString = dtString.replace(/Date\W{1,3}Completion/ig,"dcom");
 	assembleDates = assembleDates.replace(/ or $/i,"\)");
-	dtString = assembleDates + "[" + tagValue;
+    }
+    else {
+        var dateArray = dtString.split("\[");
+	string1 = dateArray[0];
+	tagValue = dateArray[1];
+	let stringArray = string1.split("\/");
+	if (stringArray[1] != null){
+		if (stringArray[1].length < 2){
+			stringArray[1] = "0" + stringArray[1];
+		}
 	}
-    //reformat date completed or revision date
-    if (dtString.search(/\[dcom/i) >= 0 || dtString.search(/\[lr/i) >= 0){
-        if (dtString.length < 16){
-					dtString = dtString.replace(/\[dcom\]/i,"*.ed.");
-					dtString = dtString.replace(/\[lr\]/i,"*.rd.");
-        }
-        else{
-					dtString = dtString.replace(/\[dcom\]/i,".ed.");
-					dtString = dtString.replace(/\[lr\]/i,".rd.");
-        }
-        dtString = dtString.replace(/\//g,"");
+	if (stringArray[2] != null){
+		if (stringArray[2].length < 2){
+			stringArray[2] = "0" + stringArray[2];
+		}
+	}
+	if (tagValue  == "lr]" || tagValue == "dcom]"){
+		string1 = stringArray[0] + stringArray[1] + stringArray[2] + "*";
+	}
+	else{
+		string1 = stringArray[0] + " " + stringArray[1] + " " + stringArray[2] + "*";
+	}
+	assembleDates = string1;
     }
-		//reformat Mesh Date or date of publication
-    if (dtString.search(/\[mhda/i) >= 0 || dtString.search(/\[dp/i) >= 0 || dtString.search(/\[pdat/i) >= 0){
-        if (dtString.length < 16){
-          dtString = dtString.replace(/\[mhda\]/i,"*.da.");
-					dtString = dtString.replace(/\[dp\]/i,"*.dp.");
-					dtString = dtString.replace(/\[pdat\]/i,"*.dp.");
-        }
-        else{
-          dtString = dtString.replace(/\[mhda\]/i,".da.");
-					dtString = dtString.replace(/\[dp\]/i,".dp.");
-					dtString = dtString.replace(/\[pdat\]/i,".dp.");
-        }
-				dtString = dtString.replace(/\//g," ");
+    //Add the two letter code
+    switch (tagValue){
+             case "dp]":
+                 tagValue = ".dp.";
+                 break;
+             case "pdat]":
+                 tagValue = ".dp.";
+                 break;
+             case "dcom]":
+                 tagValue = ".ed.";
+                 break;
+             case "crdt]":
+                 tagValue = ".ez.";
+                 dtWarning = "The value of [crdt] corresponds to the value of Entrez Date in Ovid, and the value of [edat] corresponds to the value of Create Date in Ovid. I have emailed Ovid about this but have received no response."
+                 dtWarning = dtWarning.fontcolor("blue");
+                 break;
+             case "edat]":
+                 tagValue = ".dt.";
+                 dtWarning = "The value of [crdt] corresponds to the value of Entrez Date in Ovid, and the value of [edat] corresponds to the value of Create Date in Ovid. I have emailed Ovid about this but have received no response."
+                 dtWarning = dtWarning.fontcolor("blue");
+                 break;
+             case "lr]":
+                 tagValue = ".rd.";
+                 break;
+             case "dep]":
+                 tagValue = ".ep.";
+                 break;
+             case "epdat]":
+                 tagValue = ".ep.";
+                 break;
+             case "mhda]":
+                 tagValue = ".da.";
+                 break;
     }
-    //reformat the create date and the entrez date (according to current Ovid backwards configuration)
-    else if (dtString.search(/\[edat/i) >= 0 || dtString.search(/\[crdt/i) >= 0){
-        if (dtString.length < 22){
-          dtString = dtString.replace(/\[edat\]/i,"*.dt.");
-          dtString = dtString.replace(/\[crdt\]/i,"*.ez.");
-        }
-        else{
-          dtString = dtString.replace(/\[edat\]/i,".dt.");
-          dtString = dtString.replace(/\[crdt\]/i,".ez.");
-        }
-        dtString = dtString.replace(/\//g," ");
-        dtWarning = "The value of [crdt] corresponds to the value of Entrez Date in Ovid, and the value of [edat] corresponds to the value of Create Date in Ovid. I have emailed Ovid about this but have received no response."
-        dtWarning = dtWarning.fontcolor("blue");
-    }
+    //add the two-letter code to the assembled list of dates
+    dtString = assembleDates + tagValue;
+
     dtOutputArray[0] = dtString;
     dtOutputArray[1] = dtWarning;
 
     return dtOutputArray;
 }
+
 
 
 //****************************************************************************************************Keywords*******************************************************************
@@ -2421,25 +2348,74 @@ function formatKeywordPTO(kwString, uPref) {
     var fkwOutputArray = [null, null];
 
     //reformat keywords being searched in the title
-    if (kwString.search(/\[ti\]/i) >= 0 || kwString.search(/\[title\]/i) >= 0){
-	kwString = kwString.replace(/\[title\]/i,".ti,bt.");
-	kwString = kwString.replace(/\[ti\]/i,".ti,bt.");
-	kwString = removeQuotesPTO(kwString);
-    }
-    //reformat keywords being searched in the title and abstract (with accuracy/efficiency options)
-    else if (kwString.search(/\[tiab\]/i) >= 0 || kwString.search(/\[title/i) >= 0){
-        if (uPref == 0){
-	    kwString = kwString.replace(/\[tiab\]/i,".ti,ab,cl,oa,kw,kf.");
-	    kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,cl,oa,kw,kf.");
-	    fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates the most accurate translation in Ovid Medline syntax. This conversion creates the most accurate translation in Ovid Medline syntax - if you prefer something simpler, please choose the Efficiency option.";
+    if (kwString.search(/\[ti\]/i) >= 0 || kwString.search(/\[title\]/i) >= 0 || kwString.search(/\[ti:/i) >= 0 || kwString.search(/\[title:/i) >= 0){
+	if (kwString.search(/\:~/) >= 0){
+	  var proxNum = kwString.slice(-3);
+	  proxNum = proxNum.replace(/\]/,"");
+	  proxNum = proxNum.replace(/\~/,"");
+	  if (uPref == 0){
+	    kwString = kwString.replace(/\[title:~\d+]/i,".ti,bt.");
+	    kwString = kwString.replace(/\[ti:~\d+]/i,".ti,bt.");
+	    fkwWarning = "[ti] or [title] tab in PubMed searches book title as well as article title. This conversion creates the most accurate translation in Ovid Medline syntax - if you prefer something simpler, please choose the Efficiency option. If your proximity number is three or more digits, please adjust it manually.";
+	    fkwWarning = fkwWarning.fontcolor("blue");
+	  }
+	  else{
+	    kwString = kwString.replace(/\[title:~\d+]/i,".ti.");
+	    kwString = kwString.replace(/\[ti:~\d+]/i,".ti.");
+	    fkwWarning = "[ti] or [title] tab in PubMed searches book title as well as article title. This conversion creates an efficient translation for daily use - if you prefer something more accurate, please choose the Accuracy option. If your proximity number is three or more digits, please adjust it manually.";
+	    fkwWarning = fkwWarning.fontcolor("blue");
+	  }
+	  kwString = removeQuotesPTO(kwString);
+	  kwString = kwString.replace(/\s/ig," adj"+proxNum+" ");
 	}
 	else{
-	    kwString = kwString.replace(/\[tiab\]/i,".ti,ab.");
-	    kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab.");
-	    fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates an efficient translation for daily use - if you prefer something more accurate, please choose the Accuracy option.";
-	    fkwWarning = fkwWarning.fontcolor("blue");
-	    kwString = removeQuotesPTO(kwString);
+	  if (uPref == 0){
+	    kwString = kwString.replace(/\[title\]/i,".ti,bt.");
+	    kwString = kwString.replace(/\[ti\]/i,".ti,bt.");
+	  }
+	  else{
+	    kwString = kwString.replace(/\[title\]/i,".ti.");
+	    kwString = kwString.replace(/\[ti\]/i,".ti.");
+	  }
+	  kwString = removeQuotesPTO(kwString);
 	}
+    }
+    //reformat keywords being searched in the title and abstract (with accuracy/efficiency options)
+    else if (kwString.search(/\[tiab/i) >= 0 || kwString.search(/\[title/i) >= 0){
+        if (kwString.search(/\:~/i) >= 0){
+          var proxNum = kwString.slice(-3);
+	  proxNum = proxNum.replace(/\]/,"");
+	  proxNum = proxNum.replace(/\~/,"");
+	  if (uPref == 0){
+	    kwString = kwString.replace(/\[tiab:~\d+]/i,".ti,ab,cl,oa,kw,kf.");
+	    kwString = kwString.replace(/\title\/abstract:~\d+]/i,".ti,ab,cl,oa,kw,kf.");
+	    fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates the most accurate translation in Ovid Medline syntax - if you prefer something simpler, please choose the Efficiency option. If your proximity number is three or more digits, please adjust it manually.";
+	    fkwWarning = fkwWarning.fontcolor("blue");
+	  }
+	  else{
+	    kwString = kwString.replace(/\[tiab:~\d+]/i,".ti,ab,kf.");
+	    kwString = kwString.replace(/\[title\/abstract:~\d+]/i,".ti,ab,kf.");
+	    fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates an efficient translation for daily use - if you prefer something more accurate, please choose the Accuracy option. If your proximity number is three or more digits, please adjust it manually.";
+	    fkwWarning = fkwWarning.fontcolor("blue");
+	  }
+	  kwString = removeQuotesPTO(kwString);
+	  kwString = kwString.replace(/\s/ig," adj"+proxNum+" ");
+        }
+        else{
+          if (uPref == 0){
+	      kwString = kwString.replace(/\[tiab\]/i,".ti,ab,cl,oa,kw,kf.");
+	      kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,cl,oa,kw,kf.");
+	      fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates the most accurate translation in Ovid Medline syntax. This conversion creates the most accurate translation in Ovid Medline syntax - if you prefer something simpler, please choose the Efficiency option.";
+	      fkwWarning = fkwWarning.fontcolor("blue");
+	  }
+	  else{
+	      kwString = kwString.replace(/\[tiab\]/i,".ti,ab,kf.");
+	      kwString = kwString.replace(/\[title\/abstract\]/i,".ti,ab,kf.");
+	      fkwWarning = "[tiab] or [title/abstract] tab in PubMed searches 4 additional fields besides the title and abstract. This conversion creates an efficient translation for daily use - if you prefer something more accurate, please choose the Accuracy option.";
+	      fkwWarning = fkwWarning.fontcolor("blue");
+	      kwString = removeQuotesPTO(kwString);
+	  }
+        }
     }
     //reformat keywords being searched in the other title or translated title
     else if (kwString.search(/\[ot\]/i) >= 0 || kwString.search(/\[tt/i) >= 0){
@@ -2996,6 +2972,71 @@ function formatSubheadingsPTO (fshString){
     return fshOutputArray;
 }
 
+//****************************************************************************************************  Functions for the dates*******************************************************************
+
+function generateDays (year1, month1, day1, day2, spVar){
+    var dayMaker = "";
+    var monthLead = "";
+    var dayLead = "";
+    while (day1 <= day2){
+        monthLead = month1.toString();
+        if (monthLead.length < 2){
+            monthLead = "0" + monthLead;
+        }
+        dayLead = day1.toString();
+        if (dayLead.length < 2){
+            dayLead = "0" + dayLead;
+        }
+        if (spVar == 0){
+            dayMaker = dayMaker + year1.toString() + monthLead + dayLead + " or ";
+        }
+        else{
+            dayMaker = dayMaker + year1.toString() + " " + monthLead + " " + dayLead + "* or ";
+        }
+        day1++;
+        if (day1 == 32){
+            break;
+        }
+    }
+    return dayMaker;
+}
+
+function generateMonths (year1, month1, month2, spVar){
+    var monthMaker = "";
+    var monthLead = "";
+    while (month1 <= month2){
+        monthLead = month1.toString();
+        if (monthLead.length < 2){
+            monthLead = "0" + monthLead;
+        }
+        if (spVar == 0){
+            monthMaker = monthMaker + year1.toString() + monthLead + "* or ";
+        }
+        else{
+            monthMaker = monthMaker + year1.toString() + " " + monthLead + "* or ";
+        }
+        month1++;
+        if (month1 == 13){
+            break;
+        }
+    }
+    return monthMaker;
+}
+
+function generateYears (year1, year2, spVar){
+    var yearMaker = "";
+    const todaysDate = new Date();
+    var breakYear = todaysDate.getFullYear();
+    breakYear++;
+    while (year1 <= year2){
+        yearMaker = yearMaker + year1.toString() + "* or ";
+        year1++;
+        if (year1 == breakYear){
+            break;
+        }
+    }
+    return yearMaker;
+}
 
 </script>
 
